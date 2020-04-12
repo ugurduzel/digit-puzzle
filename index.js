@@ -2,37 +2,26 @@ const Telegraf = require("telegraf");
 const Extra = require("telegraf/extra");
 const Markup = require("telegraf/markup");
 
+const session = require("telegraf/session");
+
+let sessions = {};
+
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
 bot.start((ctx) => ctx.reply("Welcome to Digit Puzzle!"));
 
-bot.command("newgame", (ctx) => {
-    console.log(ctx);
-    ctx.reply("Choose a difficulty level\n3 digits\n4 digits\n5 digits");
-});
-
-bot.hears("onetime", ({ reply }) =>
+bot.command("newgame", ({ reply }) =>
     reply(
-        "One time keyboard",
-        Markup.keyboard(["/simple", "/inline", "/pyramid"])
+        "Choose a difficulty",
+        Markup.keyboard(["3 digits", "4 digits", "5 digits"])
             .oneTime()
             .resize()
             .extra()
     )
 );
 
-bot.hears("custom", ({ reply }) => {
-    return reply(
-        "Custom buttons keyboard",
-        Markup.keyboard([
-            ["🔍 Search", "😎 Popular"], // Row1 with 2 buttons
-            ["☸ Setting", "📞 Feedback"], // Row2 with 2 buttons
-            ["📢 Ads", "⭐️ Rate us", "👥 Share"], // Row3 with 3 buttons
-        ])
-            .oneTime()
-            .resize()
-            .extra()
-    );
+bot.hears("3 digits", (ctx) => {
+    return ctx.reply("Start guessing...");
 });
 
 bot.hears("special", (ctx) => {
