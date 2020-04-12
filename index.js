@@ -1,27 +1,19 @@
-const telegram = require("telegram-bot-api");
+const Telegraf = require("telegraf");
+const Extra = require("telegraf/extra");
+const Markup = require("telegraf/markup");
 
-const api = new telegram({
-    token: "973273396:AAEbU_Nj4z3pwCM-nnyk0inizNWH2ys5hk4",
-    updates: {
-        enabled: true,
-    },
-});
+const gameShortName = "your-game";
+const gameUrl = "https://your-game.tld";
 
-async function sendMessage(chat_id) {
-    try {
-        const result = await api.sendMessage({
-            chat_id: chat_id,
-            text: "This is my kind message to you",
-        });
-        console.log(result);
-    } catch (ex) {
-        console.log("Error: ex");
-    }
-}
+const markup = Extra.markup(
+    Markup.inlineKeyboard([
+        Markup.gameButton("🎮 Play now!"),
+        Markup.urlButton("Telegraf help", "http://telegraf.js.org"),
+    ])
+);
 
-api.on("message", function (message) {
-    // Received text message
-    console.log("Hey, message received\n", message);
-
-    sendMessage(message.chat.id);
-});
+const bot = new Telegraf(process.env.BOT_TOKEN);
+bot.start(({ replyWithGame }) => replyWithGame(gameShortName));
+bot.command("foo", ({ replyWithGame }) => replyWithGame(gameShortName, markup));
+bot.gameQuery(({ answerGameQuery }) => answerGameQuery(gameUrl));
+bot.launch();
