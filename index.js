@@ -23,5 +23,5 @@ api.on("message", function (message) {
     // Received text message
     console.log("Hey, message received\n", message);
 
-    await sendMessage(message.chat.id);
+    sendMessage(message.chat.id);
 });
