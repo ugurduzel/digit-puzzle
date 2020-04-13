@@ -1,4 +1,5 @@
 const _ = require("lodash");
+const Scene = require("telegraf/scene");
 
 const minLevel = 3;
 const maxLevel = 5;

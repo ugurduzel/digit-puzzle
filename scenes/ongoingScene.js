@@ -1,3 +1,5 @@
+const Scene = require("telegraf/scene");
+
 const ongoingScene = new Scene("ongoingScene");
 ongoingScene.enter((ctx) => {
     console.log(ctx.session.game);
