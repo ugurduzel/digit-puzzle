@@ -82,12 +82,14 @@ beginScene.action(/^[0-9] digits/, (ctx) => {
     }
     ctx.session.game.number = generateRandomNumber(level);
     ctx.session.game.guesses = 1;
+    ctx.session.game.history = [];
 
     return ctx.scene.enter("ongoingScene");
 });
 
 beginScene.on("message", (ctx) => {
     ctx.session.game = {};
+    ctx.session.game;
     return ctx.reply(
         "Choose difficulty level",
         Extra.HTML().markup((m) => m.inlineKeyboard(levels.map((l) => m.callbackButton(`${l} digits`, `${l} digits`))))
@@ -96,7 +98,6 @@ beginScene.on("message", (ctx) => {
 
 const ongoingScene = new Scene("ongoingScene");
 ongoingScene.enter((ctx) => {
-    console.log(ctx.session.game);
     return ctx.reply("Only send your guesses. Each message counts. Start guessing...");
 });
 
@@ -112,6 +113,16 @@ ongoingScene.action("Quit", (ctx) => {
         `Quitted\nThe number was ${number.join("")}`,
         Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("New Game", "New Game")]))
     );
+});
+
+ongoingScene.command("history", (ctx) => {
+    const { history } = ctx.session.game;
+    let s = "Your guesses,\n";
+    for (let i = 0; i < history.length; i++) {
+        s += history[i].guess + " ➡️ ";
+        s += history[i].result + "\n";
+    }
+    return ctx.reply(s);
 });
 
 ongoingScene.hears(/.*/, (ctx) => {
@@ -137,9 +148,11 @@ ongoingScene.hears(/.*/, (ctx) => {
             Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("Quit", "Quit")]))
         );
     }
-    console.log(ctx.message);
 
     const { won, result } = getResult(ctx.message.text, ctx.session.game.number);
+
+    ctx.session.game.history.push({ guess: ctx.session.game.number, result });
+
     if (won) {
         const { game } = ctx.session;
         delete ctx.session.game;
