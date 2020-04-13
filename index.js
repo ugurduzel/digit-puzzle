@@ -160,9 +160,9 @@ ongoingScene.action("Quit", (ctx) => {
 // });
 
 const bot = new Telegraf(process.env.BOT_TOKEN || "");
-const stage = new Stage([beginScene, ongoingScene]);
+//const stage = new Stage([beginScene, ongoingScene]);
 bot.use(session());
-bot.use(stage.middleware());
+//bot.use(stage.middleware());
 
 bot.command("start", (ctx) => ctx.reply("Welcome to Digit Puzzle!\n", getMarkup("🎮 Play now!", "New Game")));
 // bot.command("newgame", (ctx) => ctx.scene.enter("beginScene"));
