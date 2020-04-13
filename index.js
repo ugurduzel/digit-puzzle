@@ -17,7 +17,7 @@ const stage = new Stage([beginScene, ongoingScene]);
 
 const secretPath = `/bot${API_TOKEN}`;
 
-bot.telegram.setWebhook(URL + secretPath);
+//bot.telegram.setWebhook(URL + secretPath);
 
 bot.use(session());
 bot.use(stage.middleware());
