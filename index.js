@@ -6,6 +6,7 @@ const session = require("telegraf/session");
 const Stage = require("telegraf/stage");
 const Scene = require("telegraf/scenes/base");
 const _ = require("lodash");
+const Telegram = require("telegraf/telegram");
 
 //const expressApp = express();
 
@@ -162,8 +163,10 @@ ongoingScene.hears(/.*/, (ctx) => {
 const API_TOKEN = process.env.BOT_TOKEN || "";
 const URL = "https://142.93.175.101";
 
+const telegram = new Telegram(API_TOKEN);
+telegram.deleteWebhook();
 const bot = new Telegraf(API_TOKEN);
-bot.deleteWebhook();
+
 // expressApp.use(bot.webhookCallback(`/bot${API_TOKEN}`));
 // bot.telegram.setWebhook(`${URL}/bot${API_TOKEN}`);
 
