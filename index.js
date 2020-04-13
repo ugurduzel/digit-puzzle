@@ -39,7 +39,7 @@ function getResult(msg, number) {
         s += `+${pos}`;
     }
     if (neg > 0) {
-        s += `-${neg}`;
+        s += ` -${neg}`;
     }
     if (s === "") {
         s = "+0 -0";
@@ -190,7 +190,7 @@ bot.action("New Game", (ctx) => ctx.scene.enter("beginScene"));
 
 bot.command("start", (ctx) =>
     ctx.reply(
-        "Welcome to Digit Puzzle!\n",
+        `Hi ${ctx.chat.first_name},\nWelcome to Digit Puzzle!\n`,
         Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play now!", "New Game")]))
     )
 );
