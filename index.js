@@ -1,4 +1,3 @@
-const _ = require("lodash");
 const express = require("express");
 const Telegraf = require("telegraf");
 const Extra = require("telegraf/extra");

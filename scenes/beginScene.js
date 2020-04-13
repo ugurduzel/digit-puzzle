@@ -1,3 +1,5 @@
+const _ = require("lodash");
+
 const minLevel = 3;
 const maxLevel = 5;
 
