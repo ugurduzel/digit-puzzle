@@ -12,16 +12,6 @@ const expressApp = express();
 const minLevel = 3;
 const maxLevel = 5;
 
-const gameShortName = "digitGame";
-const gameUrl = "https://telegram.me/DigitPuzzleBot?game=digitGame";
-
-const markup = Extra.markup(
-    Markup.inlineKeyboard([
-        Markup.gameButton("🎮 Play now!"),
-        Markup.urlButton("Telegraf help", "http://telegraf.js.org"),
-    ])
-);
-
 const levels = _.range(minLevel, maxLevel + 1);
 
 const beginScene = new Scene("beginScene");
@@ -173,7 +163,7 @@ bot.command("/start", async (ctx) => {
     return ctx.reply(
         "Welcome to Digit Puzzle!\n",
         Extra.HTML().markup((m) =>
-            m.inlineKeyboard([m.callbackButton("New Game", "New Game")])
+            m.inlineKeyboard([m.callbackButton("🎮 Play now!", "New Game")])
         )
     );
 });
