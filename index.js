@@ -67,6 +67,7 @@ beginScene.on("message", (ctx) => {
 
 const ongoingScene = new Scene("ongoingScene");
 ongoingScene.enter((ctx) => {
+    console.log(ctx.session.game);
     return ctx.reply(
         "Only send your guesses. Each message counts. Start guessing..."
     );
@@ -100,6 +101,23 @@ ongoingScene.hears(/.*/, (ctx) => {
             )
         );
     }
+    const digits = ctx.message.text.split("");
+    if (digits.includes("0")) {
+        return ctx.reply(
+            `Cannot send a number with 0 in it!`,
+            Extra.HTML().markup((m) =>
+                m.inlineKeyboard([m.callbackButton("Quit", "Quit")])
+            )
+        );
+    }
+    if (notDistinct(digits) === true) {
+        return ctx.reply(
+            `All digits must be different!`,
+            Extra.HTML().markup((m) =>
+                m.inlineKeyboard([m.callbackButton("Quit", "Quit")])
+            )
+        );
+    }
 
     const { won, result } = getResult(
         ctx.message.text,
@@ -127,13 +145,11 @@ ongoingScene.hears(/.*/, (ctx) => {
 });
 
 const API_TOKEN = process.env.BOT_TOKEN || "";
-const URL =
-    process.env.URL ||
-    "https://pacific-journey-79915.herokuapp.com/new-message";
+const URL = process.env.URL || "https://pacific-journey-79915.herokuapp.com";
 
 const bot = new Telegraf(API_TOKEN);
-bot.telegram.setWebhook(`${URL}/bot${API_TOKEN}`);
 expressApp.use(bot.webhookCallback(`/bot${API_TOKEN}`));
+bot.telegram.setWebhook(`${URL}/bot${API_TOKEN}`);
 
 // const bot = new Telegraf(process.env.BOT_TOKEN);
 // expressApp.use(bot.webhookCallback("/secret-path"));
@@ -198,6 +214,17 @@ function getResult(msg, number) {
         s = "+0 -0";
     }
     return { won: false, result: s };
+}
+
+function notDistinct(_digits) {
+    let digits = [..._digits];
+    while (digits.length > 0) {
+        const d = digits.pop();
+        if (digits.includes(d)) {
+            return true;
+        }
+    }
+    return false;
 }
 
 expressApp.listen(3000, () => {
