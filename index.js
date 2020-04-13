@@ -166,12 +166,22 @@ const stage = new Stage([beginScene]);
 bot.use(session());
 //bot.use(stage.middleware());
 
-bot.command("start", (ctx) => ctx.reply("Welcome to Digit Puzzle!\n", getMarkup("🎮 Play now!", "New Game")));
+bot.command("start", (ctx) =>
+    ctx.reply(
+        "Welcome to Digit Puzzle!\n",
+        Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play now!", "New Game")]))
+    )
+);
 // bot.command("newgame", (ctx) => ctx.scene.enter("beginScene"));
 // bot.action("New Game", (ctx) => ctx.scene.enter("beginScene"));
 bot.command("newgame", (ctx) => ctx.reply("Welcome, beginScene"));
 bot.action("New Game", (ctx) => ctx.reply("Welcome, beginScene"));
-bot.on("message", (ctx) => ctx.reply("Try /newgame", getMarkup("🎮 Play now!", "New Game")));
+bot.on("message", (ctx) =>
+    ctx.reply(
+        "Try /newgame",
+        Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play now!", "New Game")]))
+    )
+);
 
 console.log("Launching the application...");
 bot.launch();
