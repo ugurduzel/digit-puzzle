@@ -61,11 +61,11 @@ function notDistinct(_digits) {
 
 function logToAdmin(msg) {
     telegram.sendMessage(chat_id, msg);
+    console.log(msg);
 }
 
 const beginScene = new Scene("beginScene");
 beginScene.enter((ctx) => {
-    console.log(ctx.chat);
     ctx.session.game = {};
     return ctx.reply(
         "Choose difficulty level",
@@ -86,7 +86,6 @@ beginScene.action(/^[0-9] digits/, (ctx) => {
         );
     }
     ctx.session.game.number = generateRandomNumber(level);
-    console.log(ctx.session.game.number);
     logToAdmin(ctx.chat.first_name + " is playing. The number is " + ctx.session.game.number.join(""));
     ctx.session.game.guesses = 1;
     ctx.session.game.history = [];
@@ -161,9 +160,6 @@ ongoingScene.hears(/.*/, (ctx) => {
             )
         );
     }
-
-    console.log("Chat: ", ctx.chat);
-    console.log("From: ", ctx.from);
 
     const { won, result } = getResult(ctx.message.text, ctx.session.game.number);
 
