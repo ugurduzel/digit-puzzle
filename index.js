@@ -97,7 +97,7 @@ beginScene.on("message", (ctx) => {
 
 const ongoingScene = new Scene("ongoingScene");
 ongoingScene.enter((ctx) => {
-    return ctx.reply("Only send your guesses. Each message counts. Start guessing...");
+    return ctx.reply(`I have a ${ctx.session.game.number} digit number in mind.\n\nStart guessing... 🧐`);
 });
 
 ongoingScene.action("New Game", (ctx) => {
@@ -165,13 +165,13 @@ ongoingScene.hears(/.*/, (ctx) => {
         const { game } = ctx.session;
         delete ctx.session.game;
         return ctx.reply(
-            `<b>Congrats!</b>\nNumber is <b>${game.number.join("")}</b>.\nYou found it in ${game.guesses} tries.`,
+            `<b>Congrats!</b>🤯\nNumber is <b>${game.number.join("")}</b>.\nYou found it in ${game.guesses} tries.`,
             Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("New Game", "New Game")]))
         );
     }
     ctx.session.game.guesses += 1;
     return ctx.reply(
-        result,
+        `Round ${ctx.session.game.guesses - 1}` + result,
         Extra.HTML()
             .inReplyTo(ctx.message.message_id)
             .markup((m) =>
