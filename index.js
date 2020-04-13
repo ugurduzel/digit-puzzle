@@ -169,11 +169,7 @@ bot.use(session());
 const stage = new Stage([beginScene, ongoingScene]);
 bot.use(stage.middleware());
 
-bot.command("/start", (ctx) => {
-    console.log("Ctx: ", ctx);
-    console.log("Markup:", markup);
-    return ctx.replyWithGame(gameShortName);
-});
+bot.command("/start", (ctx) => ctx.scene.enter("beginScene"));
 // bot.command("/start", async (ctx) => {
 //     return ctx.reply(
 //         "Welcome to Digit Puzzle!\n",
