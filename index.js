@@ -9,7 +9,8 @@ const ongoingScene = require("./scenes/ongoingScene");
 
 // Express REST app
 
-const URL = "http://142.93.175.101";
+//const URL = "http://142.93.175.101";
+const URL = "https://----.localtunnel.me";
 const port = process.env.PORT || 8080;
 const API_TOKEN = process.env.BOT_TOKEN || "";
 
