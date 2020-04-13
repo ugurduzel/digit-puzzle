@@ -145,18 +145,12 @@ ongoingScene.hears(/.*/, (ctx) => {
 });
 
 const API_TOKEN = process.env.BOT_TOKEN || "";
-const URL = process.env.URL || "https://pacific-journey-79915.herokuapp.com";
+const URL = process.env.URL || "https://digit-puzzle.herokuapp.com/";
 
 const bot = new Telegraf(API_TOKEN);
 expressApp.use(bot.webhookCallback(`/bot${API_TOKEN}`));
 bot.telegram.setWebhook(`${URL}/bot${API_TOKEN}`);
 
-// const bot = new Telegraf(process.env.BOT_TOKEN);
-// expressApp.use(bot.webhookCallback("/secret-path"));
-// //bot.telegram.setWebhook("https://2617c6b3.ngrok.io/new-message");
-// bot.telegram.setWebhook(
-//     "https://pacific-journey-79915.herokuapp.com/new-message"
-// );
 bot.use(session());
 
 const stage = new Stage([beginScene, ongoingScene]);
