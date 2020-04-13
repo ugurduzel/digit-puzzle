@@ -163,6 +163,7 @@ const API_TOKEN = process.env.BOT_TOKEN || "";
 const URL = "https://142.93.175.101";
 
 const bot = new Telegraf(API_TOKEN);
+bot.deleteWebhook();
 // expressApp.use(bot.webhookCallback(`/bot${API_TOKEN}`));
 // bot.telegram.setWebhook(`${URL}/bot${API_TOKEN}`);
 
