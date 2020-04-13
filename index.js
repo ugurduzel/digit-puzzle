@@ -1,3 +1,4 @@
+const express = require("express");
 const Telegraf = require("telegraf");
 const Extra = require("telegraf/extra");
 const Markup = require("telegraf/markup");
@@ -5,6 +6,8 @@ const session = require("telegraf/session");
 const Stage = require("telegraf/stage");
 const Scene = require("telegraf/scenes/base");
 const _ = require("lodash");
+
+const expressApp = express();
 
 const minLevel = 3;
 const maxLevel = 5;
@@ -123,11 +126,21 @@ ongoingScene.hears(/.*/, (ctx) => {
     );
 });
 
-const bot = new Telegraf(process.env.BOT_TOKEN);
-//bot.telegram.setWebhook("https://2617c6b3.ngrok.io/new-message");
-bot.telegram.setWebhook(
-    "https://pacific-journey-79915.herokuapp.com/new-message"
-);
+const API_TOKEN = process.env.BOT_TOKEN || "";
+const URL =
+    process.env.URL ||
+    "https://pacific-journey-79915.herokuapp.com/new-message";
+
+const bot = new Telegraf(API_TOKEN);
+bot.telegram.setWebhook(`${URL}/bot${API_TOKEN}`);
+expressApp.use(bot.webhookCallback(`/bot${API_TOKEN}`));
+
+// const bot = new Telegraf(process.env.BOT_TOKEN);
+// expressApp.use(bot.webhookCallback("/secret-path"));
+// //bot.telegram.setWebhook("https://2617c6b3.ngrok.io/new-message");
+// bot.telegram.setWebhook(
+//     "https://pacific-journey-79915.herokuapp.com/new-message"
+// );
 bot.use(session());
 
 const stage = new Stage([beginScene, ongoingScene]);
@@ -186,3 +199,7 @@ function getResult(msg, number) {
     }
     return { won: false, result: s };
 }
+
+expressApp.listen(3000, () => {
+    console.log("Example app listening on port 3000!");
+});
