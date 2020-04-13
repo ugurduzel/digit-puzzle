@@ -12,6 +12,16 @@ const expressApp = express();
 const minLevel = 3;
 const maxLevel = 5;
 
+const gameShortName = "digitGame";
+const gameUrl = "https://telegram.me/DigitPuzzleBot?game=digitGame";
+
+const markup = Extra.markup(
+    Markup.inlineKeyboard([
+        Markup.gameButton("🎮 Play now!"),
+        Markup.urlButton("Telegraf help", "http://telegraf.js.org"),
+    ])
+);
+
 const levels = _.range(minLevel, maxLevel + 1);
 
 const beginScene = new Scene("beginScene");
@@ -159,17 +169,7 @@ bot.use(session());
 const stage = new Stage([beginScene, ongoingScene]);
 bot.use(stage.middleware());
 
-const gameShortName = "digitGame";
-const gameUrl = "https://telegram.me/DigitPuzzleBot?game=digitGame";
-
-const markup = Extra.markup(
-    Markup.inlineKeyboard([
-        Markup.gameButton("🎮 Play now!"),
-        Markup.urlButton("Telegraf help", "http://telegraf.js.org"),
-    ])
-);
-
-bot.start((ctx) => {
+bot.command("/start", (ctx) => {
     console.log(ctx);
     console.log(markup);
     return ctx.replyWithGame(gameShortName);
