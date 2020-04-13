@@ -171,7 +171,7 @@ ongoingScene.hears(/.*/, (ctx) => {
     }
     ctx.session.game.guesses += 1;
     return ctx.reply(
-        result + `\n\n        <b>Round ${ctx.session.game.guesses - 1}</b>`,
+        result + `\n\n                                <b>Round ${ctx.session.game.guesses - 1}</b>`,
         Extra.HTML()
             .inReplyTo(ctx.message.message_id)
             .markup((m) =>
