@@ -7,7 +7,7 @@ const Stage = require("telegraf/stage");
 const Scene = require("telegraf/scenes/base");
 const _ = require("lodash");
 
-const expressApp = express();
+//const expressApp = express();
 
 const minLevel = 3;
 const maxLevel = 5;
@@ -163,8 +163,8 @@ const API_TOKEN = process.env.BOT_TOKEN || "";
 const URL = "https://142.93.175.101";
 
 const bot = new Telegraf(API_TOKEN);
-expressApp.use(bot.webhookCallback(`/bot${API_TOKEN}`));
-bot.telegram.setWebhook(`${URL}/bot${API_TOKEN}`);
+// expressApp.use(bot.webhookCallback(`/bot${API_TOKEN}`));
+// bot.telegram.setWebhook(`${URL}/bot${API_TOKEN}`);
 
 bot.use(session());
 
@@ -191,7 +191,7 @@ bot.on("message", (ctx) =>
 );
 
 bot.action("New Game", (ctx) => ctx.scene.enter("beginScene"));
-bot.launch();
+bot.startPolling();
 
 function generateRandomNumber(digits) {
     return _.sampleSize(_.range(1, 10), digits);
@@ -237,8 +237,3 @@ function notDistinct(_digits) {
     }
     return false;
 }
-
-const port = process.env.PORT || 8080;
-expressApp.listen(port, () => {
-    console.log(`Example app listening on port ${port}!`);
-});
