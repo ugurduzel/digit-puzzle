@@ -80,6 +80,7 @@ beginScene.action(/^[0-9] digits/, (ctx) => {
         );
     }
     ctx.session.game.number = generateRandomNumber(level);
+    console.log(ctx.session.game.number);
     ctx.session.game.guesses = 1;
     ctx.session.game.history = [];
 
