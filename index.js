@@ -61,7 +61,7 @@ function notDistinct(_digits) {
 function getMarkup(text, cb) {
     Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton(text, cb)]));
 }
-
+/*
 const beginScene = new Scene("beginScene");
 beginScene.enter((ctx) => {
     ctx.session.game = {};
@@ -116,48 +116,48 @@ ongoingScene.action("Quit", (ctx) => {
         Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("New Game", "New Game")]))
     );
 });
+*/
+// ongoingScene.hears(/.*/, (ctx) => {
+//     if (!ctx.session.game) {
+//         return null;
+//     }
+//     if (isNaN(ctx.message.text) || ctx.message.text.length !== ctx.session.game.number.length) {
+//         return ctx.reply(
+//             `Only send ${ctx.session.game.number.length} digit numbers!`,
+//             Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("Quit", "Quit")]))
+//         );
+//     }
+//     const digits = ctx.message.text.split("");
+//     if (digits.includes("0")) {
+//         return ctx.reply(
+//             `Cannot send a number with 0 in it!`,
+//             Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("Quit", "Quit")]))
+//         );
+//     }
+//     if (notDistinct(digits) === true) {
+//         return ctx.reply(
+//             `All digits must be different!`,
+//             Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("Quit", "Quit")]))
+//         );
+//     }
+//     console.log(ctx);
 
-ongoingScene.hears(/.*/, (ctx) => {
-    if (!ctx.session.game) {
-        return null;
-    }
-    if (isNaN(ctx.message.text) || ctx.message.text.length !== ctx.session.game.number.length) {
-        return ctx.reply(
-            `Only send ${ctx.session.game.number.length} digit numbers!`,
-            Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("Quit", "Quit")]))
-        );
-    }
-    const digits = ctx.message.text.split("");
-    if (digits.includes("0")) {
-        return ctx.reply(
-            `Cannot send a number with 0 in it!`,
-            Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("Quit", "Quit")]))
-        );
-    }
-    if (notDistinct(digits) === true) {
-        return ctx.reply(
-            `All digits must be different!`,
-            Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("Quit", "Quit")]))
-        );
-    }
-    console.log(ctx);
-
-    const { won, result } = getResult(ctx.message.text, ctx.session.game.number);
-    if (won) {
-        const { game } = ctx.session;
-        delete ctx.session.game;
-        return ctx.reply(
-            `Congrats!\nNumber is ${game.number.join("")}.\nYou found it in ${game.guesses} tries.`,
-            Extra.HTML() //.inReplyTo(ctx.message_id)
-                .markup((m) => m.inlineKeyboard([m.callbackButton("New Game", "New Game")]))
-        );
-    }
-    ctx.session.game.guesses += 1;
-    return ctx.reply(
-        result,
-        Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("Quit", "Quit")]))
-    );
-});
+//     const { won, result } = getResult(ctx.message.text, ctx.session.game.number);
+//     if (won) {
+//         const { game } = ctx.session;
+//         delete ctx.session.game;
+//         return ctx.reply(
+//             `Congrats!\nNumber is ${game.number.join("")}.\nYou found it in ${game.guesses} tries.`,
+//             Extra.HTML() //.inReplyTo(ctx.message_id)
+//                 .markup((m) => m.inlineKeyboard([m.callbackButton("New Game", "New Game")]))
+//         );
+//     }
+//     ctx.session.game.guesses += 1;
+//     return ctx.reply(
+//         result,
+//         Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("Quit", "Quit")]))
+//     );
+// });
 
 const bot = new Telegraf(process.env.BOT_TOKEN || "");
 const stage = new Stage([beginScene, ongoingScene]);
@@ -165,8 +165,10 @@ bot.use(session());
 bot.use(stage.middleware());
 
 bot.command("start", (ctx) => ctx.reply("Welcome to Digit Puzzle!\n", getMarkup("🎮 Play now!", "New Game")));
-bot.command("newgame", (ctx) => ctx.scene.enter("beginScene"));
-bot.action("New Game", (ctx) => ctx.scene.enter("beginScene"));
+// bot.command("newgame", (ctx) => ctx.scene.enter("beginScene"));
+// bot.action("New Game", (ctx) => ctx.scene.enter("beginScene"));
+bot.command("newgame", (ctx) => ctx.reply("beginScene"));
+bot.action("New Game", (ctx) => ctx.reply("beginScene"));
 bot.on("message", (ctx) => ctx.reply("Try /newgame", getMarkup("🎮 Play now!", "New Game")));
 
 bot.launch();
