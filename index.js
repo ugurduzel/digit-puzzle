@@ -163,8 +163,6 @@ ongoingScene.hears(/.*/, (ctx) => {
 const API_TOKEN = process.env.BOT_TOKEN || "";
 const URL = "https://142.93.175.101";
 
-const telegram = new Telegram(API_TOKEN);
-telegram.deleteWebhook();
 const bot = new Telegraf(API_TOKEN);
 
 // expressApp.use(bot.webhookCallback(`/bot${API_TOKEN}`));
@@ -195,7 +193,7 @@ bot.on("message", (ctx) =>
 );
 
 bot.action("New Game", (ctx) => ctx.scene.enter("beginScene"));
-bot.startPolling();
+bot.launch();
 
 function generateRandomNumber(digits) {
     return _.sampleSize(_.range(1, 10), digits);
