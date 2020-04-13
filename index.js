@@ -58,12 +58,9 @@ function notDistinct(_digits) {
     return false;
 }
 
-function getMarkup(text, cb) {
-    Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton(text, cb)]));
-}
-
 const beginScene = new Scene("beginScene");
 beginScene.enter((ctx) => {
+    console.log("Entered beginScene");
     ctx.session.game = {};
     return ctx.reply(
         "Choose difficulty level",
@@ -164,7 +161,10 @@ const bot = new Telegraf(process.env.BOT_TOKEN || "");
 //const stage = new Stage([beginScene, ongoingScene]);
 const stage = new Stage([beginScene]);
 bot.use(session());
-//bot.use(stage.middleware());
+bot.use(stage.middleware());
+
+bot.command("newgame", (ctx) => ctx.scene.enter("beginScene"));
+bot.action("New Game", (ctx) => ctx.scene.enter("beginScene"));
 
 bot.command("start", (ctx) =>
     ctx.reply(
@@ -172,10 +172,6 @@ bot.command("start", (ctx) =>
         Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play now!", "New Game")]))
     )
 );
-// bot.command("newgame", (ctx) => ctx.scene.enter("beginScene"));
-// bot.action("New Game", (ctx) => ctx.scene.enter("beginScene"));
-bot.command("newgame", (ctx) => ctx.reply("Welcome, beginScene"));
-bot.action("New Game", (ctx) => ctx.reply("Welcome, beginScene"));
 bot.on("message", (ctx) =>
     ctx.reply(
         "Try /newgame",
