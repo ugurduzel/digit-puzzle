@@ -48,6 +48,10 @@ bot.on("text", ({ replyWithHTML }) => replyWithHTML("<b>Hello</b>"));
 
 const app = express();
 app.use(bot.webhookCallback(secretPath));
+app.use((req, res, next) => {
+    console.log(req);
+    next();
+});
 
 app.get("/", (req, res) => res.send("Hello World!"));
 
