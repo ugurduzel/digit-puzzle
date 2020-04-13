@@ -10,6 +10,7 @@ const Telegram = require("telegraf/telegram");
 
 const minLevel = 3;
 const maxLevel = 5;
+const chat_id = "369332762";
 
 const levels = _.range(minLevel, maxLevel + 1);
 
@@ -58,6 +59,10 @@ function notDistinct(_digits) {
     return false;
 }
 
+function logToAdmin(msg) {
+    telegram.sendMessage.sendMessage(msg, chat_id);
+}
+
 const beginScene = new Scene("beginScene");
 beginScene.enter((ctx) => {
     ctx.session.game = {};
@@ -81,6 +86,7 @@ beginScene.action(/^[0-9] digits/, (ctx) => {
     }
     ctx.session.game.number = generateRandomNumber(level);
     console.log(ctx.session.game.number);
+    logToAdmin(ctx.chat.first_name + " is playing. The number is " + ctx.session.game.number.join(""));
     ctx.session.game.guesses = 1;
     ctx.session.game.history = [];
 
@@ -183,6 +189,7 @@ ongoingScene.hears(/.*/, (ctx) => {
     );
 });
 
+const telegram = new Telegram(process.env.BOT_TOKEN || "");
 const bot = new Telegraf(process.env.BOT_TOKEN || "");
 const stage = new Stage([beginScene, ongoingScene]);
 bot.use(session());
