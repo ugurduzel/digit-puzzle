@@ -166,7 +166,9 @@ ongoingScene.hears(/.*/, (ctx) => {
         const { game } = ctx.session;
         delete ctx.session.game;
         return ctx.reply(
-            `<b>Congrats!</b>🤯\nNumber is <b>${game.number.join("")}</b>.\nYou found it in ${game.guesses} tries.`,
+            `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${game.number.join("")}</b>.\nYou found it in ${
+                game.guesses
+            } tries. 🤯`,
             Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("New Game", "New Game")]))
         );
     }
