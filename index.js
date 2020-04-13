@@ -148,7 +148,7 @@ ongoingScene.hears(/.*/, (ctx) => {
 });
 
 const API_TOKEN = process.env.BOT_TOKEN || "";
-const URL = process.env.URL || "http://142.93.175.101";
+const URL = "http://142.93.175.101";
 
 const bot = new Telegraf(API_TOKEN);
 expressApp.use(bot.webhookCallback(`/bot${API_TOKEN}`));
