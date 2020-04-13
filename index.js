@@ -173,7 +173,7 @@ bot.command("/start", async (ctx) => {
     return ctx.reply(
         "Welcome to Digit Puzzle!\n",
         Extra.HTML().markup((m) =>
-            m.inlineKeyboard([m.callbackButton("New Game", "New Game")])
+            m.inlineKeyboard([m.callbackButton("🎮 Play now!", "New Game")])
         )
     );
 });
