@@ -187,7 +187,11 @@ const markup = Extra.markup(
     ])
 );
 
-bot.start(({ replyWithGame }) => replyWithGame(gameShortName));
+bot.start((ctx) => {
+    console.log(ctx);
+    console.log(markup);
+    return ctx.replyWithGame(gameShortName);
+});
 bot.command("foo", ({ replyWithGame }) => replyWithGame(gameShortName, markup));
 bot.gameQuery(({ answerGameQuery }) => answerGameQuery(gameUrl));
 
