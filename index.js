@@ -10,7 +10,7 @@ const Telegram = require("telegraf/telegram");
 
 const minLevel = 3;
 const maxLevel = 5;
-const chat_id = "369332762";
+const chat_id = 369332762;
 
 const levels = _.range(minLevel, maxLevel + 1);
 
