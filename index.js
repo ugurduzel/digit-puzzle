@@ -17,9 +17,9 @@ const API_TOKEN = process.env.BOT_TOKEN || "";
 const bot = new Telegraf(API_TOKEN);
 const stage = new Stage([beginScene, ongoingScene]);
 
+expressApp.use(bot.webhookCallback(`/bot${API_TOKEN}`));
 bot.telegram.setWebhook(`${URL}/bot${API_TOKEN}`);
 
-expressApp.use(bot.webhookCallback(`/bot${API_TOKEN}`));
 bot.use(session());
 bot.use(stage.middleware());
 
