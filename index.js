@@ -144,8 +144,7 @@ ongoingScene.hears(/.*/, (ctx) => {
             `Congrats!\nNumber is ${game.number.join("")}.\nYou found it in ${
                 game.guesses
             } tries.`,
-            Extra.inReplyTo(ctx.message_id)
-                .HTML()
+            Extra.HTML() //.inReplyTo(ctx.message_id)
                 .markup((m) =>
                     m.inlineKeyboard([m.callbackButton("New Game", "New Game")])
                 )
