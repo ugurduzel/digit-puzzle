@@ -60,7 +60,6 @@ function notDistinct(_digits) {
 
 const beginScene = new Scene("beginScene");
 beginScene.enter((ctx) => {
-    console.log("Entered beginScene");
     ctx.session.game = {};
     return ctx.reply(
         "Choose difficulty level",
@@ -115,11 +114,11 @@ ongoingScene.action("Quit", (ctx) => {
     );
 });
 
-ongoingScene.command("history", (ctx) => {
+ongoingScene.action("History", (ctx) => {
     const { history } = ctx.session.game;
     let s = "Your guesses,\n";
     for (let i = 0; i < history.length; i++) {
-        s += history[i].guess + " ➡️ ";
+        s += "▪️ " + history[i].guess + " ➡️ ";
         s += history[i].result + "\n";
     }
     return ctx.reply(s);
@@ -132,32 +131,41 @@ ongoingScene.hears(/.*/, (ctx) => {
     if (isNaN(ctx.message.text) || ctx.message.text.length !== ctx.session.game.number.length) {
         return ctx.reply(
             `Only send ${ctx.session.game.number.length} digit numbers!`,
-            Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("Quit", "Quit")]))
+            Extra.HTML().markup((m) =>
+                m.inlineKeyboard([m.callbackButton("Get History", "History"), m.callbackButton("Quit", "Quit")])
+            )
         );
     }
     const digits = ctx.message.text.split("");
     if (digits.includes("0")) {
         return ctx.reply(
             `Cannot send a number with 0 in it!`,
-            Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("Quit", "Quit")]))
+            Extra.HTML().markup((m) =>
+                m.inlineKeyboard([m.callbackButton("Get History", "History"), m.callbackButton("Quit", "Quit")])
+            )
         );
     }
     if (notDistinct(digits) === true) {
         return ctx.reply(
             `All digits must be different!`,
-            Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("Quit", "Quit")]))
+            Extra.HTML().markup((m) =>
+                m.inlineKeyboard([m.callbackButton("Get History", "History"), m.callbackButton("Quit", "Quit")])
+            )
         );
     }
 
+    console.log("Chat: ", ctx.session.chat);
+    console.log("From: ", ctx.session.from);
+
     const { won, result } = getResult(ctx.message.text, ctx.session.game.number);
 
-    ctx.session.game.history.push({ guess: ctx.session.game.number, result });
+    ctx.session.game.history.push({ guess: ctx.session.game.number.join(""), result });
 
     if (won) {
         const { game } = ctx.session;
         delete ctx.session.game;
         return ctx.reply(
-            `Congrats!\nNumber is ${game.number.join("")}.\nYou found it in ${game.guesses} tries.`,
+            `<b>Congrats!</b>\nNumber is <b>${game.number.join("")}</b>.\nYou found it in ${game.guesses} tries.`,
             Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("New Game", "New Game")]))
         );
     }
