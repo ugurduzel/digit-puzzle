@@ -148,7 +148,7 @@ ongoingScene.hears(/.*/, (ctx) => {
 });
 
 const API_TOKEN = process.env.BOT_TOKEN || "";
-const URL = process.env.URL || "https://digit-puzzle.herokuapp.com/";
+const URL = process.env.URL || "http://142.93.175.101";
 
 const bot = new Telegraf(API_TOKEN);
 expressApp.use(bot.webhookCallback(`/bot${API_TOKEN}`));
@@ -176,6 +176,21 @@ bot.on("message", (ctx) =>
         )
     )
 );
+
+const gameShortName = "digitGame";
+const gameUrl = "https://telegram.me/DigitPuzzleBot?game=digitGame";
+
+const markup = Extra.markup(
+    Markup.inlineKeyboard([
+        Markup.gameButton("🎮 Play now!"),
+        Markup.urlButton("Telegraf help", "http://telegraf.js.org"),
+    ])
+);
+
+bot.start(({ replyWithGame }) => replyWithGame(gameShortName));
+bot.command("foo", ({ replyWithGame }) => replyWithGame(gameShortName, markup));
+bot.gameQuery(({ answerGameQuery }) => answerGameQuery(gameUrl));
+
 bot.action("New Game", (ctx) => ctx.scene.enter("beginScene"));
 bot.launch();
 
