@@ -9,17 +9,13 @@ const _ = require("lodash");
 const minLevel = 3;
 const maxLevel = 5;
 
-// Handler factoriess
-const { enter, leave } = Stage;
-
 const levels = _.range(minLevel, maxLevel + 1);
 
-// Greeter scene
 const beginScene = new Scene("beginScene");
 beginScene.enter((ctx) => {
     ctx.session.game = {};
     return ctx.reply(
-        "<b>Choose difficulty level</b>",
+        "Choose difficulty level",
         Extra.HTML().markup((m) =>
             m.inlineKeyboard(
                 levels.map((l) =>
@@ -32,11 +28,10 @@ beginScene.enter((ctx) => {
 
 beginScene.action(/^[0-9] digits/, (ctx) => {
     const level = eval(ctx.match[0][0]);
-    console.log(level);
 
     if (level < minLevel || level > maxLevel) {
         return ctx.reply(
-            "<b>Choose difficulty level</b>",
+            "Choose difficulty level",
             "<p>Plase select from these inline options!</p>",
             Extra.HTML().markup((m) =>
                 m.inlineKeyboard(
@@ -47,7 +42,6 @@ beginScene.action(/^[0-9] digits/, (ctx) => {
             )
         );
     }
-    //ctx.session.game.number = [1, 2, 3];
     ctx.session.game.number = generateRandomNumber(level);
     ctx.session.game.guesses = 1;
 
@@ -57,7 +51,7 @@ beginScene.action(/^[0-9] digits/, (ctx) => {
 beginScene.on("message", (ctx) => {
     ctx.session.game = {};
     return ctx.reply(
-        "<b>Choose difficulty level</b>",
+        "Choose difficulty level",
         Extra.HTML().markup((m) =>
             m.inlineKeyboard(
                 levels.map((l) =>
@@ -70,7 +64,6 @@ beginScene.on("message", (ctx) => {
 
 const ongoingScene = new Scene("ongoingScene");
 ongoingScene.enter((ctx) => {
-    console.log(ctx.session.game);
     return ctx.reply(
         "Only send your guesses. Each message counts. Start guessing..."
     );
@@ -141,8 +134,6 @@ const stage = new Stage([beginScene, ongoingScene]);
 bot.use(stage.middleware());
 
 bot.command("/start", async (ctx) => {
-    console.log(await ctx.getChat());
-    console.log(await ctx.getChatMembersCount());
     return ctx.reply(
         "Welcome to Digit Puzzle!\n",
         Extra.HTML().markup((m) =>
@@ -183,5 +174,15 @@ function getResult(msg, number) {
     if (pos === number.length) {
         return { won: true, result: "+${pos}" };
     }
-    return { won: false, result: `+${pos} -${neg}` };
+    let s = "";
+    if (pos > 0) {
+        s += `+${pos}`;
+    }
+    if (neg > 0) {
+        s += `-${neg}`;
+    }
+    if (s === "") {
+        s = "+0 -0";
+    }
+    return { won: false, result: s };
 }
