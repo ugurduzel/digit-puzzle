@@ -182,6 +182,8 @@ bot.command("/start", (ctx) => {
 //         )
 //     );
 // });
+bot.command("foo", ({ replyWithGame }) => replyWithGame(gameShortName, markup));
+bot.gameQuery(({ answerGameQuery }) => answerGameQuery(gameUrl));
 
 bot.command("newgame", (ctx) => ctx.scene.enter("beginScene"));
 bot.on("message", (ctx) =>
