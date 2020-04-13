@@ -169,23 +169,13 @@ bot.use(session());
 const stage = new Stage([beginScene, ongoingScene]);
 bot.use(stage.middleware());
 
-bot.command("/start", (ctx) => ctx.scene.enter("beginScene"));
-// bot.command("/start", async (ctx) => {
-//     return ctx.reply(
-//         "Welcome to Digit Puzzle!\n",
-//         Extra.HTML().markup((m) =>
-//             m.inlineKeyboard([m.callbackButton("New Game", "New Game")])
-//         )
-//     );
-// });
-bot.command("foo", ({ replyWithGame }) => replyWithGame(gameShortName, markup));
-bot.gameQuery(({ answerGameQuery }) => answerGameQuery(gameUrl));
-
-bot.on("callback_query", function (callbackQuery) {
-    console.log(callbackQuery);
-    // bot.answerCallbackQuery(callbackQuery.id, gameUrl, true, {
-    //     url: gameUrl,
-    // });
+bot.command("/start", async (ctx) => {
+    return ctx.reply(
+        "Welcome to Digit Puzzle!\n",
+        Extra.HTML().markup((m) =>
+            m.inlineKeyboard([m.callbackButton("New Game", "New Game")])
+        )
+    );
 });
 
 bot.command("newgame", (ctx) => ctx.scene.enter("beginScene"));
