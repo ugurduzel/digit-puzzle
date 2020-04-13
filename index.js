@@ -227,6 +227,7 @@ function notDistinct(_digits) {
     return false;
 }
 
-expressApp.listen(3000, () => {
-    console.log("Example app listening on port 3000!");
+const port = process.env.PORT || 8080;
+expressApp.listen(port, () => {
+    console.log(`Example app listening on port ${port}!`);
 });
