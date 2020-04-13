@@ -8,17 +8,17 @@ const beginScene = require("./scenes/beginScene");
 const ongoingScene = require("./scenes/ongoingScene");
 
 // Express REST app
-const expressApp = express();
 
-const URL = process.env.BOT_URL || "http://142.93.175.101";
+//const URL = process.env.BOT_URL || "http://142.93.175.101";
 const port = process.env.PORT || 8080;
 const API_TOKEN = process.env.BOT_TOKEN || "";
 
 const bot = new Telegraf(API_TOKEN);
 const stage = new Stage([beginScene, ongoingScene]);
 
-expressApp.use(bot.webhookCallback(`/bot${API_TOKEN}`));
-bot.telegram.setWebhook(`${URL}/bot${API_TOKEN}`);
+const secretPath = `/bot${API_TOKEN}`;
+
+bot.telegram.setWebhook("https://----.localtunnel.me/" + secretPath);
 
 bot.use(session());
 bot.use(stage.middleware());
@@ -45,8 +45,11 @@ bot.on("message", (ctx) =>
 
 bot.action("New Game", (ctx) => ctx.scene.enter("beginScene"));
 
-bot.launch();
+const app = express();
+app.use(bot.webhookCallback(secretPath));
 
-expressApp.listen(port, () => {
+app.get("/", (req, res) => res.send("Hello World!"));
+
+app.listen(port, () => {
     console.log(`Example app listening on port ${port}!`);
 });
