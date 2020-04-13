@@ -154,8 +154,8 @@ ongoingScene.hears(/.*/, (ctx) => {
         );
     }
 
-    console.log("Chat: ", ctx.session.chat);
-    console.log("From: ", ctx.session.from);
+    console.log("Chat: ", ctx.chat);
+    console.log("From: ", ctx.from);
 
     const { won, result } = getResult(ctx.message.text, ctx.session.game.number);
 
@@ -174,7 +174,9 @@ ongoingScene.hears(/.*/, (ctx) => {
         result,
         Extra.HTML()
             .inReplyTo(ctx.message.message_id)
-            .markup((m) => m.inlineKeyboard([m.callbackButton("Quit", "Quit")]))
+            .markup((m) =>
+                m.inlineKeyboard([m.callbackButton("Get History", "History"), m.callbackButton("Quit", "Quit")])
+            )
     );
 });
 
