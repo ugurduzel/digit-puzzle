@@ -185,6 +185,12 @@ bot.command("/start", (ctx) => {
 bot.command("foo", ({ replyWithGame }) => replyWithGame(gameShortName, markup));
 bot.gameQuery(({ answerGameQuery }) => answerGameQuery(gameUrl));
 
+bot.on("callback_query", function (callbackQuery) {
+    bot.answerCallbackQuery(callbackQuery.id, gameUrl, true, {
+        url: gameUrl,
+    });
+});
+
 bot.command("newgame", (ctx) => ctx.scene.enter("beginScene"));
 bot.on("message", (ctx) =>
     ctx.reply(
