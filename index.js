@@ -170,13 +170,10 @@ const stage = new Stage([beginScene, ongoingScene]);
 bot.use(stage.middleware());
 
 bot.command("/start", (ctx) => {
-    console.log(ctx);
-    console.log(markup);
+    console.log("Ctx: ", ctx);
+    console.log("Markup:", markup);
     return ctx.replyWithGame(gameShortName);
 });
-bot.command("foo", ({ replyWithGame }) => replyWithGame(gameShortName, markup));
-bot.gameQuery(({ answerGameQuery }) => answerGameQuery(gameUrl));
-
 // bot.command("/start", async (ctx) => {
 //     return ctx.reply(
 //         "Welcome to Digit Puzzle!\n",
@@ -185,6 +182,7 @@ bot.gameQuery(({ answerGameQuery }) => answerGameQuery(gameUrl));
 //         )
 //     );
 // });
+
 bot.command("newgame", (ctx) => ctx.scene.enter("beginScene"));
 bot.on("message", (ctx) =>
     ctx.reply(
