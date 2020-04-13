@@ -90,6 +90,9 @@ ongoingScene.action("Quit", (ctx) => {
 });
 
 ongoingScene.hears(/.*/, (ctx) => {
+    if (ctx.session.game) {
+        return null;
+    }
     if (
         isNaN(ctx.message.text) ||
         ctx.message.text.length !== ctx.session.game.number.length
