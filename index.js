@@ -97,7 +97,7 @@ beginScene.on("message", (ctx) => {
 
 const ongoingScene = new Scene("ongoingScene");
 ongoingScene.enter((ctx) => {
-    return ctx.reply(`I have a ${ctx.session.game.number} digit number in mind.\n\nStart guessing... 🧐`);
+    return ctx.reply(`I have a ${ctx.session.game.number.length} digit number in mind.\n\nStart guessing... 🧐`);
 });
 
 ongoingScene.action("New Game", (ctx) => {
