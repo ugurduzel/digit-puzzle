@@ -137,7 +137,7 @@ ongoingScene.hears(/.*/, (ctx) => {
             Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("Quit", "Quit")]))
         );
     }
-    console.log(ctx);
+    console.log(ctx.message);
 
     const { won, result } = getResult(ctx.message.text, ctx.session.game.number);
     if (won) {
