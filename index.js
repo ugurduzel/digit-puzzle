@@ -159,24 +159,6 @@ bot.use(session());
 const stage = new Stage([beginScene, ongoingScene]);
 bot.use(stage.middleware());
 
-bot.command("/start", async (ctx) => {
-    return ctx.reply(
-        "Welcome to Digit Puzzle!\n",
-        Extra.HTML().markup((m) =>
-            m.inlineKeyboard([m.callbackButton("New Game", "New Game")])
-        )
-    );
-});
-bot.command("newgame", (ctx) => ctx.scene.enter("beginScene"));
-bot.on("message", (ctx) =>
-    ctx.reply(
-        "Try /newgame",
-        Extra.HTML().markup((m) =>
-            m.inlineKeyboard([m.callbackButton("New Game", "New Game")])
-        )
-    )
-);
-
 const gameShortName = "digitGame";
 const gameUrl = "https://telegram.me/DigitPuzzleBot?game=digitGame";
 
@@ -194,6 +176,24 @@ bot.start((ctx) => {
 });
 bot.command("foo", ({ replyWithGame }) => replyWithGame(gameShortName, markup));
 bot.gameQuery(({ answerGameQuery }) => answerGameQuery(gameUrl));
+
+// bot.command("/start", async (ctx) => {
+//     return ctx.reply(
+//         "Welcome to Digit Puzzle!\n",
+//         Extra.HTML().markup((m) =>
+//             m.inlineKeyboard([m.callbackButton("New Game", "New Game")])
+//         )
+//     );
+// });
+bot.command("newgame", (ctx) => ctx.scene.enter("beginScene"));
+bot.on("message", (ctx) =>
+    ctx.reply(
+        "Try /newgame",
+        Extra.HTML().markup((m) =>
+            m.inlineKeyboard([m.callbackButton("New Game", "New Game")])
+        )
+    )
+);
 
 bot.action("New Game", (ctx) => ctx.scene.enter("beginScene"));
 bot.launch();
