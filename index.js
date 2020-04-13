@@ -145,7 +145,8 @@ ongoingScene.hears(/.*/, (ctx) => {
         delete ctx.session.game;
         return ctx.reply(
             `Congrats!\nNumber is ${game.number.join("")}.\nYou found it in ${game.guesses} tries.`,
-            Extra.HTML() //.inReplyTo(ctx.message_id)
+            Extra.HTML()
+                .inReplyTo(ctx.message.message_id)
                 .markup((m) => m.inlineKeyboard([m.callbackButton("New Game", "New Game")]))
         );
     }
