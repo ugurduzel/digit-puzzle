@@ -7,6 +7,9 @@ const Stage = require("telegraf/stage");
 const Scene = require("telegraf/scenes/base");
 const _ = require("lodash");
 
+const beginScene = require("./scenes/beginScene");
+const ongoingScene = require("./scenes/ongoingScene");
+
 const expressApp = express();
 
 const minLevel = 3;
@@ -23,139 +26,6 @@ const markup = Extra.markup(
 );
 
 const levels = _.range(minLevel, maxLevel + 1);
-
-const beginScene = new Scene("beginScene");
-beginScene.enter((ctx) => {
-    ctx.session.game = {};
-    return ctx.reply(
-        "Choose difficulty level",
-        Extra.HTML().markup((m) =>
-            m.inlineKeyboard(
-                levels.map((l) =>
-                    m.callbackButton(`${l} digits`, `${l} digits`)
-                )
-            )
-        )
-    );
-});
-
-beginScene.action(/^[0-9] digits/, (ctx) => {
-    const level = eval(ctx.match[0][0]);
-
-    if (level < minLevel || level > maxLevel) {
-        return ctx.reply(
-            "Choose difficulty level",
-            "<p>Plase select from these inline options!</p>",
-            Extra.HTML().markup((m) =>
-                m.inlineKeyboard(
-                    levels.map((l) =>
-                        m.callbackButton(`${l} digits`, `${l} digits`)
-                    )
-                )
-            )
-        );
-    }
-    ctx.session.game.number = generateRandomNumber(level);
-    ctx.session.game.guesses = 1;
-
-    return ctx.scene.enter("ongoingScene");
-});
-
-beginScene.on("message", (ctx) => {
-    ctx.session.game = {};
-    return ctx.reply(
-        "Choose difficulty level",
-        Extra.HTML().markup((m) =>
-            m.inlineKeyboard(
-                levels.map((l) =>
-                    m.callbackButton(`${l} digits`, `${l} digits`)
-                )
-            )
-        )
-    );
-});
-
-const ongoingScene = new Scene("ongoingScene");
-ongoingScene.enter((ctx) => {
-    console.log(ctx.session.game);
-    return ctx.reply(
-        "Only send your guesses. Each message counts. Start guessing..."
-    );
-});
-
-ongoingScene.action("New Game", (ctx) => {
-    delete ctx.session.game;
-    return ctx.scene.enter("beginScene");
-});
-
-ongoingScene.action("Quit", (ctx) => {
-    const { number } = ctx.session.game;
-    delete ctx.session.game;
-    return ctx.reply(
-        `Quitted\nThe number was ${number.join("")}`,
-        Extra.HTML().markup((m) =>
-            m.inlineKeyboard([m.callbackButton("New Game", "New Game")])
-        )
-    );
-});
-
-ongoingScene.hears(/.*/, (ctx) => {
-    if (!ctx.session.game) {
-        return null;
-    }
-    if (
-        isNaN(ctx.message.text) ||
-        ctx.message.text.length !== ctx.session.game.number.length
-    ) {
-        return ctx.reply(
-            `Only send ${ctx.session.game.number.length} digit numbers!`,
-            Extra.HTML().markup((m) =>
-                m.inlineKeyboard([m.callbackButton("Quit", "Quit")])
-            )
-        );
-    }
-    const digits = ctx.message.text.split("");
-    if (digits.includes("0")) {
-        return ctx.reply(
-            `Cannot send a number with 0 in it!`,
-            Extra.HTML().markup((m) =>
-                m.inlineKeyboard([m.callbackButton("Quit", "Quit")])
-            )
-        );
-    }
-    if (notDistinct(digits) === true) {
-        return ctx.reply(
-            `All digits must be different!`,
-            Extra.HTML().markup((m) =>
-                m.inlineKeyboard([m.callbackButton("Quit", "Quit")])
-            )
-        );
-    }
-
-    const { won, result } = getResult(
-        ctx.message.text,
-        ctx.session.game.number
-    );
-    if (won) {
-        const { game } = ctx.session;
-        delete ctx.session.game;
-        return ctx.reply(
-            `Congrats!\nNumber is ${game.number.join("")}.\nYou found it in ${
-                game.guesses
-            } tries.`,
-            Extra.HTML().markup((m) =>
-                m.inlineKeyboard([m.callbackButton("New Game", "New Game")])
-            )
-        );
-    }
-    ctx.session.game.guesses += 1;
-    return ctx.reply(
-        result,
-        Extra.HTML().markup((m) =>
-            m.inlineKeyboard([m.callbackButton("Quit", "Quit")])
-        )
-    );
-});
 
 const API_TOKEN = process.env.BOT_TOKEN || "";
 const URL = "https://142.93.175.101";
