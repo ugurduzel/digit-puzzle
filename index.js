@@ -9,7 +9,7 @@ const ongoingScene = require("./scenes/ongoingScene");
 
 // Express REST app
 
-//const URL = process.env.BOT_URL || "http://142.93.175.101";
+const URL = process.env.BOT_URL || "http://142.93.175.101";
 const port = process.env.PORT || 8080;
 const API_TOKEN = process.env.BOT_TOKEN || "";
 
@@ -18,7 +18,7 @@ const stage = new Stage([beginScene, ongoingScene]);
 
 const secretPath = `/bot${API_TOKEN}`;
 
-bot.telegram.setWebhook("https://----.localtunnel.me/" + secretPath);
+bot.telegram.setWebhook(URL + secretPath);
 
 bot.use(session());
 bot.use(stage.middleware());
