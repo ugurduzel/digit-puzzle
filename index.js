@@ -90,7 +90,7 @@ ongoingScene.action("Quit", (ctx) => {
 });
 
 ongoingScene.hears(/.*/, (ctx) => {
-    if (ctx.session.game) {
+    if (!ctx.session.game) {
         return null;
     }
     if (
