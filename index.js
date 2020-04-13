@@ -9,7 +9,7 @@ const ongoingScene = require("./scenes/ongoingScene");
 
 // Express REST app
 
-const URL = "https://142.93.175.101";
+const URL = "http://142.93.175.101";
 const port = process.env.PORT || 8080;
 const API_TOKEN = process.env.BOT_TOKEN || "";
 
@@ -44,6 +44,7 @@ bot.on("message", (ctx) =>
 );
 
 bot.action("New Game", (ctx) => ctx.scene.enter("beginScene"));
+bot.on("text", ({ replyWithHTML }) => replyWithHTML("<b>Hello</b>"));
 
 const app = express();
 app.use(bot.webhookCallback(secretPath));
