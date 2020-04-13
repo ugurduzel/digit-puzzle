@@ -45,4 +45,4 @@ bot.on("message", (ctx) =>
 bot.action("New Game", (ctx) => ctx.scene.enter("beginScene"));
 bot.on("text", ({ replyWithHTML }) => replyWithHTML("<b>Hello</b>"));
 
-bot.launch();
+bot.launch({ polling: { timeout: 1 } });
