@@ -83,8 +83,7 @@ beginScene.action(/^[0-9] digits/, (ctx) => {
     ctx.session.game.number = generateRandomNumber(level);
     ctx.session.game.guesses = 1;
 
-    //return ctx.scene.enter("ongoingScene");
-    return ctx.reply("ongoingScene");
+    return ctx.scene.enter("ongoingScene");
 });
 
 beginScene.on("message", (ctx) => {
@@ -95,71 +94,70 @@ beginScene.on("message", (ctx) => {
     );
 });
 
-// const ongoingScene = new Scene("ongoingScene");
-// ongoingScene.enter((ctx) => {
-//     console.log(ctx.session.game);
-//     return ctx.reply("Only send your guesses. Each message counts. Start guessing...");
-// });
+const ongoingScene = new Scene("ongoingScene");
+ongoingScene.enter((ctx) => {
+    console.log(ctx.session.game);
+    return ctx.reply("Only send your guesses. Each message counts. Start guessing...");
+});
 
-// ongoingScene.action("New Game", (ctx) => {
-//     delete ctx.session.game;
-//     return ctx.scene.enter("beginScene");
-// });
+ongoingScene.action("New Game", (ctx) => {
+    delete ctx.session.game;
+    return ctx.scene.enter("beginScene");
+});
 
-// ongoingScene.action("Quit", (ctx) => {
-//     const { number } = ctx.session.game;
-//     delete ctx.session.game;
-//     return ctx.reply(
-//         `Quitted\nThe number was ${number.join("")}`,
-//         Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("New Game", "New Game")]))
-//     );
-// });
+ongoingScene.action("Quit", (ctx) => {
+    const { number } = ctx.session.game;
+    delete ctx.session.game;
+    return ctx.reply(
+        `Quitted\nThe number was ${number.join("")}`,
+        Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("New Game", "New Game")]))
+    );
+});
 
-// ongoingScene.hears(/.*/, (ctx) => {
-//     if (!ctx.session.game) {
-//         return null;
-//     }
-//     if (isNaN(ctx.message.text) || ctx.message.text.length !== ctx.session.game.number.length) {
-//         return ctx.reply(
-//             `Only send ${ctx.session.game.number.length} digit numbers!`,
-//             Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("Quit", "Quit")]))
-//         );
-//     }
-//     const digits = ctx.message.text.split("");
-//     if (digits.includes("0")) {
-//         return ctx.reply(
-//             `Cannot send a number with 0 in it!`,
-//             Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("Quit", "Quit")]))
-//         );
-//     }
-//     if (notDistinct(digits) === true) {
-//         return ctx.reply(
-//             `All digits must be different!`,
-//             Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("Quit", "Quit")]))
-//         );
-//     }
-//     console.log(ctx);
+ongoingScene.hears(/.*/, (ctx) => {
+    if (!ctx.session.game) {
+        return null;
+    }
+    if (isNaN(ctx.message.text) || ctx.message.text.length !== ctx.session.game.number.length) {
+        return ctx.reply(
+            `Only send ${ctx.session.game.number.length} digit numbers!`,
+            Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("Quit", "Quit")]))
+        );
+    }
+    const digits = ctx.message.text.split("");
+    if (digits.includes("0")) {
+        return ctx.reply(
+            `Cannot send a number with 0 in it!`,
+            Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("Quit", "Quit")]))
+        );
+    }
+    if (notDistinct(digits) === true) {
+        return ctx.reply(
+            `All digits must be different!`,
+            Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("Quit", "Quit")]))
+        );
+    }
+    console.log(ctx);
 
-//     const { won, result } = getResult(ctx.message.text, ctx.session.game.number);
-//     if (won) {
-//         const { game } = ctx.session;
-//         delete ctx.session.game;
-//         return ctx.reply(
-//             `Congrats!\nNumber is ${game.number.join("")}.\nYou found it in ${game.guesses} tries.`,
-//             Extra.HTML() //.inReplyTo(ctx.message_id)
-//                 .markup((m) => m.inlineKeyboard([m.callbackButton("New Game", "New Game")]))
-//         );
-//     }
-//     ctx.session.game.guesses += 1;
-//     return ctx.reply(
-//         result,
-//         Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("Quit", "Quit")]))
-//     );
-// });
+    const { won, result } = getResult(ctx.message.text, ctx.session.game.number);
+    if (won) {
+        const { game } = ctx.session;
+        delete ctx.session.game;
+        return ctx.reply(
+            `Congrats!\nNumber is ${game.number.join("")}.\nYou found it in ${game.guesses} tries.`,
+            Extra.HTML() //.inReplyTo(ctx.message_id)
+                .markup((m) => m.inlineKeyboard([m.callbackButton("New Game", "New Game")]))
+        );
+    }
+    ctx.session.game.guesses += 1;
+    return ctx.reply(
+        result,
+        Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("Quit", "Quit")]))
+    );
+});
 
 const bot = new Telegraf(process.env.BOT_TOKEN || "");
-//const stage = new Stage([beginScene, ongoingScene]);
-const stage = new Stage([beginScene]);
+const stage = new Stage([beginScene, ongoingScene]);
 bot.use(session());
 bot.use(stage.middleware());
 
