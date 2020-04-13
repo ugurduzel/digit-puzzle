@@ -199,5 +199,5 @@ bot.on("message", (ctx) =>
     )
 );
 
-console.log("Launching the application...");
+console.log("Launching the application... " + new Date(Date.now()).toTimeString().substring(0, 8));
 bot.launch();
