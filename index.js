@@ -193,7 +193,7 @@ bot.on("message", (ctx) =>
 );
 
 bot.action("New Game", (ctx) => ctx.scene.enter("beginScene"));
-bot.launch();
+bot.startPolling();
 
 function generateRandomNumber(digits) {
     return _.sampleSize(_.range(1, 10), digits);
