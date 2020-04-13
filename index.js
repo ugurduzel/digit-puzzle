@@ -159,7 +159,7 @@ ongoingScene.hears(/.*/, (ctx) => {
 
     const { won, result } = getResult(ctx.message.text, ctx.session.game.number);
 
-    ctx.session.game.history.push({ guess: ctx.session.game.number.join(""), result });
+    ctx.session.game.history.push({ guess: ctx.message.text, result });
 
     if (won) {
         const { game } = ctx.session;
