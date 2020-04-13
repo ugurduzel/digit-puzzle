@@ -65,6 +65,7 @@ function logToAdmin(msg) {
 
 const beginScene = new Scene("beginScene");
 beginScene.enter((ctx) => {
+    console.log(ctx.chat);
     ctx.session.game = {};
     return ctx.reply(
         "Choose difficulty level",
