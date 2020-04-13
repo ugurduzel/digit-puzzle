@@ -74,4 +74,5 @@ bot.command("newgame", (ctx) => ctx.reply("Welcome, beginScene"));
 bot.action("New Game", (ctx) => ctx.reply("Welcome, beginScene"));
 bot.on("message", (ctx) => ctx.reply("Try /newgame", getMarkup("🎮 Play now!", "New Game")));
 
+console.log("Launching the application...");
 bot.launch();
