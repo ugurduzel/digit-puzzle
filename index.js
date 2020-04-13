@@ -1,4 +1,3 @@
-const express = require("express");
 const Telegraf = require("telegraf");
 const Extra = require("telegraf/extra");
 const Stage = require("telegraf/stage");

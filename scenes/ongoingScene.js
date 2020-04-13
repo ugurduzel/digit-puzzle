@@ -1,4 +1,5 @@
 const Scene = require("telegraf/scenes/base");
+const Extra = require("telegraf/extra");
 
 const ongoingScene = new Scene("ongoingScene");
 ongoingScene.enter((ctx) => {
