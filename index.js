@@ -60,7 +60,7 @@ function notDistinct(_digits) {
 }
 
 function logToAdmin(msg) {
-    telegram.sendMessage(msg, chat_id);
+    telegram.sendMessage(chat_id, msg);
 }
 
 const beginScene = new Scene("beginScene");
