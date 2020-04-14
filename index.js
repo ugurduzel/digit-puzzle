@@ -1,4 +1,3 @@
-const express = require("express");
 const Telegraf = require("telegraf");
 const Extra = require("telegraf/extra");
 const Markup = require("telegraf/markup");
@@ -6,95 +5,18 @@ const session = require("telegraf/session");
 const Stage = require("telegraf/stage");
 const Scene = require("telegraf/scenes/base");
 const _ = require("lodash");
-const Telegram = require("telegraf/telegram");
 
-const underMaintenance = true;
+const commandArgsMiddleware = require("./middleware/commandArgs");
+const { generateRandomNumber, getResult, notDistinct, playerLog, getTime } = require("./utils");
+const { underMaintenance, minLevel, maxLevel } = require("./configs/constants.json");
 
-const minLevel = 3;
-const maxLevel = 5;
-const chat_id = 369332762;
+const bot = new Telegraf(process.env.BOT_TOKEN || "");
+const stage = new Stage([beginScene, ongoingScene]);
+bot.use(session());
+bot.use(stage.middleware());
+bot.use(commandArgsMiddleware());
 
 const levels = _.range(minLevel, maxLevel + 1);
-
-function generateRandomNumber(digits) {
-    return _.sampleSize(_.range(1, 10), digits);
-}
-
-function getResult(msg, number) {
-    let pos = 0;
-    let neg = 0;
-    const guess = msg.split("").map(eval);
-    for (let i = 0; i < guess.length; i++) {
-        if (guess[i] === number[i]) {
-            pos++;
-            continue;
-        }
-        if (number.includes(guess[i])) {
-            neg++;
-        }
-    }
-
-    if (pos === number.length) {
-        return { won: true, result: "+${pos}" };
-    }
-    let s = "";
-    if (pos > 0) {
-        s += `+${pos}`;
-    }
-    if (neg > 0) {
-        s += ` -${neg}`;
-    }
-    if (s === "") {
-        s = "+0 -0";
-    }
-    return { won: false, result: s };
-}
-
-function notDistinct(_digits) {
-    let digits = [..._digits];
-    while (digits.length > 0) {
-        const d = digits.pop();
-        if (digits.includes(d)) {
-            return true;
-        }
-    }
-    return false;
-}
-
-function logToAdmin(ctx) {
-    const msg = ctx.chat.first_name + " is playing. The number is " + ctx.session.game.number.join("");
-    if (ctx.chat.user_name && ctx.chat.user_name === "ugurduzel") {
-        telegram.sendMessage(chat_id, msg);
-    }
-    console.log(msg);
-}
-
-function getTime(start) {
-    const millis = Date.now() - start;
-    let seconds = Math.floor(millis / 1000);
-    let minutes = 0;
-    let hours = 0;
-    let days = 0;
-    if (seconds >= 60) {
-        minutes = Math.floor(seconds / 60);
-    }
-    seconds -= minutes * 60;
-
-    if (minutes >= 60) {
-        hours = Math.floor(minutes / 60);
-    }
-    minutes -= hours * 60;
-    if (hours >= 24) {
-        days = Math.floor(hours / 24);
-    }
-    hours -= days * 24;
-
-    const dayString = `${days !== 0 ? (days === 1 ? "1 day, " : days + " days, ") : ""}`;
-    const hoursString = `${hours !== 0 ? (hours === 1 ? "1 hour, " : hours + " hours, ") : ""}`;
-    const minutesString = `${minutes !== 0 ? (minutes === 1 ? "1 minute, " : minutes + " minutes, ") : ""}`;
-    const secondsString = `${seconds !== 0 ? (seconds === 1 ? "1 second" : seconds + " seconds") : ""}`;
-    return dayString + hoursString + minutesString + secondsString;
-}
 
 const beginScene = new Scene("beginScene");
 beginScene.enter((ctx) => {
@@ -120,7 +42,7 @@ beginScene.action(/^[0-9] digits/, (ctx) => {
     ctx.session.game.number = generateRandomNumber(level);
     ctx.session.game.guesses = 1;
     ctx.session.game.history = [];
-    logToAdmin(ctx);
+    playerLog(ctx);
 
     return ctx.reply(
         "Do you want to play against time?\nYou can aslo play to find in minimum steps.\n\n<b>Your Choice</b> 🤨",
@@ -245,14 +167,9 @@ ongoingScene.hears(/.*/, (ctx) => {
     );
 });
 
-const telegram = new Telegram(process.env.BOT_TOKEN || "");
-const bot = new Telegraf(process.env.BOT_TOKEN || "");
-const stage = new Stage([beginScene, ongoingScene]);
-bot.use(session());
-bot.use(stage.middleware());
-
 bot.command("newgame", (ctx) => {
     if (underMaintenance === true && ctx.chat.user_name !== "ugurduzel") {
+        logMessage(ctx.chat.first_name + " is tryin to play.");
         return ctx.reply("Game is under maintenance now");
     }
     return ctx.scene.enter("beginScene");
@@ -260,6 +177,7 @@ bot.command("newgame", (ctx) => {
 
 bot.action("New Game", (ctx) => {
     if (underMaintenance === true && ctx.chat.user_name !== "ugurduzel") {
+        logMessage(ctx.chat.first_name + " is tryin to play.");
         return ctx.reply("Game is under maintenance now");
     }
     return ctx.scene.enter("beginScene");
@@ -267,6 +185,7 @@ bot.action("New Game", (ctx) => {
 
 bot.command("start", (ctx) => {
     if (underMaintenance === true && ctx.chat.user_name !== "ugurduzel") {
+        logMessage(ctx.chat.first_name + " is tryin to play.");
         return ctx.reply("Game is under maintenance now");
     }
     return ctx.reply(
@@ -274,8 +193,10 @@ bot.command("start", (ctx) => {
         Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play now!", "New Game")]))
     );
 });
+
 bot.on("message", (ctx) => {
     if (underMaintenance === true && ctx.chat.user_name !== "ugurduzel") {
+        logMessage(ctx.chat.first_name + " is tryin to play.");
         return ctx.reply("Game is under maintenance now");
     }
     return ctx.reply(
