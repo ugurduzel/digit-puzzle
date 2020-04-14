@@ -292,8 +292,6 @@ function getTimeLeaderboard(lst) {
 }
 
 function getStepLeaderboard(lst) {
-    console.log(lst);
-    return " ";
     let s = "Singleplayer Step Leaderboard\n";
     let max = -1;
     for (let item in lst) {
