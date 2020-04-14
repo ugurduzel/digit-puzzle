@@ -44,14 +44,9 @@ sp_beginScene.action(/^[0-9] digits/, (ctx) => {
 
 sp_beginScene.action("Against_Time", (ctx) => {
     ctx.session.start = Date.now();
-    return ctx.scene.leave("sp_beginScene");
-});
-
-sp_beginScene.action("Against_Steps", (ctx) => ctx.scene.leave("sp_beginScene"));
-
-sp_beginScene.leave((ctx) => {
-    ctx.reply("Leaving beginscene and entering onoing scene");
     return ctx.scene.enter("sp_ongoingScene");
 });
+
+sp_beginScene.action("Against_Steps", (ctx) => ctx.scene.enter("sp_ongoingScene"));
 
 module.exports = sp_beginScene;
