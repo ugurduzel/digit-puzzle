@@ -6,7 +6,7 @@ const Stage = require("telegraf/stage");
 const Scene = require("telegraf/scenes/base");
 const _ = require("lodash");
 
-const commandArgsMiddleware = require("./middleware/commandArgs");
+const commandArgsMiddleware = require("../../middleware/commandArgs");
 const { getResult, notDistinct, getTime } = require("../../utils");
 
 const ongoingScene = new Scene("ongoingScene");
