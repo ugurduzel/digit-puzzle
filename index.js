@@ -14,8 +14,8 @@ const sp_beginScene = require("./scenes/singleplayer/sp_beginScene");
 const sp_ongoingScene = require("./scenes/singleplayer/sp_ongoingScene");
 
 // Models
-const gameModel = require("./models/gameModel").gameModel;
-const sessionModel = require("./models/sessionModel").sessionModel;
+const gameModel = require("./models/gameModel");
+const sessionModel = require("./models/sessionModel");
 
 console.log("\n\n SessionModel: \n\n", sessionModel);
 
