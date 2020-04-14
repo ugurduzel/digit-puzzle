@@ -1,5 +1,5 @@
 const LocalSession = require("telegraf-session-local");
-const { gameDatabase } = require("../configs/dbInfo.json");
+const { gameDatabase } = JSON.parse(require("../configs/dbInfo.json"));
 
 module.exports = (function () {
     this.gameModel = new LocalSession({
