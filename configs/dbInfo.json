@@ -1,0 +1,4 @@
+{
+    "gameDatabase": "db/gameInformation.json",
+    "sessionsDatabase": "db/sessions.json"
+}

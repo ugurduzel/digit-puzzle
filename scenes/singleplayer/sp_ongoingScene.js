@@ -5,22 +5,22 @@ const { getResult, notDistinct, getTime } = require("../../utils");
 
 const sp_ongoingScene = new Scene("sp_ongoingScene");
 sp_ongoingScene.enter((ctx) => {
-    return ctx.reply(`I have a ${ctx.session.game.number.length} digit number in mind.\n\nStart guessing... 🧐`);
+    return ctx.reply(`I have a ${ctx.session.number.length} digit number in mind.\n\nStart guessing... 🧐`);
 });
 
 sp_ongoingScene.action("NEW_SP_GAME", (ctx) => {
-    delete ctx.session.game;
+    delete ctx.session;
     return ctx.scene.enter("sp_beginScene");
 });
 
 sp_ongoingScene.command("newgame", (ctx) => {
-    delete ctx.session.game;
+    delete ctx.session;
     return ctx.scene.enter("navigationScene");
 });
 
 sp_ongoingScene.action("Quit", (ctx) => {
-    const { number } = ctx.session.game;
-    delete ctx.session.game;
+    const { number } = ctx.session;
+    delete ctx.session;
     ctx.reply(
         `Quitted\nThe number was ${number.join("")}`,
         Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 New Singleplayer Game", "NEW_SP_GAME")]))
@@ -29,7 +29,7 @@ sp_ongoingScene.action("Quit", (ctx) => {
 });
 
 sp_ongoingScene.action("History", (ctx) => {
-    const { history } = ctx.session.game;
+    const { history } = ctx.session;
     let s = "Your guesses,\n";
     for (let i = 0; i < history.length; i++) {
         s += "▪️ " + history[i].guess + " ➡️ ";
@@ -39,7 +39,7 @@ sp_ongoingScene.action("History", (ctx) => {
 });
 
 sp_ongoingScene.hears(/.*/, (ctx) => {
-    if (!ctx.session.game) {
+    if (!ctx.session) {
         return null;
     }
     if (isNaN(ctx.message.text)) {
@@ -50,9 +50,9 @@ sp_ongoingScene.hears(/.*/, (ctx) => {
             )
         );
     }
-    if (isNaN(ctx.message.text) || ctx.message.text.length !== ctx.session.game.number.length) {
+    if (isNaN(ctx.message.text) || ctx.message.text.length !== ctx.session.number.length) {
         return ctx.reply(
-            `Only send ${ctx.session.game.number.length} digit numbers!`,
+            `Only send ${ctx.session.number.length} digit numbers!`,
             Extra.HTML().markup((m) =>
                 m.inlineKeyboard([m.callbackButton("Get History", "History"), m.callbackButton("Quit", "Quit")])
             )
@@ -76,13 +76,13 @@ sp_ongoingScene.hears(/.*/, (ctx) => {
         );
     }
 
-    const { won, result } = getResult(ctx.message.text, ctx.session.game.number);
+    const { won, result } = getResult(ctx.message.text, ctx.session.number);
 
-    ctx.session.game.history.push({ guess: ctx.message.text, result });
+    ctx.session.history.push({ guess: ctx.message.text, result });
 
     if (won) {
         const { game } = ctx.session;
-        delete ctx.session.game;
+        delete ctx.session;
         if (game.start) {
             return ctx.reply(
                 `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${game.number.join("")}</b>.\nYou found it in ${getTime(
@@ -100,7 +100,7 @@ sp_ongoingScene.hears(/.*/, (ctx) => {
             Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 New Singleplayer Game", "NEW_SP_GAME")]))
         );
     }
-    ctx.session.game.guesses += 1;
+    ctx.session.guesses += 1;
     return ctx.reply(
         result,
         Extra.HTML()
