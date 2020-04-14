@@ -252,21 +252,21 @@ bot.use(session());
 bot.use(stage.middleware());
 
 bot.command("newgame", (ctx) => {
-    if (underMaintenance === true && ctx.chat.user_name && ctx.chat.user_name !== "ugurduzel") {
+    if (underMaintenance === true && ctx.chat.user_name !== "ugurduzel") {
         return ctx.reply("Game is under maintenance now");
     }
     return ctx.scene.enter("beginScene");
 });
 
 bot.action("New Game", (ctx) => {
-    if (underMaintenance === true && ctx.chat.user_name && ctx.chat.user_name !== "ugurduzel") {
+    if (underMaintenance === true && ctx.chat.user_name !== "ugurduzel") {
         return ctx.reply("Game is under maintenance now");
     }
     return ctx.scene.enter("beginScene");
 });
 
 bot.command("start", (ctx) => {
-    if (underMaintenance === true && ctx.chat.user_name && ctx.chat.user_name !== "ugurduzel") {
+    if (underMaintenance === true && ctx.chat.user_name !== "ugurduzel") {
         return ctx.reply("Game is under maintenance now");
     }
     return ctx.reply(
@@ -275,7 +275,7 @@ bot.command("start", (ctx) => {
     );
 });
 bot.on("message", (ctx) => {
-    if (underMaintenance === true && ctx.chat.user_name && ctx.chat.user_name !== "ugurduzel") {
+    if (underMaintenance === true && ctx.chat.user_name !== "ugurduzel") {
         return ctx.reply("Game is under maintenance now");
     }
     return ctx.reply(
