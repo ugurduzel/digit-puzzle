@@ -7,7 +7,7 @@ const Scene = require("telegraf/scenes/base");
 const _ = require("lodash");
 
 const commandArgsMiddleware = require("./middleware/commandArgs");
-const { getResult, notDistinct, getTime } = require("./utils");
+const { getResult, notDistinct, getTime } = require("../../utils");
 
 const ongoingScene = new Scene("ongoingScene");
 ongoingScene.enter((ctx) => {
