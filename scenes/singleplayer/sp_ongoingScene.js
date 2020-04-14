@@ -324,5 +324,3 @@ function getStepLeaderboard(lst) {
 
     return s;
 }
-
-ctx[property + "DB"].get("messages").push([ctx.message]).write();
