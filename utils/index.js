@@ -14,7 +14,7 @@ function playerLog(ctx) {
         console.log(msg);
         return;
     }
-    logMessage(chat_id, msg);
+    logMessage(msg);
 }
 
 function formatTime(start, now) {
