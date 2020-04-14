@@ -21,7 +21,7 @@ const beginScene = new Scene("beginScene");
 beginScene.enter((ctx) => {
     ctx.session.game = {};
     return ctx.reply(
-        "Choose difficulty level",
+        "Choose difficulty level\n\n3 is too easy, 4 is the most fun",
         Extra.HTML().markup((m) => m.inlineKeyboard(levels.map((l) => m.callbackButton(`${l} digits`, `${l} digits`))))
     );
 });
@@ -38,7 +38,8 @@ beginScene.action(/^[0-9] digits/, (ctx) => {
             )
         );
     }
-    ctx.session.game.number = generateRandomNumber(level);
+
+    ctx.session.game.number = ctx.session.game.number ? ctx.session.game.number : generateRandomNumber(level);
     ctx.session.game.guesses = 1;
     ctx.session.game.history = [];
     playerLog(ctx);
