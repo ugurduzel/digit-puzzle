@@ -32,27 +32,27 @@ localSession.DB.then((DB) => {
 
 bot.use(commandParts());
 
-//bot.use(log());
+bot.use(howto());
+bot.use(log());
 bot.use(localSession.middleware());
 bot.use(underMaintenanceMiddleware());
 
 bot.use(stage.middleware());
-bot.use(howto());
 
-// bot.on("text", (ctx, next) => {
-//     ctx.session.counter = ctx.session.counter || 0;
-//     ctx.session.counter++;
-//     ctx.replyWithMarkdown(`Counter updated, new value: \`${ctx.session.counter}\``);
-//     // Writing message to Array `messages` into database which already has sessions Array
-//     ctx.sessionDB.get("messages").push([ctx.message]).write();
-//     // `property`+'DB' is a name of property which contains lowdb instance, default = `sessionDB`, in current example = `dataDB`
-//     // ctx.dataDB.get('messages').push([ctx.message]).write()
-//     localSession.DB.then((DB) => {
-//         console.log("Current LocalSession DB:", DB.value());
-//     });
+bot.on("text", (ctx, next) => {
+    ctx.session.counter = ctx.session.counter || 0;
+    ctx.session.counter++;
+    ctx.replyWithMarkdown(`Counter updated, new value: \`${ctx.session.counter}\``);
+    // Writing message to Array `messages` into database which already has sessions Array
+    ctx.sessionDB.get("messages").push([ctx.message]).write();
+    // `property`+'DB' is a name of property which contains lowdb instance, default = `sessionDB`, in current example = `dataDB`
+    // ctx.dataDB.get('messages').push([ctx.message]).write()
+    localSession.DB.then((DB) => {
+        console.log("Current LocalSession DB:", DB.value());
+    });
 
-//     return next();
-// });
+    return next();
+});
 
 bot.action("NEW_GAME", (ctx) => ctx.scene.enter("navigationScene"));
 
