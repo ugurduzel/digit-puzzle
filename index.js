@@ -167,8 +167,10 @@ ongoingScene.hears(/.*/, (ctx) => {
 });
 
 bot.command("newgame", (ctx) => {
+    console.log(ctx.from);
+    console.log(ctx.chat);
     if (underMaintenance === true && ctx.chat.user_name !== "ugurduzel") {
-        logMessage(ctx.chat.first_name + " is tryin to play.");
+        logMessage(ctx.chat.first_name + " is trying to play.");
         return ctx.reply("Game is under maintenance now");
     }
     return ctx.scene.enter("beginScene");
@@ -176,7 +178,7 @@ bot.command("newgame", (ctx) => {
 
 bot.action("New Game", (ctx) => {
     if (underMaintenance === true && ctx.chat.user_name !== "ugurduzel") {
-        logMessage(ctx.chat.first_name + " is tryin to play.");
+        logMessage(ctx.chat.first_name + " is trying to play.");
         return ctx.reply("Game is under maintenance now");
     }
     return ctx.scene.enter("beginScene");
@@ -184,7 +186,7 @@ bot.action("New Game", (ctx) => {
 
 bot.command("start", (ctx) => {
     if (underMaintenance === true && ctx.chat.user_name !== "ugurduzel") {
-        logMessage(ctx.chat.first_name + " is tryin to play.");
+        logMessage(ctx.chat.first_name + " is trying to play.");
         return ctx.reply("Game is under maintenance now");
     }
     return ctx.reply(
@@ -195,7 +197,7 @@ bot.command("start", (ctx) => {
 
 bot.on("message", (ctx) => {
     if (underMaintenance === true && ctx.chat.user_name !== "ugurduzel") {
-        logMessage(ctx.chat.first_name + " is tryin to play.");
+        logMessage(ctx.chat.first_name + " is trying to play.");
         return ctx.reply("Game is under maintenance now");
     }
     return ctx.reply(
