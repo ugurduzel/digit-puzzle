@@ -1,5 +1,5 @@
 const _ = require("lodash");
-const { admin_chat_id: chat_id } = require("./configs/constants.json");
+const { admin_chat_id: chat_id } = require("../configs/constants.json");
 const Telegram = require("telegraf/telegram");
 const telegram = new Telegram(process.env.BOT_TOKEN || "");
 
