@@ -40,6 +40,8 @@ bot.action("NEW_GAME", (ctx) => {
         console.log("Adding a player with id" + ctx.from.id);
         ctx.reply("We have added you to our userbase. 👏\n\nHave fun! ");
     }
+    console.log(ctx.gameStat);
+    console.log(ctx.session);
 
     return ctx.scene.enter("navigationScene");
 });

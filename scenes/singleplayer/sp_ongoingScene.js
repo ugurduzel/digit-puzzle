@@ -277,7 +277,7 @@ function handleTop10Step(ctx, numberOfGames, avgScore) {
         ctx.gameStat.sp_step_top10.push({
             avgScore,
             numberOfGames,
-            username: (ctx.chat.first_name || "") + (ctx.chat.last_name || ""),
+            username: (ctx.chat.first_name || "") + (ctx.chat.last_name || "") + "",
         });
         ctx.gameStat.sp_step_top10.sort((e1, e2) => (e1.avgScore < e2.avgScore ? -1 : 1));
         return;
@@ -286,7 +286,7 @@ function handleTop10Step(ctx, numberOfGames, avgScore) {
         ctx.gameStat.sp_step_top10[9] = {
             avgScore,
             numberOfGames,
-            username: (ctx.chat.first_name || "") + (ctx.chat.last_name || ""),
+            username: (ctx.chat.first_name || "") + (ctx.chat.last_name || "") + "",
         };
         ctx.gameStat.sp_step_top10.sort((e1, e2) => (e1.avgScore < e2.avgScore ? -1 : 1));
     }
