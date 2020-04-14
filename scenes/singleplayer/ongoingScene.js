@@ -29,7 +29,7 @@ ongoingScene.action("Quit", (ctx) => {
     delete ctx.session.game;
     return ctx.reply(
         `Quitted\nThe number was ${number.join("")}`,
-        Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("New Game", "New Game")]))
+        Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 New Game", "New Game")]))
     );
 });
 
@@ -46,6 +46,14 @@ ongoingScene.action("History", (ctx) => {
 ongoingScene.hears(/.*/, (ctx) => {
     if (!ctx.session.game) {
         return null;
+    }
+    if (isNaN(ctx.message.text)) {
+        return ctx.reply(
+            `Only send numbers!`,
+            Extra.HTML().markup((m) =>
+                m.inlineKeyboard([m.callbackButton("Get History", "History"), m.callbackButton("Quit", "Quit")])
+            )
+        );
     }
     if (isNaN(ctx.message.text) || ctx.message.text.length !== ctx.session.game.number.length) {
         return ctx.reply(
@@ -85,14 +93,14 @@ ongoingScene.hears(/.*/, (ctx) => {
                 `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${game.number.join("")}</b>.\nYou found it in ${getTime(
                     game.start
                 )}. 🤯`,
-                Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("New Game", "New Game")]))
+                Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 New Game", "New Game")]))
             );
         }
         return ctx.reply(
             `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${game.number.join("")}</b>.\nYou found it in ${
                 game.guesses
             } tries. 🤯`,
-            Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("New Game", "New Game")]))
+            Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 New Game", "New Game")]))
         );
     }
     ctx.session.game.guesses += 1;
