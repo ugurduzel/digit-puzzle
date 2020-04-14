@@ -12,7 +12,7 @@ sp_ongoingScene.enter((ctx) => {
 
 sp_ongoingScene.action("PLAY_AGAIN", (ctx) => {
     ctx.session = null;
-    return ctx.scene.enter("navigationScene");
+    return ctx.scene.enter("sp_beginScene");
 });
 
 sp_ongoingScene.action("Quit", (ctx) => {
