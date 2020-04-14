@@ -28,7 +28,7 @@ bot.use(gameModel.middleware());
 bot.use(sessionModel.middleware());
 bot.use(underMaintenanceMiddleware());
 bot.use(stage.middleware());
-bot.use(log());
+//bot.use(log());
 
 bot.action("NEW_GAME", (ctx) => ctx.scene.enter("navigationScene"));
 

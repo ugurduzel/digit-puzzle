@@ -5,9 +5,6 @@ const Extra = require("telegraf/extra");
 const Scene = require("telegraf/scenes/base");
 const _ = require("lodash");
 
-// Models
-const { gameModel } = require("../../models/gameModel");
-
 const levels = _.range(minLevel, maxLevel + 1);
 
 const sp_beginScene = new Scene("sp_beginScene");
@@ -37,12 +34,12 @@ sp_beginScene.action(/^[0-9] digits/, (ctx) => {
     ctx.session.history = [];
     playerLog(ctx);
 
-    if (ctx.game.players[ctx.from.id]) {
-        console.log("Player " + ctx.from.id + " is found\n" + ctx.game.players[ctx.from.id]);
-    } else {
-        ctx.game.players[ctx.from.id] = {};
-        console.log("Adding a player with id" + ctx.from.id);
-    }
+    // if (ctx.game.players[ctx.from.id]) {
+    //     console.log("Player " + ctx.from.id + " is found\n" + ctx.game.players[ctx.from.id]);
+    // } else {
+    //     ctx.game.players[ctx.from.id] = {};
+    //     console.log("Adding a player with id" + ctx.from.id);
+    // }
 
     return ctx.reply(
         "Do you want to play against time?\nYou can aslo play to find in minimum steps.\n\n<b>Your Choice</b> 🤨",

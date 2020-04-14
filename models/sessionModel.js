@@ -9,7 +9,11 @@ module.exports = (function () {
             serialize: (obj) => JSON.stringify(obj, null, 2),
             deserialize: (str) => JSON.parse(str),
         },
-        state: {},
+        state: {
+            number: null,
+            guesses: null,
+            history: [],
+        },
     });
 
     this.sessionModel.DB.then((DB) => {
