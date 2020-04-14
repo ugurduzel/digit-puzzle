@@ -17,8 +17,8 @@ function playerLog(ctx) {
     logMessage(chat_id, msg);
 }
 
-function getTime(start) {
-    const millis = Date.now() - start;
+function formatTime(start, now) {
+    const millis = now - start;
     let seconds = Math.floor(millis / 1000);
     let minutes = 0;
     let hours = 0;
@@ -41,7 +41,14 @@ function getTime(start) {
     const hoursString = `${hours !== 0 ? (hours === 1 ? "1 hour, " : hours + " hours, ") : ""}`;
     const minutesString = `${minutes !== 0 ? (minutes === 1 ? "1 minute, " : minutes + " minutes, ") : ""}`;
     const secondsString = `${seconds !== 0 ? (seconds === 1 ? "1 second" : seconds + " seconds") : ""}`;
-    return dayString + hoursString + minutesString + secondsString;
+    const formattedTime = dayString + hoursString + minutesString + secondsString;
+    return {
+        seconds,
+        minutes,
+        hours,
+        days,
+        formattedTime,
+    };
 }
 
 function generateRandomNumber(digits) {
@@ -95,5 +102,5 @@ module.exports = {
     notDistinct,
     playerLog,
     logMessage,
-    getTime,
+    formatTime,
 };
