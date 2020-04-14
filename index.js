@@ -11,9 +11,8 @@ const { generateRandomNumber, getResult, notDistinct, playerLog, getTime } = req
 const { underMaintenance, minLevel, maxLevel } = require("./configs/constants.json");
 
 const bot = new Telegraf(process.env.BOT_TOKEN || "");
-const stage = new Stage([beginScene, ongoingScene]);
+
 bot.use(session());
-bot.use(stage.middleware());
 bot.use(commandArgsMiddleware());
 
 const levels = _.range(minLevel, maxLevel + 1);
@@ -204,6 +203,9 @@ bot.on("message", (ctx) => {
         Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play now!", "New Game")]))
     );
 });
+
+const stage = new Stage([beginScene, ongoingScene]);
+bot.use(stage.middleware());
 
 console.log("Launching the application... " + new Date(Date.now()).toTimeString().substring(0, 8));
 bot.launch();
