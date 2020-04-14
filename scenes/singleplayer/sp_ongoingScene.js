@@ -203,7 +203,7 @@ function addSpStepResult(ctx, step) {
 
     numberOfGames = getStepGameNumber(ctx);
     avgScore = getAvgStepScore(ctx);
-    handleTop10Step(ctx, numberOfGames, avgScore);
+    //handleTop10Step(ctx, numberOfGames, avgScore);
 }
 
 function getStepGameNumber(ctx) {
