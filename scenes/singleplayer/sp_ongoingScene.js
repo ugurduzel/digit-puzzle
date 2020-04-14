@@ -302,12 +302,12 @@ function getStepLeaderboard(lst) {
         max = 4;
     }
     let temp_s = "";
-    temp_s += "Name";
+    temp_s += "Name  ";
     temp_s += " ".repeat(max - 4);
     temp_s += " | ";
-    const avg_len = temp_s.length;
+    const avg_len = temp_s.length - 3;
     temp_s += "Avg Steps | ";
-    const total_len = temp_s.length;
+    const total_len = temp_s.length - 3;
     temp_s += "Total Games\n";
     s += temp_s;
 
