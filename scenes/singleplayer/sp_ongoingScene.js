@@ -190,9 +190,7 @@ function addSpStepResult(ctx, step) {
         ctx.gameStat.players[ctx.from.id].sp_step = {};
     }
     let numberOfGames = getStepGameNumber(ctx);
-    if (numberOfGames) {
-        setStepGameNumber(ctx, numberOfGames + 1 || 1);
-    }
+    setStepGameNumber(ctx, numberOfGames + 1 || 1);
 
     let avgScore = getAvgStepScore(ctx);
     if (!avgScore) {
