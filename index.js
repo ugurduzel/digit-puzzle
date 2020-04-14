@@ -25,6 +25,10 @@ const localSession = new LocalSession({
     state: { messages: [] },
 });
 
+localSession.DB.then((DB) => {
+    console.log("Current LocalSession DB:", DB.value());
+});
+
 bot.use(commandParts());
 bot.use(howto());
 bot.use(underMaintenanceMiddleware());
