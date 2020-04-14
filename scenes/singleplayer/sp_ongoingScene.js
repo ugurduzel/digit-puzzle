@@ -84,12 +84,12 @@ sp_ongoingScene.hears(/.*/, (ctx) => {
         if (start) {
             return ctx.reply(
                 `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${number.join("")}</b>.\nYou found it in ${getTime(start)}. 🤯`,
-                Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "PLAY_AGAIN")]))
+                Markup.inlineKeyboard([Markup.callbackButton("🎮 Play Again", "PLAY_AGAIN")]).extra()
             );
         }
         return ctx.reply(
             `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${number.join("")}</b>.\nYou found it in ${guesses} tries. 🤯`,
-            Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "PLAY_AGAIN")]))
+            Markup.inlineKeyboard([Markup.callbackButton("🎮 Play Again", "PLAY_AGAIN")]).extra()
         );
     }
     ctx.session.guesses += 1;
