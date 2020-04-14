@@ -156,7 +156,7 @@ ongoingScene.action("New Game", (ctx) => {
     return ctx.scene.enter("beginScene");
 });
 
-ongoingScene.command("start", (ctx) => {
+ongoingScene.command("newgame", (ctx) => {
     delete ctx.session.game;
     return ctx.scene.enter("beginScene");
 });
