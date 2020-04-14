@@ -223,23 +223,11 @@ function getAvgStepScore(ctx) {
     return tuple ? tuple[1] : undefined;
 }
 
-function setAvgStepScore(ctx, result) {
+function setAvgStepScore(ctx, step) {
     if (!ctx.gameStat.players[ctx.from.id].sp_step[ctx.session.number.length]) {
         ctx.gameStat.players[ctx.from.id].sp_step[ctx.session.number.length] = [];
     }
-    ctx.gameStat.players[ctx.from.id].sp_step[ctx.session.number.length][1] = {};
-    if (result.seconds) {
-        ctx.gameStat.players[ctx.from.id].sp_step[ctx.session.number.length][1].seconds = result.seconds;
-    }
-    if (result.minutes) {
-        ctx.gameStat.players[ctx.from.id].sp_step[ctx.session.number.length][1].minutes = result.minutes;
-    }
-    if (result.hours) {
-        ctx.gameStat.players[ctx.from.id].sp_step[ctx.session.number.length][1].hours = result.hours;
-    }
-    if (result.days) {
-        ctx.gameStat.players[ctx.from.id].sp_step[ctx.session.number.length][1].days = result.days;
-    }
+    ctx.gameStat.players[ctx.from.id].sp_step[ctx.session.number.length][1] = step;
 }
 
 function calculateStepAvg(avgScore, numberOfGames, step) {
