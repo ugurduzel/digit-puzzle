@@ -94,5 +94,6 @@ module.exports = {
     getResult,
     notDistinct,
     playerLog,
+    logMessage,
     getTime,
 };

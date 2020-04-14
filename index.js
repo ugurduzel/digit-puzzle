@@ -7,7 +7,7 @@ const Scene = require("telegraf/scenes/base");
 const _ = require("lodash");
 
 const commandArgsMiddleware = require("./middleware/commandArgs");
-const { generateRandomNumber, getResult, notDistinct, playerLog, getTime } = require("./utils");
+const { generateRandomNumber, getResult, notDistinct, playerLog, logMessage, getTime } = require("./utils");
 const { underMaintenance, minLevel, maxLevel } = require("./configs/constants.json");
 
 const bot = new Telegraf(process.env.BOT_TOKEN || "");
