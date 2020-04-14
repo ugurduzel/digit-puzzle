@@ -19,7 +19,6 @@ navigationScene.action("NEW_GAME", (ctx) =>
 );
 
 navigationScene.enter((ctx) => {
-    console.log("IN NAVIGATION SCENE");
     return ctx.reply(
         `Singleplayer or Multiplayer?`,
         Markup.inlineKeyboard([

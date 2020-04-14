@@ -17,8 +17,6 @@ const sp_ongoingScene = require("./scenes/singleplayer/sp_ongoingScene");
 const gameModel = require("./models/gameModel");
 const sessionModel = require("./models/sessionModel");
 
-console.log("\n\n SessionModel: \n\n", sessionModel);
-
 const stage = new Stage([navigationScene, sp_beginScene, sp_ongoingScene]);
 
 const bot = new Telegraf(process.env.BOT_TOKEN || "");

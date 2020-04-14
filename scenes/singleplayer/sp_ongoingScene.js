@@ -11,18 +11,13 @@ sp_ongoingScene.enter((ctx) => {
 });
 
 sp_ongoingScene.action("FIN_PLAY_AGAIN", (ctx) => {
-    console.log("IN PLAYA GAIN");
-    delete ctx.session.number;
-    delete ctx.session.guesses;
-    delete ctx.session.start;
+    deleteSessionFeatures(ctx.session);
     return ctx.scene.enter("navigationScene");
 });
 
 sp_ongoingScene.action("Quit", (ctx) => {
     const { number } = ctx.session;
-    delete ctx.session.number;
-    delete ctx.session.guesses;
-    delete ctx.session.start;
+    deleteSessionFeatures(ctx.session);
     return ctx.reply(
         `Quitted\nThe number was ${number.join("")}`,
         Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "FIN_PLAY_AGAIN")]))
@@ -32,6 +27,7 @@ sp_ongoingScene.action("Quit", (ctx) => {
 
 sp_ongoingScene.action("History", (ctx) => {
     const { history } = ctx.session;
+
     let s = "Your guesses,\n";
     for (let i = 0; i < history.length; i++) {
         s += "▪️ " + history[i].guess + " ➡️ ";
@@ -52,12 +48,15 @@ sp_ongoingScene.hears(/.*/, (ctx) => {
             )
         );
     }
+    let withHistoryKeyboard = [];
+    if (ctx.session.history && ctx.session.history.length > 0) {
+        withHistoryKeyboard.push(m.callbackButton("Get History", "History"));
+    }
+
     if (isNaN(ctx.message.text) || ctx.message.text.length !== ctx.session.number.length) {
         return ctx.reply(
             `Only send ${ctx.session.number.length} digit numbers!`,
-            Extra.HTML().markup((m) =>
-                m.inlineKeyboard([m.callbackButton("Get History", "History"), m.callbackButton("Quit", "Quit")])
-            )
+            m.inlineKeyboard([m.callbackButton("Get History", "History"), m.callbackButton("Quit", "Quit")])
         );
     }
     const digits = ctx.message.text.split("");
@@ -84,9 +83,7 @@ sp_ongoingScene.hears(/.*/, (ctx) => {
 
     if (won) {
         const { number, guesses, start } = ctx.session;
-        delete ctx.session.number;
-        delete ctx.session.guesses;
-        delete ctx.session.start;
+        deleteSessionFeatures(ctx.session);
         if (start) {
             return ctx.reply(
                 `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${number.join("")}</b>.\nYou found it in ${getTime(start)}. 🤯`,
@@ -110,3 +107,9 @@ sp_ongoingScene.hears(/.*/, (ctx) => {
 });
 
 module.exports = sp_ongoingScene;
+
+function deleteSessionFeatures(session) {
+    delete session.number;
+    delete session.guesses;
+    delete session.start;
+}
