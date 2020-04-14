@@ -1,7 +1,7 @@
 const Telegraf = require("telegraf");
 const Stage = require("telegraf/stage");
 const Extra = require("telegraf/extra");
-const session = require("telegraf/session");
+const LocalSession = require("telegraf-session-local");
 
 // Middlewares
 const howto = require("./middleware/howto");
