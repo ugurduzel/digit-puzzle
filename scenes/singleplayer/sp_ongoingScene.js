@@ -2,21 +2,16 @@ const Extra = require("telegraf/extra");
 const Scene = require("telegraf/scenes/base");
 const Markup = require("telegraf/markup");
 
-
 const { getResult, notDistinct, getTime } = require("../../utils");
 
 const sp_ongoingScene = new Scene("sp_ongoingScene");
+
 sp_ongoingScene.enter((ctx) => {
     return ctx.reply(`I have a ${ctx.session.number.length} digit number in mind.\n\nStart guessing... 🧐`);
 });
 
-sp_ongoingScene.action("NEW_SP_GAME", (ctx) => {
-    delete ctx.session;
-    return ctx.scene.enter("sp_beginScene");
-});
-
-sp_ongoingScene.command("newgame", (ctx) => {
-    delete ctx.session;
+sp_ongoingScene.action("PLAY_AGAIN", (ctx) => {
+    ctx.session = null;
     return ctx.scene.enter("navigationScene");
 });
 
@@ -25,7 +20,7 @@ sp_ongoingScene.action("Quit", (ctx) => {
     delete ctx.session;
     ctx.reply(
         `Quitted\nThe number was ${number.join("")}`,
-        Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 New Singleplayer Game", "NEW_SP_GAME")]))
+        Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "PLAY_AGAIN")]))
     );
     //ctx.scene.
 });
@@ -83,23 +78,17 @@ sp_ongoingScene.hears(/.*/, (ctx) => {
     ctx.session.history.push({ guess: ctx.message.text, result });
 
     if (won) {
-        const { game } = ctx.session;
-        delete ctx.session;
-        if (game.start) {
+        const { number, guesses, start } = ctx.session;
+        ctx.session = null;
+        if (start) {
             return ctx.reply(
-                `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${game.number.join("")}</b>.\nYou found it in ${getTime(
-                    game.start
-                )}. 🤯`,
-                Extra.HTML().markup((m) =>
-                    m.inlineKeyboard([m.callbackButton("🎮 New Singleplayer Game", "NEW_SP_GAME")])
-                )
+                `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${number.join("")}</b>.\nYou found it in ${getTime(start)}. 🤯`,
+                Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "PLAY_AGAIN")]))
             );
         }
         return ctx.reply(
-            `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${game.number.join("")}</b>.\nYou found it in ${
-                game.guesses
-            } tries. 🤯`,
-            Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 New Singleplayer Game", "NEW_SP_GAME")]))
+            `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${number.join("")}</b>.\nYou found it in ${guesses} tries. 🤯`,
+            Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "PLAY_AGAIN")]))
         );
     }
     ctx.session.guesses += 1;
