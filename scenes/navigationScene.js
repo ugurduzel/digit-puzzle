@@ -18,15 +18,16 @@ navigationScene.action("NEW_GAME", (ctx) =>
     )
 );
 
-navigationScene.enter((ctx) =>
-    ctx.reply(
+navigationScene.enter((ctx) => {
+    console.log("Entered nav scene");
+    return ctx.reply(
         `Singleplayer or Multiplayer?`,
         Markup.inlineKeyboard([
             Markup.callbackButton("Singleplayer", "SINGLEPLAYER_GAME"),
             Markup.callbackButton("Multiplayer", "MULTIPLAYER_GAME"),
         ]).extra()
-    )
-);
+    );
+});
 
 navigationScene.on("message", (ctx) =>
     ctx.reply(

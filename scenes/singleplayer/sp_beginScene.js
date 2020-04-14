@@ -18,7 +18,9 @@ sp_beginScene.enter((ctx) => {
 
 sp_beginScene.action(/^[0-9] digits/, (ctx) => {
     const level = eval(ctx.match[0][0]);
+    console.log("In begin");
 
+    return;
     if (level < minLevel || level > maxLevel) {
         return ctx.reply(
             "Choose difficulty level",
