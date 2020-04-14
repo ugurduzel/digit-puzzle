@@ -261,17 +261,20 @@ function handleTop10Step(ctx, numberOfGames, avgScore) {
     if (!ctx.gameStat.sp_step_top10) {
         ctx.gameStat.sp_step_top10 = [];
     }
-    let player = ctx.gameStat.sp_step_top10.find(
-        (e) => e.username === (ctx.chat.first_name || "") + (ctx.chat.last_name || "") + ""
-    );
-    if (player) {
-        player.avgScore = avgScore;
-        player.numberOfGames = numberOfGames;
-        return;
-    }
+
+    ctx.gameStatDB
+        .update("sp_step_top10", (arr) => {
+            let player = arr.find((e) => e.username === (ctx.chat.first_name || "") + (ctx.chat.last_name || "") + "");
+            if (player) {
+                player.avgScore = avgScore;
+                player.numberOfGames = numberOfGames;
+            }
+            return arr;
+        })
+        .write();
 
     if (ctx.gameStat.sp_step_top10.length < 10) {
-        ctx.gameStat.sp_step_top10.push({
+        ctx.gameStatDB.get("sp_step_top10").push({
             avgScore,
             numberOfGames,
             username: (ctx.chat.first_name || "") + (ctx.chat.last_name || "") + "",
