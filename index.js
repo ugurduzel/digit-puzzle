@@ -32,7 +32,7 @@ localSession.DB.then((DB) => {
 });
 
 // Telegraf will use `telegraf-session-local` configured above middleware with overrided `property` name
-bot.use(localSession.middleware(property));
+bot.use(localSession.middleware());
 
 bot.use(commandParts());
 bot.use(howto());
