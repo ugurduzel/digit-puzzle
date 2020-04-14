@@ -17,8 +17,8 @@ sp_ongoingScene.action("PLAY_AGAIN", (ctx) => {
 
 sp_ongoingScene.action("Quit", (ctx) => {
     const { number } = ctx.session;
-    delete ctx.session;
-    ctx.reply(
+    ctx.session = null;
+    return ctx.reply(
         `Quitted\nThe number was ${number.join("")}`,
         Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "PLAY_AGAIN")]))
     );
