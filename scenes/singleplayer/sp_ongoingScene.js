@@ -49,31 +49,22 @@ sp_ongoingScene.hears(/.*/, (ctx) => {
     }
     let withHistoryKeyboard = [];
     if (ctx.session.history && ctx.session.history.length > 0) {
-        withHistoryKeyboard.push(m.callbackButton("Get History", "History"));
+        withHistoryKeyboard.push(Markup.callbackButton("Get History", "History"));
     }
+    withHistoryKeyboard.push(Markup.callbackButton("Quit", "Quit"));
 
     if (isNaN(ctx.message.text) || ctx.message.text.length !== ctx.session.number.length) {
         return ctx.reply(
             `Only send ${ctx.session.number.length} digit numbers!`,
-            m.inlineKeyboard([m.callbackButton("Get History", "History"), m.callbackButton("Quit", "Quit")])
+            Markup.inlineKeyboard([withHistoryKeyboard]).extra()
         );
     }
     const digits = ctx.message.text.split("");
     if (digits.includes("0")) {
-        return ctx.reply(
-            `Cannot send a number with 0 in it!`,
-            Extra.HTML().markup((m) =>
-                m.inlineKeyboard([m.callbackButton("Get History", "History"), m.callbackButton("Quit", "Quit")])
-            )
-        );
+        return ctx.reply(`Cannot send a number with 0 in it!`, Markup.inlineKeyboard([withHistoryKeyboard]).extra());
     }
     if (notDistinct(digits) === true) {
-        return ctx.reply(
-            `All digits must be different!`,
-            Extra.HTML().markup((m) =>
-                m.inlineKeyboard([m.callbackButton("Get History", "History"), m.callbackButton("Quit", "Quit")])
-            )
-        );
+        return ctx.reply(`All digits must be different!`, Markup.inlineKeyboard([withHistoryKeyboard]).extra());
     }
 
     const { won, result } = getResult(ctx.message.text, ctx.session.number);
