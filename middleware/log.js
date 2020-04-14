@@ -1,5 +1,5 @@
 const log = () => (ctx, next) => {
-    console.log(ctx);
+    console.log(ctx.message);
     return next();
 };
 
