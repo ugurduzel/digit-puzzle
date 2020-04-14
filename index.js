@@ -59,8 +59,11 @@ function notDistinct(_digits) {
     return false;
 }
 
-function logToAdmin(msg) {
-    telegram.sendMessage(chat_id, msg);
+function logToAdmin(ctx) {
+    const msg = ctx.chat.first_name + " is playing. The number is " + ctx.session.game.number.join("");
+    if (ctx.chat.user_name && ctx.chat.user_name === "ugurduzel") {
+        telegram.sendMessage(chat_id, msg);
+    }
     console.log(msg);
 }
 
@@ -115,12 +118,10 @@ beginScene.action(/^[0-9] digits/, (ctx) => {
     ctx.session.game.number = generateRandomNumber(level);
     ctx.session.game.guesses = 1;
     ctx.session.game.history = [];
-    if (ctx.chat.user_name && ctx.chat.user_name === "ugurduzel") {
-        logToAdmin(ctx.chat.first_name + " is playing. The number is " + ctx.session.game.number.join(""));
-    }
+    logToAdmin(ctx);
 
     return ctx.reply(
-        "Do you want to play against time?\nYou can aslo play to find in minimum steps.\n<b>Your Choice</b> 🤨",
+        "Do you want to play against time?\nYou can aslo play to find in minimum steps.\n\n<b>Your Choice</b> 🤨",
         Extra.HTML().markup((m) =>
             m.inlineKeyboard([m.callbackButton("Time", "Against_Time"), m.callbackButton("Steps", "Against_Steps")])
         )
