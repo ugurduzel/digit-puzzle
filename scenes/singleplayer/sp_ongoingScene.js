@@ -294,7 +294,8 @@ function getTimeLeaderboard(lst) {
 function getStepLeaderboard(lst) {
     let s = "Singleplayer Step Leaderboard\n";
     let max = -1;
-    for (let item in lst) {
+    for (let i = 0; i < lst.length; i++) {
+        const item = lst[i];
         max = item.username.length > max ? item.username.length : max;
     }
     if (max < 4) {
@@ -310,7 +311,8 @@ function getStepLeaderboard(lst) {
     temp_s += "Total Games\n";
     s += temp_s;
 
-    for (let item in lst) {
+    for (let i = 0; i < lst.length; i++) {
+        const item = lst[i];
         s += item.username;
         s += " ".repeat(avg_len - item.username.length) + ": ";
         s += item.avgScore;
