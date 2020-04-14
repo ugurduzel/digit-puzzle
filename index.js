@@ -15,7 +15,6 @@ const sp_ongoingScene = require("./scenes/singleplayer/sp_ongoingScene");
 
 const stage = new Stage([sp_beginScene, sp_ongoingScene]);
 
-console.log(process.env.BOT_TOKEN);
 const bot = new Telegraf(process.env.BOT_TOKEN || "");
 
 const localSession = new LocalSession({
@@ -42,7 +41,7 @@ bot.use(log());
 bot.action("NEW_GAME", (ctx) => ctx.scene.enter("navigationScene"));
 
 bot.command("start", (ctx) => {
-    console.log(ctx.sessionDB);
+    //console.log(ctx.sessionDB);
     return ctx.reply(
         `Hi ${ctx.chat.first_name},\nWelcome to Digit Puzzle! 🧩\n`,
         Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play now!", "NEW_GAME")]))
