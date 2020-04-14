@@ -28,7 +28,7 @@ const localSession = new LocalSession({
 bot.use(commandParts());
 bot.use(howto());
 bot.use(underMaintenanceMiddleware());
-bot.use(localSession.use());
+bot.use(localSession.middleware());
 
 bot.use(stage.middleware());
 
