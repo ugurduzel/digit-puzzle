@@ -14,7 +14,7 @@ const commandArgs = () => (ctx, next) => {
                 }
             }
 
-            ctx.state.command = {
+            ctx.contextState.command = {
                 raw: text,
                 command,
                 args,
