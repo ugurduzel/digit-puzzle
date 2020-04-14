@@ -11,7 +11,8 @@ navigationScene.action("NEW_GAME", (ctx) =>
     ctx.reply(
         `Singleplayer or Multiplayer?`,
         Markup.inlineKeyboard([
-            Markup.callbackButton("Singleplayer", "SINGLEPLAYER_GAME", "Multiplayer", "MULTIPLAYER_GAME"),
+            Markup.callbackButton("Singleplayer", "SINGLEPLAYER_GAME"),
+            Markup.callbackButton("Multiplayer", "MULTIPLAYER_GAME"),
         ]).extra()
     )
 );
@@ -20,7 +21,8 @@ navigationScene.enter((ctx) =>
     ctx.reply(
         `Singleplayer or Multiplayer?`,
         Markup.inlineKeyboard([
-            Markup.callbackButton("Singleplayer", "SINGLEPLAYER_GAME", "Multiplayer", "MULTIPLAYER_GAME"),
+            Markup.callbackButton("Singleplayer", "SINGLEPLAYER_GAME"),
+            Markup.callbackButton("Multiplayer", "MULTIPLAYER_GAME"),
         ]).extra()
     )
 );

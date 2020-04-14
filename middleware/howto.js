@@ -21,9 +21,14 @@ const message =
     You need to make intelligent guesses. That is the fun part. 😁";
 
 const howto = () => (ctx, next) => {
-    console.log(ctx.state);
+    if (ctx.state.howto) {
+        ctx.state.howto += 1;
+    } else {
+        ctx.state.howto = 0;
+    }
+
     if (ctx.state.command.command === "howto") {
-        return ctx.reply(message);
+        return ctx.reply("Howto: " + ctx.state.how);
     }
 };
 
