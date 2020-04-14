@@ -9,15 +9,15 @@ const commandParts = require("telegraf-command-parts");
 const underMaintenanceMiddleware = require("./middleware/maintenance");
 
 // Scenes
+const nagivationScene = require("./scenes/nagivationScene");
 const sp_beginScene = require("./scenes/singleplayer/sp_beginScene");
 const sp_ongoingScene = require("./scenes/singleplayer/sp_ongoingScene");
-const nagivationScene = require("./scenes/singleplayer/nagivationScene");
 
 // Models
 const { gameModel } = require("./models/gameModel");
 const { sessionModel } = require("./models/sessionModel");
 
-const stage = new Stage([sp_beginScene, sp_ongoingScene, nagivationScene]);
+const stage = new Stage([nagivationScene, sp_beginScene, sp_ongoingScene]);
 
 const bot = new Telegraf(process.env.BOT_TOKEN || "");
 

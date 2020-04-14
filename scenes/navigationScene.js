@@ -33,3 +33,5 @@ navigationScene.on("message", (ctx) =>
         Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play now!", "NEW_GAME")]))
     )
 );
+
+module.exports = navigationScene;
