@@ -11,8 +11,9 @@ sp_ongoingScene.enter((ctx) => {
 });
 
 sp_ongoingScene.action("PLAY_AGAIN", (ctx) => {
+    console.log("IN PLAYAGAIN");
     ctx.session = null;
-    return ctx.scene.enter("sp_beginScene");
+    return ctx.scene.enter("navigationScene");
 });
 
 sp_ongoingScene.action("Quit", (ctx) => {
