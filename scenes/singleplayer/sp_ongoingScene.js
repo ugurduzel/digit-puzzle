@@ -292,7 +292,7 @@ function getTimeLeaderboard(lst) {
 }
 
 function getStepLeaderboard(lst) {
-    let s = "<b>Singleplayer Step Leaderboard</b>\n";
+    let s = "<b>Singleplayer Step Leaderboard</b>\n\n";
     let max = -1;
     for (let i = 0; i < lst.length; i++) {
         const item = lst[i];
