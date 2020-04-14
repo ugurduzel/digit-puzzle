@@ -143,7 +143,7 @@ function getTimeGameNumber(ctx) {
 }
 
 function setTimeGameNumber(ctx, number) {
-    if (ctx.gameStat.players[ctx.from.id].sp_time[ctx.session.number.length]) {
+    if (!ctx.gameStat.players[ctx.from.id].sp_time[ctx.session.number.length]) {
         ctx.gameStat.players[ctx.from.id].sp_time[ctx.session.number.length] = [];
     }
     ctx.gameStat.players[ctx.from.id].sp_time[ctx.session.number.length][0] = number;
@@ -155,7 +155,7 @@ function getAvgTimeScore(ctx) {
 }
 
 function setAvgTimeScore(ctx, result) {
-    if (ctx.gameStat.players[ctx.from.id].sp_time[ctx.session.number.length]) {
+    if (!ctx.gameStat.players[ctx.from.id].sp_time[ctx.session.number.length]) {
         ctx.gameStat.players[ctx.from.id].sp_time[ctx.session.number.length] = [];
     }
 
@@ -212,7 +212,7 @@ function getStepGameNumber(ctx) {
 }
 
 function setStepGameNumber(ctx, number) {
-    if (ctx.gameStat.players[ctx.from.id].sp_step[ctx.session.number.length]) {
+    if (!ctx.gameStat.players[ctx.from.id].sp_step[ctx.session.number.length]) {
         ctx.gameStat.players[ctx.from.id].sp_step[ctx.session.number.length] = [];
     }
     ctx.gameStat.players[ctx.from.id].sp_step[ctx.session.number.length][0] = number;
@@ -224,7 +224,7 @@ function getAvgStepScore(ctx) {
 }
 
 function setAvgStepScore(ctx, result) {
-    if (ctx.gameStat.players[ctx.from.id].sp_step[ctx.session.number.length]) {
+    if (!ctx.gameStat.players[ctx.from.id].sp_step[ctx.session.number.length]) {
         ctx.gameStat.players[ctx.from.id].sp_step[ctx.session.number.length] = [];
     }
     ctx.gameStat.players[ctx.from.id].sp_step[ctx.session.number.length][1] = {};
