@@ -1,18 +1,13 @@
 const { generateRandomNumber, playerLog } = require("../../utils");
 const { minLevel, maxLevel } = require("../../configs/constants.json");
-const commandArgsMiddleware = require("../../middleware/commandArgs");
-const Telegraf = require("telegraf");
 const Extra = require("telegraf/extra");
-const Markup = require("telegraf/markup");
-const session = require("telegraf/session");
-const Stage = require("telegraf/stage");
 const Scene = require("telegraf/scenes/base");
 const _ = require("lodash");
 
 const levels = _.range(minLevel, maxLevel + 1);
 
-const beginScene = new Scene("beginScene");
-beginScene.enter((ctx) => {
+const sp_beginScene = new Scene("sp_beginScene");
+sp_beginScene.enter((ctx) => {
     ctx.session.game = {};
     return ctx.reply(
         "Choose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun",
@@ -20,7 +15,7 @@ beginScene.enter((ctx) => {
     );
 });
 
-beginScene.action(/^[0-9] digits/, (ctx) => {
+sp_beginScene.action(/^[0-9] digits/, (ctx) => {
     const level = eval(ctx.match[0][0]);
 
     if (level < minLevel || level > maxLevel) {
@@ -46,16 +41,16 @@ beginScene.action(/^[0-9] digits/, (ctx) => {
     );
 });
 
-beginScene.action("Against_Time", (ctx) => {
+sp_beginScene.action("Against_Time", (ctx) => {
     ctx.session.game.start = Date.now();
-    return ctx.scene.enter("ongoingScene");
+    return ctx.scene.enter("sp_ongoingScene");
 });
 
-beginScene.action("Against_Steps", (ctx) => {
-    return ctx.scene.enter("ongoingScene");
+sp_beginScene.action("Against_Steps", (ctx) => {
+    return ctx.scene.enter("sp_ongoingScene");
 });
 
-beginScene.on("message", (ctx) => {
+sp_beginScene.on("message", (ctx) => {
     ctx.session.game = {};
     ctx.session.game;
     return ctx.reply(
@@ -64,4 +59,4 @@ beginScene.on("message", (ctx) => {
     );
 });
 
-module.exports = beginScene;
+module.exports = sp_beginScene;

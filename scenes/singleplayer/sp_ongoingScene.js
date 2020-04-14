@@ -1,39 +1,33 @@
-const Telegraf = require("telegraf");
 const Extra = require("telegraf/extra");
-const Markup = require("telegraf/markup");
-const session = require("telegraf/session");
-const Stage = require("telegraf/stage");
 const Scene = require("telegraf/scenes/base");
-const _ = require("lodash");
 
-const commandArgsMiddleware = require("../../middleware/commandArgs");
 const { getResult, notDistinct, getTime } = require("../../utils");
 
-const ongoingScene = new Scene("ongoingScene");
-ongoingScene.enter((ctx) => {
+const sp_ongoingScene = new Scene("sp_ongoingScene");
+sp_ongoingScene.enter((ctx) => {
     return ctx.reply(`I have a ${ctx.session.game.number.length} digit number in mind.\n\nStart guessing... 🧐`);
 });
 
-ongoingScene.action("New Game", (ctx) => {
+sp_ongoingScene.action("NEW_SP_GAME", (ctx) => {
     delete ctx.session.game;
-    return ctx.scene.enter("beginScene");
+    return ctx.scene.enter("sp_beginScene");
 });
 
-ongoingScene.command("newgame", (ctx) => {
+sp_ongoingScene.command("newgame", (ctx) => {
     delete ctx.session.game;
-    return ctx.scene.enter("beginScene");
+    return ctx.scene.enter("navigationScene");
 });
 
-ongoingScene.action("Quit", (ctx) => {
+sp_ongoingScene.action("Quit", (ctx) => {
     const { number } = ctx.session.game;
     delete ctx.session.game;
     return ctx.reply(
         `Quitted\nThe number was ${number.join("")}`,
-        Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 New Game", "New Game")]))
+        Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 New Singleplayer Game", "NEW_SP_GAME")]))
     );
 });
 
-ongoingScene.action("History", (ctx) => {
+sp_ongoingScene.action("History", (ctx) => {
     const { history } = ctx.session.game;
     let s = "Your guesses,\n";
     for (let i = 0; i < history.length; i++) {
@@ -43,7 +37,7 @@ ongoingScene.action("History", (ctx) => {
     return ctx.reply(s);
 });
 
-ongoingScene.hears(/.*/, (ctx) => {
+sp_ongoingScene.hears(/.*/, (ctx) => {
     if (!ctx.session.game) {
         return null;
     }
@@ -93,14 +87,16 @@ ongoingScene.hears(/.*/, (ctx) => {
                 `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${game.number.join("")}</b>.\nYou found it in ${getTime(
                     game.start
                 )}. 🤯`,
-                Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 New Game", "New Game")]))
+                Extra.HTML().markup((m) =>
+                    m.inlineKeyboard([m.callbackButton("🎮 New Singleplayer Game", "NEW_SP_GAME")])
+                )
             );
         }
         return ctx.reply(
             `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${game.number.join("")}</b>.\nYou found it in ${
                 game.guesses
             } tries. 🤯`,
-            Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 New Game", "New Game")]))
+            Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 New Singleplayer Game", "NEW_SP_GAME")]))
         );
     }
     ctx.session.game.guesses += 1;
@@ -114,4 +110,4 @@ ongoingScene.hears(/.*/, (ctx) => {
     );
 });
 
-module.exports = ongoingScene;
+module.exports = sp_ongoingScene;
