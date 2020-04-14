@@ -10,11 +10,8 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "axios": "^0.19.2",
-        "body-parser": "^1.19.0",
-        "express": "^4.17.1",
-        "fs-extra": "^9.0.0",
         "lodash": "^4.17.15",
-        "telegraf": "^3.37.0"
+        "telegraf": "^3.37.0",
+        "telegraf-command-parts": "^1.0.3"
     }
 }

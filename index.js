@@ -5,7 +5,7 @@ const session = require("telegraf/session");
 
 // Middlewares
 const howto = require("./middleware/howto");
-const commandArgsMiddleware = require("./middleware/commandArgs");
+const commandParts = require("telegraf-command-parts");
 const underMaintenanceMiddleware = require("./middleware/maintenance");
 
 // Scenes
@@ -16,7 +16,7 @@ const stage = new Stage([sp_beginScene, sp_ongoingScene]);
 
 const bot = new Telegraf(process.env.BOT_TOKEN || "");
 
-bot.use(commandArgsMiddleware());
+app.use(commandParts());
 bot.use(howto());
 bot.use(underMaintenanceMiddleware());
 bot.use(session());
