@@ -33,7 +33,7 @@ localSession.DB.then((DB) => {
 bot.use(commandParts());
 bot.use(howto());
 bot.use(log());
-bot.use(localSession.middleware());
+//bot.use(localSession.middleware());
 bot.use(underMaintenanceMiddleware());
 
 bot.use(stage.middleware());
