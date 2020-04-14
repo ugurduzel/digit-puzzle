@@ -1,7 +1,7 @@
 const Telegraf = require("telegraf");
 const Stage = require("telegraf/stage");
 const Extra = require("telegraf/extra");
-const LocalSession = require("telegraf-session-local");
+const session = require("telegraf/session");
 
 // Middlewares
 const howto = require("./middleware/howto");
@@ -16,27 +16,10 @@ const stage = new Stage([sp_beginScene, sp_ongoingScene]);
 
 const bot = new Telegraf(process.env.BOT_TOKEN || "");
 
-const localSession = new LocalSession({
-    database: "sessions.json",
-    property: "session",
-    storage: LocalSession.storageFileAsync,
-    format: {
-        serialize: (obj) => JSON.stringify(obj, null, 2), // null & 2 for pretty-formatted JSON
-        deserialize: (str) => JSON.parse(str),
-    },
-    state: { messages: [] },
-});
-
-localSession.DB.then((DB) => {
-    console.log("Current LocalSession DB:", DB.value());
-});
-
-bot.use(localSession.middleware());
-
 bot.use(commandParts());
 bot.use(howto());
-
 bot.use(underMaintenanceMiddleware());
+bot.use(session());
 
 bot.use(stage.middleware());
 
