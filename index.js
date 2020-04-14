@@ -33,11 +33,10 @@ localSession.DB.then((DB) => {
 bot.use(commandParts());
 
 bot.use(howto());
-bot.use(log());
 bot.use(localSession.middleware());
 bot.use(underMaintenanceMiddleware());
-
 bot.use(stage.middleware());
+bot.use(log());
 
 bot.on("text", (ctx, next) => {
     ctx.session.counter = ctx.session.counter || 0;
