@@ -1,7 +1,7 @@
 {
     "admin_chat_id": 369332762,
     "admin_from_id": 369332762,
-    "underMaintenance": true,
+    "isUnderMaintenance": true,
     "minLevel": 3,
     "maxLevel": 6
 }
