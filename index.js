@@ -31,9 +31,11 @@ localSession.DB.then((DB) => {
     console.log("Current LocalSession DB:", DB.value());
 });
 
+bot.use(localSession.middleware());
+
 bot.use(commandParts());
 bot.use(howto());
-bot.use(localSession.middleware());
+
 bot.use(underMaintenanceMiddleware());
 
 bot.use(stage.middleware());
