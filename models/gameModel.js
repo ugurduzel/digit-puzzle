@@ -1,30 +1,28 @@
 const LocalSession = require("telegraf-session-local");
 
-module.exports = (function () {
-    this.gameModel = new LocalSession({
-        database: "gameInformation.json",
-        property: "game",
-        storage: LocalSession.storageFileAsync,
-        format: {
-            serialize: (obj) => JSON.stringify(obj, null, 2),
-            deserialize: (str) => JSON.parse(str),
-        },
-        state: {
-            sp_step_top10: [],
-            sp_time_top10: [],
-            mp_step_wins_top10: [],
-            mp_time_wins_top10: [],
-            mp_total_wins_top10: [],
-            players: {},
-        },
-    });
+const gameModel = new LocalSession({
+    database: "gameInformation.json",
+    property: "game",
+    storage: LocalSession.storageFileAsync,
+    format: {
+        serialize: (obj) => JSON.stringify(obj, null, 2),
+        deserialize: (str) => JSON.parse(str),
+    },
+    state: {
+        sp_step_top10: [],
+        sp_time_top10: [],
+        mp_step_wins_top10: [],
+        mp_time_wins_top10: [],
+        mp_total_wins_top10: [],
+        players: {},
+    },
+});
 
-    this.gameModel.DB.then((DB) => {
-        console.log("Current gameModel:", DB.value());
-    });
+gameModel.DB.then((DB) => {
+    console.log("Current gameModel:", DB.value());
+});
 
-    return this;
-})();
+module.exports = gameModel;
 
 /**
     sp_step_top10: [ids],
