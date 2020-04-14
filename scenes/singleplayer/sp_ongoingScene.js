@@ -78,6 +78,7 @@ sp_ongoingScene.hears(/.*/, (ctx) => {
             const now = Date.now();
             const result = formatTime(start, now);
             //addSpTimeResult(ctx, result);
+            ctx.gameStatDB.write();
             ctx.reply(
                 `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${number.join("")}</b>.\nYou found it in ${
                     result.formattedTime
@@ -88,6 +89,7 @@ sp_ongoingScene.hears(/.*/, (ctx) => {
             return;
         }
         addSpStepResult(ctx, guesses);
+        ctx.gameStatDB.write();
         ctx.reply(
             `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${number.join(
                 ""
@@ -199,8 +201,9 @@ function addSpStepResult(ctx, step) {
         setAvgStepScore(ctx, calculateStepAvg(avgScore, numberOfGames, step));
     }
 
+    console.log("Player: ", ctx.gameStat.players[ctx.from.id]);
     handleTop10Step(ctx, getStepGameNumber(ctx), getAvgStepScore(ctx));
-    console.log("Leaderboard:", ctx.gameStatDB.get("players"));
+    console.log("Leaderboard:", ctx.gameStat.sp_step_top10);
 }
 
 function getStepGameNumber(ctx) {
@@ -224,9 +227,7 @@ function setAvgStepScore(ctx, step) {
     if (!ctx.gameStat.players[ctx.from.id].sp_step[ctx.session.number.length]) {
         ctx.gameStat.players[ctx.from.id].sp_step[ctx.session.number.length] = [];
     }
-    const temp = ctx.gameStat.players[ctx.from.id].sp_step[ctx.session.number.length];
-    //ctx.gameStatDB.write();
-    ctx.gameStatDB.get("players").get("sp_step").set("ctx.session.number.length", [temp[0], step]).write();
+    ctx.gameStat.players[ctx.from.id].sp_step[ctx.session.number.length][1] = step;
 }
 
 function calculateStepAvg(avgScore, numberOfGames, step) {
@@ -260,20 +261,17 @@ function handleTop10Step(ctx, numberOfGames, avgScore) {
     if (!ctx.gameStat.sp_step_top10) {
         ctx.gameStat.sp_step_top10 = [];
     }
-
-    ctx.gameStatDB
-        .update("sp_step_top10", (arr) => {
-            let player = arr.find((e) => e.username === (ctx.chat.first_name || "") + (ctx.chat.last_name || "") + "");
-            if (player) {
-                player.avgScore = avgScore;
-                player.numberOfGames = numberOfGames;
-            }
-            return arr;
-        })
-        .write();
+    let player = ctx.gameStat.sp_step_top10.find(
+        (e) => e.username === (ctx.chat.first_name || "") + (ctx.chat.last_name || "") + ""
+    );
+    if (player) {
+        player.avgScore = avgScore;
+        player.numberOfGames = numberOfGames;
+        return;
+    }
 
     if (ctx.gameStat.sp_step_top10.length < 10) {
-        ctx.gameStatDB.get("sp_step_top10").push({
+        ctx.gameStat.sp_step_top10.push({
             avgScore,
             numberOfGames,
             username: (ctx.chat.first_name || "") + (ctx.chat.last_name || "") + "",

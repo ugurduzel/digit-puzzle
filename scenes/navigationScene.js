@@ -19,6 +19,7 @@ navigationScene.action("NEW_GAME", (ctx) => {
         console.log("Adding a player with id" + ctx.from.id);
         ctx.reply("We have added you to our userbase. 👏\n\nHave fun! ");
     }
+    ctx.gameStatDB.write();
 
     return ctx.reply(
         `Singleplayer or Multiplayer?`,
