@@ -192,14 +192,16 @@ function addSpStepResult(ctx, step) {
     let numberOfGames = getStepGameNumber(ctx);
     setStepGameNumber(ctx, numberOfGames + 1 || 1);
 
+    numberOfGames = getStepGameNumber(ctx);
+
     let avgScore = getAvgStepScore(ctx);
     if (!avgScore) {
         setAvgStepScore(ctx, step);
     } else {
-        setAvgStepScore(ctx, calculateStepAvg(avgScore, numberOfGames + 1 || 1, step));
+        setAvgStepScore(ctx, calculateStepAvg(avgScore, numberOfGames, step));
     }
 
-    console.log(ctx.gameStat.players[ctx.from.id]);
+    console.log("Player: ", ctx.gameStat.players[ctx.from.id]);
 
     numberOfGames = getStepGameNumber(ctx);
     avgScore = getAvgStepScore(ctx);
