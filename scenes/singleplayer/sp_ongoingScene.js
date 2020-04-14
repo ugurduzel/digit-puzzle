@@ -21,10 +21,11 @@ sp_ongoingScene.command("newgame", (ctx) => {
 sp_ongoingScene.action("Quit", (ctx) => {
     const { number } = ctx.session.game;
     delete ctx.session.game;
-    return ctx.reply(
+    ctx.reply(
         `Quitted\nThe number was ${number.join("")}`,
         Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 New Singleplayer Game", "NEW_SP_GAME")]))
     );
+    ctx.scene.
 });
 
 sp_ongoingScene.action("History", (ctx) => {

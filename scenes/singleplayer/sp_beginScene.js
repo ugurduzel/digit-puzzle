@@ -7,6 +7,7 @@ const _ = require("lodash");
 const levels = _.range(minLevel, maxLevel + 1);
 
 const sp_beginScene = new Scene("sp_beginScene");
+
 sp_beginScene.enter((ctx) => {
     ctx.session.game = {};
     return ctx.reply(
@@ -43,12 +44,12 @@ sp_beginScene.action(/^[0-9] digits/, (ctx) => {
 
 sp_beginScene.action("Against_Time", (ctx) => {
     ctx.session.game.start = Date.now();
-    return ctx.scene.enter("sp_ongoingScene");
+    return ctx.scene.leave("sp_beginScene");
 });
 
-sp_beginScene.action("Against_Steps", (ctx) => {
-    return ctx.scene.enter("sp_ongoingScene");
-});
+sp_beginScene.action("Against_Steps", (ctx) => ctx.scene.leave("sp_beginScene"));
+
+sp_beginScene.leave((ctx) => ctx.scene.enter("sp_ongoingScene"));
 
 sp_beginScene.on("message", (ctx) => {
     ctx.session.game = {};

@@ -4,6 +4,7 @@ const Extra = require("telegraf/extra");
 const LocalSession = require("telegraf-session-local");
 
 // Middlewares
+const log = require("./middleware/log");
 const howto = require("./middleware/howto");
 const commandParts = require("telegraf-command-parts");
 const underMaintenanceMiddleware = require("./middleware/maintenance");
@@ -31,8 +32,9 @@ localSession.DB.then((DB) => {
 
 bot.use(commandParts());
 bot.use(howto());
-bot.use(underMaintenanceMiddleware());
 bot.use(localSession.middleware());
+bot.use(log());
+bot.use(underMaintenanceMiddleware());
 
 bot.use(stage.middleware());
 
