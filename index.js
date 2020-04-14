@@ -19,7 +19,6 @@ const bot = new Telegraf(process.env.BOT_TOKEN || "");
 bot.use(commandParts());
 bot.use(howto());
 bot.use(underMaintenanceMiddleware());
-bot.use(session());
 
 bot.use(stage.middleware());
 
