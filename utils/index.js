@@ -1,5 +1,5 @@
 const _ = require("lodash");
-const { admin_chat_id: chat_id } = require("../configs/constants.json");
+const { admin_from_id, admin_chat_id: chat_id } = require("../configs/constants.json");
 const Telegram = require("telegraf/telegram");
 const telegram = new Telegram(process.env.BOT_TOKEN || "");
 
@@ -10,7 +10,7 @@ function logMessage(msg) {
 
 function playerLog(ctx) {
     const msg = ctx.chat.first_name + " is playing. The number is " + ctx.session.game.number.join("");
-    if (ctx.chat.user_name === "ugurduzel") {
+    if (ctx.from.id === admin_from_id) {
         console.log(msg);
         return;
     }
