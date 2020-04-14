@@ -77,7 +77,7 @@ sp_ongoingScene.hears(/.*/, (ctx) => {
         if (start) {
             const now = Date.now();
             const result = formatTime(start, now);
-            addSpTimeResult(ctx, result);
+            //addSpTimeResult(ctx, result);
             ctx.reply(
                 `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${number.join("")}</b>.\nYou found it in ${
                     result.formattedTime
@@ -288,11 +288,11 @@ function handleTop10Step(ctx, numberOfGames, avgScore) {
 }
 
 function getTimeLeaderboard(lst) {
-    return " ";
+    return "Time leaderboard is under construction.";
 }
 
 function getStepLeaderboard(lst) {
-    let s = "Singleplayer Step Leaderboard\n";
+    let s = "<b>Singleplayer Step Leaderboard</b>\n";
     let max = -1;
     for (let i = 0; i < lst.length; i++) {
         const item = lst[i];
