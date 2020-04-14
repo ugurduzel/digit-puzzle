@@ -18,9 +18,7 @@ sp_beginScene.enter((ctx) => {
 
 sp_beginScene.action(/^[0-9] digits/, (ctx) => {
     const level = eval(ctx.match[0][0]);
-    console.log("In begin");
 
-    return;
     if (level < minLevel || level > maxLevel) {
         return ctx.reply(
             "Choose difficulty level",
@@ -35,13 +33,6 @@ sp_beginScene.action(/^[0-9] digits/, (ctx) => {
     ctx.session.guesses = 1;
     ctx.session.history = [];
     playerLog(ctx);
-
-    // if (ctx.game.players[ctx.from.id]) {
-    //     console.log("Player " + ctx.from.id + " is found\n" + ctx.game.players[ctx.from.id]);
-    // } else {
-    //     ctx.game.players[ctx.from.id] = {};
-    //     console.log("Adding a player with id" + ctx.from.id);
-    // }
 
     return ctx.reply(
         "Do you want to play against time?\nYou can aslo play to find in minimum steps.\n\n<b>Your Choice</b> 🤨",
