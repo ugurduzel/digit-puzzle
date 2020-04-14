@@ -22,8 +22,8 @@ const stage = new Stage([navigationScene, sp_beginScene, sp_ongoingScene]);
 const bot = new Telegraf(process.env.BOT_TOKEN || "");
 
 bot.use(commandParts());
-//bot.use(howto());
-//bot.use(gameModel.middleware());
+bot.use(howto());
+bot.use(gameModel.middleware());
 bot.use(sessionModel.middleware());
 bot.use(underMaintenanceMiddleware());
 bot.use(stage.middleware());
