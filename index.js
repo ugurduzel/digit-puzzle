@@ -156,7 +156,15 @@ ongoingScene.action("New Game", (ctx) => {
     return ctx.scene.enter("beginScene");
 });
 
-ongoingScene.action("Quit", (ctx) => ctx.scene.leave("ongoingScene"));
+ongoingScene.action("Quit", (ctx) => {
+    const { number } = ctx.session.game;
+    delete ctx.session.game;
+    ctx.scene.leave("ongoingScene");
+    return ctx.reply(
+        `Quitted\nThe number was ${number.join("")}`,
+        Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("New Game", "New Game")]))
+    );
+});
 
 ongoingScene.leave((ctx) => {
     const { number } = ctx.session.game;
