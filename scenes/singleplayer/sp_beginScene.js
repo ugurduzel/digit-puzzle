@@ -1,5 +1,6 @@
 const { generateRandomNumber, playerLog } = require("../../utils");
 const { minLevel, maxLevel } = require("../../configs/constants.json");
+const Markup = require("telegraf/markup");
 const Extra = require("telegraf/extra");
 const Scene = require("telegraf/scenes/base");
 const _ = require("lodash");
