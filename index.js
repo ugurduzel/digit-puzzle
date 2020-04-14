@@ -8,6 +8,8 @@ const Scene = require("telegraf/scenes/base");
 const _ = require("lodash");
 const Telegram = require("telegraf/telegram");
 
+const underMaintenance = true;
+
 const minLevel = 3;
 const maxLevel = 5;
 const chat_id = 369332762;
@@ -249,21 +251,38 @@ const stage = new Stage([beginScene, ongoingScene]);
 bot.use(session());
 bot.use(stage.middleware());
 
-bot.command("newgame", (ctx) => ctx.scene.enter("beginScene"));
-bot.action("New Game", (ctx) => ctx.scene.enter("beginScene"));
+bot.command("newgame", (ctx) => {
+    if (underMaintenance === true && ctx.chat.user_name && ctx.chat.user_name !== "ugurduzel") {
+        return ctx.reply("Game is under maintenance now");
+    }
+    return ctx.scene.enter("beginScene");
+});
 
-bot.command("start", (ctx) =>
-    ctx.reply(
+bot.action("New Game", (ctx) => {
+    if (underMaintenance === true && ctx.chat.user_name && ctx.chat.user_name !== "ugurduzel") {
+        return ctx.reply("Game is under maintenance now");
+    }
+    return ctx.scene.enter("beginScene");
+});
+
+bot.command("start", (ctx) => {
+    if (underMaintenance === true && ctx.chat.user_name && ctx.chat.user_name !== "ugurduzel") {
+        return ctx.reply("Game is under maintenance now");
+    }
+    return ctx.reply(
         `Hi ${ctx.chat.first_name},\nWelcome to Digit Puzzle!\n`,
         Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play now!", "New Game")]))
-    )
-);
-bot.on("message", (ctx) =>
-    ctx.reply(
+    );
+});
+bot.on("message", (ctx) => {
+    if (underMaintenance === true && ctx.chat.user_name && ctx.chat.user_name !== "ugurduzel") {
+        return ctx.reply("Game is under maintenance now");
+    }
+    return ctx.reply(
         "Try /newgame",
         Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play now!", "New Game")]))
-    )
-);
+    );
+});
 
 console.log("Launching the application... " + new Date(Date.now()).toTimeString().substring(0, 8));
 bot.launch();
