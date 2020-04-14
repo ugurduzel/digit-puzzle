@@ -10,8 +10,8 @@ sp_ongoingScene.enter((ctx) => {
     return ctx.reply(`I have a ${ctx.session.number.length} digit number in mind.\n\nStart guessing... 🧐`);
 });
 
-sp_ongoingScene.action("PLAY_AGAIN", (ctx) => {
-    console.log("IN PLAYAGAIN");
+sp_ongoingScene.action("FIN_PLAY_AGAIN", (ctx) => {
+    console.log("IN PLAYA GAIN");
     ctx.session = null;
     return ctx.scene.enter("navigationScene");
 });
@@ -21,7 +21,7 @@ sp_ongoingScene.action("Quit", (ctx) => {
     ctx.session = null;
     return ctx.reply(
         `Quitted\nThe number was ${number.join("")}`,
-        Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "PLAY_AGAIN")]))
+        Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "FIN_PLAY_AGAIN")]))
     );
     //ctx.scene.
 });
@@ -80,18 +80,16 @@ sp_ongoingScene.hears(/.*/, (ctx) => {
 
     if (won) {
         const { number, guesses, start } = ctx.session;
-        console.log(ctx);
         ctx.session = null;
-        console.log(ctx);
         if (start) {
             return ctx.reply(
                 `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${number.join("")}</b>.\nYou found it in ${getTime(start)}. 🤯`,
-                Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "PLAY_AGAIN")]))
+                Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "FIN_PLAY_AGAIN")]))
             );
         }
         return ctx.reply(
             `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${number.join("")}</b>.\nYou found it in ${guesses} tries. 🤯`,
-            Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "PLAY_AGAIN")]))
+            Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "FIN_PLAY_AGAIN")]))
         );
     }
     ctx.session.guesses += 1;
