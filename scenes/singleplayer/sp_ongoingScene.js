@@ -12,13 +12,17 @@ sp_ongoingScene.enter((ctx) => {
 
 sp_ongoingScene.action("FIN_PLAY_AGAIN", (ctx) => {
     console.log("IN PLAYA GAIN");
-    ctx.session = null;
+    delete ctx.session.number;
+    delete ctx.session.guesses;
+    delete ctx.session.start;
     return ctx.scene.enter("navigationScene");
 });
 
 sp_ongoingScene.action("Quit", (ctx) => {
     const { number } = ctx.session;
-    ctx.session = null;
+    delete ctx.session.number;
+    delete ctx.session.guesses;
+    delete ctx.session.start;
     return ctx.reply(
         `Quitted\nThe number was ${number.join("")}`,
         Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "FIN_PLAY_AGAIN")]))
@@ -80,7 +84,9 @@ sp_ongoingScene.hears(/.*/, (ctx) => {
 
     if (won) {
         const { number, guesses, start } = ctx.session;
-        ctx.session = null;
+        delete ctx.session.number;
+        delete ctx.session.guesses;
+        delete ctx.session.start;
         if (start) {
             return ctx.reply(
                 `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${number.join("")}</b>.\nYou found it in ${getTime(start)}. 🤯`,
