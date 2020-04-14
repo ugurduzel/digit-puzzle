@@ -44,6 +44,8 @@ bot.action("NEW_GAME", (ctx) => {
 });
 
 bot.command("start", (ctx) => {
+    console.log("ctx.game : ", ctx.game);
+    console.log("ctx.session : ", ctx.session);
     return ctx.reply(
         `Hi ${ctx.chat.first_name},\nWelcome to Digit Puzzle! 🧩\n\nUse /howto command to see the detailed explanation.`,
         Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play now!", "NEW_GAME")]))
