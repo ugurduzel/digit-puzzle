@@ -4,8 +4,8 @@ const Extra = require("telegraf/extra");
 const session = require("telegraf/session");
 
 // Middlewares
-const underMaintenance = require("./middleware/maintenance");
 const commandArgsMiddleware = require("./middleware/commandArgs");
+const underMaintenanceMiddleware = require("./middleware/maintenance");
 
 // Scenes
 const beginScene = require("./scenes/singleplayer/beginScene");
@@ -15,8 +15,8 @@ const stage = new Stage([beginScene, ongoingScene]);
 
 const bot = new Telegraf(process.env.BOT_TOKEN || "");
 
-bot.use(underMaintenance());
 bot.use(commandArgsMiddleware());
+bot.use(underMaintenanceMiddleware());
 bot.use(session());
 
 bot.use(stage.middleware());
