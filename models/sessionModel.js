@@ -2,7 +2,7 @@ const LocalSession = require("telegraf-session-local");
 
 module.exports = (function () {
     this.sessionModel = new LocalSession({
-        database: "../db/sessions.json",
+        database: "sessions.json",
         property: "session",
         storage: LocalSession.storageFileAsync,
         format: {
