@@ -21,10 +21,10 @@ const message =
     You need to make intelligent guesses. That is the fun part. 😁";
 
 const howto = () => (ctx, next) => {
-    if (ctx.state.howto) {
-        ctx.state.howto += 1;
+    if (ctx.state.command.howto) {
+        ctx.state.command.howto += 1;
     } else {
-        ctx.state.howto = 0;
+        ctx.state.command.howto = 0;
     }
 
     if (ctx.state.command.command === "howto") {
