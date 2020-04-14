@@ -305,18 +305,18 @@ function getStepLeaderboard(lst) {
     temp_s += "Name  ";
     temp_s += " ".repeat(max - 4);
     temp_s += " | ";
-    const avg_len = temp_s.length - 3;
+    const avg_len = temp_s.length - 5;
     temp_s += "Avg Steps | ";
-    const total_len = temp_s.length - 3;
+    const total_len = temp_s.length - 1;
     temp_s += "Total Games\n";
     s += temp_s;
 
     for (let i = 0; i < lst.length; i++) {
         const item = lst[i];
         s += item.username;
-        s += " ".repeat(avg_len - item.username.length) + ": ";
+        s += " ".repeat(avg_len - item.username.length) + "| ";
         s += item.avgScore;
-        s += " ".repeat(total_len - item.username.length) + ": ";
+        s += " ".repeat(total_len - item.username.length) + "| ";
         s += item.numberOfGames + "\n";
     }
 
