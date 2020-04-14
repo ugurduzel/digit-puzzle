@@ -9,8 +9,6 @@ const Stage = require("telegraf/stage");
 const Scene = require("telegraf/scenes/base");
 const _ = require("lodash");
 
-const { minLevel, maxLevel } = require("./configs/constants.json");
-
 const beginScene = new Scene("beginScene");
 beginScene.enter((ctx) => {
     ctx.session.game = {};
