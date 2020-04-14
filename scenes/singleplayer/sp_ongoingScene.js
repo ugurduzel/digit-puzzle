@@ -199,9 +199,8 @@ function addSpStepResult(ctx, step) {
         setAvgStepScore(ctx, calculateStepAvg(avgScore, numberOfGames, step));
     }
 
-    console.log("Player: ", ctx.gameStat.players[ctx.from.id]);
     handleTop10Step(ctx, getStepGameNumber(ctx), getAvgStepScore(ctx));
-    console.log("Leaderboard:", ctx.gameStat.sp_step_top10);
+    console.log("Leaderboard:", ctx.gameStatDB.get("players"));
 }
 
 function getStepGameNumber(ctx) {

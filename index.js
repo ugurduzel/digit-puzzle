@@ -30,18 +30,17 @@ bot.use(stage.middleware());
 //bot.use(log());
 
 bot.action("NEW_GAME", (ctx) => {
-    if (!ctx.gameStat.players) {
-        ctx.gameStat.players = {};
+    if (!ctx.gameStatDB.get("players")) {
+        ctx.gameStatDB.set("players", {}).write();
     }
-    if (ctx.gameStat.players[ctx.from.id]) {
-        console.log("Player " + ctx.from.id + " is found\n" + ctx.gameStat.players[ctx.from.id]);
+    if (ctx.gameStatDB.get("players").get(ctx.from.id)) {
+        console.log("Player " + ctx.from.id + " is found\n" + ctx.gameStatDB.get("players").get(ctx.from.id));
     } else {
-        ctx.gameStat.players[ctx.from.id] = {};
+        ctx.gameStatDB.get("players").set(ctx.from.id, {});
         console.log("Adding a player with id" + ctx.from.id);
         ctx.reply("We have added you to our userbase. 👏\n\nHave fun! ");
     }
-    console.log(ctx.gameStat);
-    console.log(ctx.session);
+    console.log(ctx.gameStatDB);
 
     return ctx.scene.enter("navigationScene");
 });
