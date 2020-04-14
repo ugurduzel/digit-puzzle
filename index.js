@@ -49,5 +49,17 @@ bot.command("play", (ctx) =>
     ctx.reply(Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play now!", "NEW_GAME")])))
 );
 
+bot.on("text", (ctx, next) => {
+    ctx.session.counter = ctx.session.counter || 0;
+    ctx.session.counter++;
+    ctx.replyWithMarkdown(`Counter updated, new value: \`${ctx.session.counter}\``);
+    // Writing message to Array `messages` into database which already has sessions Array
+    ctx.sessionDB.get("messages").push([ctx.message]).write();
+    // `property`+'DB' is a name of property which contains lowdb instance, default = `sessionDB`, in current example = `dataDB`
+    // ctx.dataDB.get('messages').push([ctx.message]).write()
+
+    return next();
+});
+
 console.log("Launching the application... " + new Date(Date.now()).toTimeString().substring(0, 8));
 bot.launch();
