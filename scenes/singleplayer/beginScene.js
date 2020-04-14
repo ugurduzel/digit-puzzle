@@ -1,4 +1,3 @@
-const levels = _.range(minLevel, maxLevel + 1);
 const { generateRandomNumber, playerLog } = require("../../utils");
 const { minLevel, maxLevel } = require("./configs/constants.json");
 const Telegraf = require("telegraf");
@@ -8,6 +7,8 @@ const session = require("telegraf/session");
 const Stage = require("telegraf/stage");
 const Scene = require("telegraf/scenes/base");
 const _ = require("lodash");
+
+const levels = _.range(minLevel, maxLevel + 1);
 
 const beginScene = new Scene("beginScene");
 beginScene.enter((ctx) => {
