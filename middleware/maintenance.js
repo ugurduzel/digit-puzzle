@@ -9,4 +9,4 @@ const underMaintenance = () => (ctx, next) => {
     return next();
 };
 
-module.export = underMaintenance;
+module.exports = underMaintenance;
