@@ -247,6 +247,9 @@ function calculateStepAvg(avgScore, numberOfGames, step) {
 }
 
 function handleTop10Time(ctx, numberOfGames, avgScore) {
+    if (!ctx.gameStat.sp_time_top10) {
+        ctx.gameStat.sp_time_top10 = [];
+    }
     if (ctx.gameStat.sp_time_top10.length < 10) {
         ctx.gameStat.sp_time_top10.push({
             avgScore,
@@ -267,6 +270,9 @@ function handleTop10Time(ctx, numberOfGames, avgScore) {
 }
 
 function handleTop10Step(ctx, numberOfGames, avgScore) {
+    if (!ctx.gameStat.sp_step_top10) {
+        ctx.gameStat.sp_step_top10 = [];
+    }
     if (ctx.gameStat.sp_step_top10.length < 10) {
         ctx.gameStat.sp_step_top10.push({
             avgScore,
