@@ -36,19 +36,6 @@ bot.use(localSession.middleware());
 
 bot.use(stage.middleware());
 
-bot.action("NEW_GAME", (ctx) => ctx.scene.enter("navigationScene"));
-
-bot.command("start", (ctx) =>
-    ctx.reply(
-        `Hi ${ctx.chat.first_name},\nWelcome to Digit Puzzle! 🧩\n`,
-        Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play now!", "NEW_GAME")]))
-    )
-);
-
-bot.command("play", (ctx) =>
-    ctx.reply(Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play now!", "NEW_GAME")])))
-);
-
 bot.on("text", (ctx, next) => {
     ctx.session.counter = ctx.session.counter || 0;
     ctx.session.counter++;
@@ -63,6 +50,19 @@ bot.on("text", (ctx, next) => {
 
     return next();
 });
+
+bot.action("NEW_GAME", (ctx) => ctx.scene.enter("navigationScene"));
+
+bot.command("start", (ctx) =>
+    ctx.reply(
+        `Hi ${ctx.chat.first_name},\nWelcome to Digit Puzzle! 🧩\n`,
+        Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play now!", "NEW_GAME")]))
+    )
+);
+
+bot.command("play", (ctx) =>
+    ctx.reply(Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play now!", "NEW_GAME")])))
+);
 
 console.log("Launching the application... " + new Date(Date.now()).toTimeString().substring(0, 8));
 bot.launch();
