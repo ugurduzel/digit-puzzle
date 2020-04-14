@@ -2,6 +2,7 @@ const { isUnderMaintenance, admin_from_id } = require("../configs/constants.json
 const { logMessage } = require("../utils");
 
 const underMaintenance = () => (ctx, next) => {
+    console.log(ctx);
     if (isUnderMaintenance === true && ctx.from.id !== admin_from_id) {
         logMessage(ctx.chat.first_name + " is trying to play.");
         return ctx.reply(

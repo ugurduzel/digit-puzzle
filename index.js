@@ -16,10 +16,28 @@ const stage = new Stage([sp_beginScene, sp_ongoingScene]);
 
 const bot = new Telegraf(process.env.BOT_TOKEN || "");
 
+const localSession = new LocalSession({
+    database: "sessions.json",
+    property: "session",
+    storage: LocalSession.storageFileAsync,
+    format: {
+        serialize: (obj) => JSON.stringify(obj, null, 2), // null & 2 for pretty-formatted JSON
+        deserialize: (str) => JSON.parse(str),
+    },
+    state: { messages: [] },
+});
+
+localSession.DB.then((DB) => {
+    console.log("Current LocalSession DB:", DB.value());
+});
+
+// Telegraf will use `telegraf-session-local` configured above middleware with overrided `property` name
+bot.use(localSession.middleware(property));
+
 bot.use(commandParts());
 bot.use(howto());
+bot.use(localSession.middleware());
 bot.use(underMaintenanceMiddleware());
-bot.use(session());
 
 bot.use(stage.middleware());
 

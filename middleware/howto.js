@@ -19,16 +19,9 @@ const message =
     (+1) (-1) (+1) (0) ➡️  +2 -1\n \
     So we return +2 -1 for your guess but you will not know which one is for what.\n\n \
     You need to make intelligent guesses. That is the fun part. 😁";
-
 const howto = () => (ctx, next) => {
-    if (ctx.state.command.howto) {
-        ctx.state.command.howto += 1;
-    } else {
-        ctx.state.command.howto = 0;
-    }
-
     if (ctx.state.command.command === "howto") {
-        return ctx.reply("Howto: " + ctx.state.how);
+        return ctx.reply(message);
     }
 };
 
