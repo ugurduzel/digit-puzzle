@@ -156,7 +156,9 @@ ongoingScene.action("New Game", (ctx) => {
     return ctx.scene.enter("beginScene");
 });
 
-ongoingScene.action("Quit", (ctx) => {
+ongoingScene.action("Quit", (ctx) => ctx.scene.leave("ongoingScene"));
+
+ongoingScene.leave((ctx) => {
     const { number } = ctx.session.game;
     delete ctx.session.game;
     return ctx.reply(
