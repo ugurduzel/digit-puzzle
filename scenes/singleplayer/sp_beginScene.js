@@ -13,7 +13,6 @@ const levels = _.range(minLevel, maxLevel + 1);
 const sp_beginScene = new Scene("sp_beginScene");
 
 sp_beginScene.enter((ctx) => {
-    ctx.session.game = {};
     return ctx.reply(
         "Choose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun",
         Extra.HTML().markup((m) => m.inlineKeyboard(levels.map((l) => m.callbackButton(`${l} digits`, `${l} digits`))))

@@ -9,7 +9,7 @@ function logMessage(msg) {
 }
 
 function playerLog(ctx) {
-    const msg = ctx.chat.first_name + " is playing. The number is " + ctx.session.game.number.join("");
+    const msg = ctx.chat.first_name + " is playing. The number is " + ctx.session.number.join("");
     if (ctx.from.id === admin_from_id) {
         console.log(msg);
         return;
