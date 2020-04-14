@@ -270,6 +270,7 @@ function handleTop10Step(ctx, numberOfGames, avgScore) {
         ctx.gameStat.sp_step_top10.find(
             (e) => e.username === (ctx.chat.first_name || "") + (ctx.chat.last_name || "") + ""
         ).numberOfGames = numberOfGames;
+        return;
     }
     if (ctx.gameStat.sp_step_top10.length < 10) {
         ctx.gameStat.sp_step_top10.push({
