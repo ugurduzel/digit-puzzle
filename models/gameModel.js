@@ -2,7 +2,7 @@ const LocalSession = require("telegraf-session-local");
 
 const gameModel = new LocalSession({
     database: "gameInformation.json",
-    property: "game",
+    property: "gameStat",
     storage: LocalSession.storageFileAsync,
     format: {
         serialize: (obj) => JSON.stringify(obj, null, 2),

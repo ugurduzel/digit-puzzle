@@ -30,16 +30,16 @@ bot.use(stage.middleware());
 //bot.use(log());
 
 bot.action("NEW_GAME", (ctx) => {
-    // if (!ctx.game.players) {
-    //     ctx.game.players = {};
-    // }
-    // if (ctx.game.players[ctx.from.id]) {
-    //     console.log("Player " + ctx.from.id + " is found\n" + ctx.game.players[ctx.from.id]);
-    // } else {
-    //     ctx.game.players[ctx.from.id] = {};
-    //     console.log("Adding a player with id" + ctx.from.id);
-    //     ctx.reply("We have added you to our userbase. 👏\n\nHave fun! ");
-    // }
+    if (!ctx.gameStat.players) {
+        ctx.gameStat.players = {};
+    }
+    if (ctx.gameStat.players[ctx.from.id]) {
+        console.log("Player " + ctx.from.id + " is found\n" + ctx.gameStat.players[ctx.from.id]);
+    } else {
+        ctx.gameStat.players[ctx.from.id] = {};
+        console.log("Adding a player with id" + ctx.from.id);
+        ctx.reply("We have added you to our userbase. 👏\n\nHave fun! ");
+    }
 
     return ctx.scene.enter("navigationScene");
 });
