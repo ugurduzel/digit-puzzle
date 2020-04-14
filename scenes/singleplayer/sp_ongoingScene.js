@@ -80,16 +80,18 @@ sp_ongoingScene.hears(/.*/, (ctx) => {
 
     if (won) {
         const { number, guesses, start } = ctx.session;
+        console.log(ctx);
         ctx.session = null;
+        console.log(ctx);
         if (start) {
             return ctx.reply(
                 `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${number.join("")}</b>.\nYou found it in ${getTime(start)}. 🤯`,
-                Markup.inlineKeyboard([Markup.callbackButton("🎮 Play Again", "PLAY_AGAIN")]).extra()
+                Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "PLAY_AGAIN")]))
             );
         }
         return ctx.reply(
             `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${number.join("")}</b>.\nYou found it in ${guesses} tries. 🤯`,
-            Markup.inlineKeyboard([Markup.callbackButton("🎮 Play Again", "PLAY_AGAIN")]).extra()
+            Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "PLAY_AGAIN")]))
         );
     }
     ctx.session.guesses += 1;
