@@ -9,7 +9,7 @@ const commandParts = require("telegraf-command-parts");
 const underMaintenanceMiddleware = require("./middleware/maintenance");
 
 // Scenes
-const navigationScene = require("/scenes/navigationScene");
+const navigationScene = require("./scenes/navigationScene");
 const sp_beginScene = require("./scenes/singleplayer/sp_beginScene");
 const sp_ongoingScene = require("./scenes/singleplayer/sp_ongoingScene");
 
