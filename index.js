@@ -16,7 +16,7 @@ const stage = new Stage([sp_beginScene, sp_ongoingScene]);
 
 const bot = new Telegraf(process.env.BOT_TOKEN || "");
 
-app.use(commandParts());
+bot.use(commandParts());
 bot.use(howto());
 bot.use(underMaintenanceMiddleware());
 bot.use(session());
