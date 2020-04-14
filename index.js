@@ -31,7 +31,9 @@ bot.use(underMaintenanceMiddleware());
 bot.use(stage.middleware());
 //bot.use(log());
 
-//bot.action("NEW_GAME", (ctx) => ctx.scene.enter("navigationScene"));
+bot.action("NEW_GAME", (ctx) => {
+    return ctx.scene.enter("navigationScene");
+});
 
 bot.command("start", (ctx) => {
     return ctx.reply(
