@@ -199,6 +199,8 @@ function addSpStepResult(ctx, step) {
         setAvgStepScore(ctx, calculateStepAvg(avgScore, numberOfGames + 1 || 1, step));
     }
 
+    console.log(ctx.gameStat.players[ctx.from.id]);
+
     numberOfGames = getStepGameNumber(ctx);
     avgScore = getAvgStepScore(ctx);
     handleTop10Step(ctx, numberOfGames, avgScore);
@@ -264,12 +266,14 @@ function handleTop10Step(ctx, numberOfGames, avgScore) {
             (e) => e.username === (ctx.chat.first_name || "") + (ctx.chat.last_name || "") + ""
         )
     ) {
-        ctx.gameStat.sp_step_top10.find(
+        let res = ctx.gameStat.sp_step_top10.find(
             (e) => e.username === (ctx.chat.first_name || "") + (ctx.chat.last_name || "") + ""
-        ).avgScore = avgScore;
-        ctx.gameStat.sp_step_top10.find(
-            (e) => e.username === (ctx.chat.first_name || "") + (ctx.chat.last_name || "") + ""
-        ).numberOfGames = numberOfGames;
+        );
+
+        console.log("Result is: ", res);
+
+        res.numberOfGames = numberOfGames;
+        res.avgScore = avgScore;
         return;
     }
     if (ctx.gameStat.sp_step_top10.length < 10) {
