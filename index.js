@@ -57,6 +57,9 @@ bot.on("text", (ctx, next) => {
     ctx.sessionDB.get("messages").push([ctx.message]).write();
     // `property`+'DB' is a name of property which contains lowdb instance, default = `sessionDB`, in current example = `dataDB`
     // ctx.dataDB.get('messages').push([ctx.message]).write()
+    localSession.DB.then((DB) => {
+        console.log("Current LocalSession DB:", DB.value());
+    });
 
     return next();
 });
