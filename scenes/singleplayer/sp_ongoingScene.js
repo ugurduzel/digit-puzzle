@@ -304,7 +304,7 @@ function getStepLeaderboard(lst) {
     let temp_s = "";
     temp_s += "Name  ";
     temp_s += " ".repeat(max - 4);
-    temp_s += " | ";
+    temp_s += "  | ";
     const avg_len = temp_s.length - 5;
     temp_s += "Avg Steps | ";
     const total_len = temp_s.length - 1;
