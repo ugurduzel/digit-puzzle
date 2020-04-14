@@ -64,6 +64,33 @@ function logToAdmin(msg) {
     console.log(msg);
 }
 
+function getTime(start) {
+    const millis = Date.now() - start;
+    let seconds = Math.floor(millis / 1000);
+    let minutes = 0;
+    let hours = 0;
+    let days = 0;
+    if (seconds >= 60) {
+        minutes = Math.floor(seconds / 60);
+    }
+    seconds -= minutes * 60;
+
+    if (minutes >= 60) {
+        hours = Math.floor(minutes / 60);
+    }
+    minutes -= hours * 60;
+    if (hours >= 24) {
+        days = Math.floor(hours / 24);
+    }
+    hours -= days * 24;
+
+    const dayString = `${days !== 0 ? (days === 1 ? "1 day, " : days + " days, ") : ""}`;
+    const hoursString = `${hours !== 0 ? (hours === 1 ? "1 hour, " : hours + " hours, ") : ""}`;
+    const minutesString = `${minutes !== 0 ? (minutes === 1 ? "1 minute, " : minutes + " minutes, ") : ""}`;
+    const secondsString = `${seconds !== 0 ? (seconds === 1 ? "1 second" : seconds + " seconds") : ""}`;
+    return dayString + hoursString + minutesString + secondsString;
+}
+
 const beginScene = new Scene("beginScene");
 beginScene.enter((ctx) => {
     ctx.session.game = {};
@@ -86,10 +113,26 @@ beginScene.action(/^[0-9] digits/, (ctx) => {
         );
     }
     ctx.session.game.number = generateRandomNumber(level);
-    logToAdmin(ctx.chat.first_name + " is playing. The number is " + ctx.session.game.number.join(""));
     ctx.session.game.guesses = 1;
     ctx.session.game.history = [];
+    if (ctx.chat.user_name && ctx.chat.user_name === "ugurduzel") {
+        logToAdmin(ctx.chat.first_name + " is playing. The number is " + ctx.session.game.number.join(""));
+    }
 
+    return ctx.reply(
+        "Do you want to play against time?\nYou can aslo play to find in minimum steps.\n<b>Your Choice</b> 🤨",
+        Extra.HTML().markup((m) =>
+            m.inlineKeyboard([m.callbackButton("Time", "Against_Time"), m.callbackButton("Steps", "Against_Steps")])
+        )
+    );
+});
+
+beginScene.action("Against_Time", (ctx) => {
+    ctx.session.game.start = Date.now();
+    return ctx.scene.enter("ongoingScene");
+});
+
+beginScene.action("Against_Steps", (ctx) => {
     return ctx.scene.enter("ongoingScene");
 });
 
@@ -168,6 +211,14 @@ ongoingScene.hears(/.*/, (ctx) => {
     if (won) {
         const { game } = ctx.session;
         delete ctx.session.game;
+        if (game.start) {
+            return ctx.reply(
+                `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${game.number.join("")}</b>.\nYou found it in ${getTime(
+                    game.start
+                )}. 🤯`,
+                Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("New Game", "New Game")]))
+            );
+        }
         return ctx.reply(
             `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${game.number.join("")}</b>.\nYou found it in ${
                 game.guesses
