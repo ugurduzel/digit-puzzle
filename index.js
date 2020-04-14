@@ -31,9 +31,6 @@ localSession.DB.then((DB) => {
     console.log("Current LocalSession DB:", DB.value());
 });
 
-// Telegraf will use `telegraf-session-local` configured above middleware with overrided `property` name
-bot.use(localSession.middleware());
-
 bot.use(commandParts());
 bot.use(howto());
 bot.use(localSession.middleware());
