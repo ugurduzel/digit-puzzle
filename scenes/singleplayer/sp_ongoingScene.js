@@ -226,8 +226,8 @@ function setAvgStepScore(ctx, step) {
         ctx.gameStat.players[ctx.from.id].sp_step[ctx.session.number.length] = [];
     }
     ctx.gameStat.players[ctx.from.id].sp_step[ctx.session.number.length][1] = step;
-    ctx.gameStatDB.get("players")[ctx.from.id].sp_step[ctx.session.number.length][1] = step;
-    ctx.gameStatDB.get("players")[ctx.from.id].sp_step[ctx.session.number.length].write();
+    ctx.gameStatDB.get("players") = ctx.gameStat.players[ctx.from.id];
+    ctx.gameStatDB.get("players").write();
 }
 
 function calculateStepAvg(avgScore, numberOfGames, step) {
