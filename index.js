@@ -23,19 +23,29 @@ bot.use(stage.middleware());
 
 bot.command("newgame", (ctx) => ctx.scene.enter("beginScene"));
 
-bot.action("New Game", (ctx) => ctx.scene.enter("beginScene"));
+bot.action("SINGLEPLAYER_GAME", (ctx) => ctx.scene.enter("beginScene"));
+
+//bot.action("NEW_GAME", (ctx) => ctx.scene.enter("beginScene"));
+bot.action("NEW_GAME", (ctx) =>
+    ctx.reply(
+        `Singleplayer or Multiplayer?`,
+        Markup.inlineKeyboard([
+            Markup.callbackButton("Singleplayer", "SINGLEPLAYER_GAME", "Multiplayer", "MULTIPLAYER_GAME"),
+        ]).extra()
+    )
+);
 
 bot.command("start", (ctx) =>
     ctx.reply(
         `Hi ${ctx.chat.first_name},\nWelcome to Digit Puzzle!\n`,
-        Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play now!", "New Game")]))
+        Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play now!", "NEW_GAME")]))
     )
 );
 
 bot.on("message", (ctx) =>
     ctx.reply(
         "Try /newgame",
-        Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play now!", "New Game")]))
+        Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play now!", "NEW_GAME")]))
     )
 );
 
