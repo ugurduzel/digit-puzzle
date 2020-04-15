@@ -40,6 +40,10 @@ mp_ongoingScene.action("History", (ctx) => {
     return ctx.reply(s);
 });
 
+mp_ongoingScene.action("OK", (ctx) => {
+    ctx.reply("OK!");
+});
+
 mp_ongoingScene.hears(/.*/, (ctx) => {
     console.log("Message: ", ctx.message);
     if (!storage.has(ctx.chat.id)) {
@@ -145,12 +149,9 @@ mp_ongoingScene.enter((ctx) => {
             storage.get(ctx.chat.id).user1.number.length
         } digit number is set for both of you.\n\nStart guessing... 🧐\n\n${
             storage.get(ctx.chat.id).user1.name
-        }\'s turn.`
+        }\'s turn.`,
+        Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("OK", "OK")]))
     );
-});
-
-mp_ongoingScene.on("text", (ctx) => {
-    ctx.reply(ctx.message);
 });
 
 module.exports = mp_ongoingScene;
