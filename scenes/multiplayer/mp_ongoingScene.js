@@ -15,7 +15,7 @@ mp_ongoingScene.action("OK", (ctx) => {
 
 mp_ongoingScene.action("FIN_PLAY_AGAIN", (ctx) => {
     storage.get(ctx.chat.id).user1.ctx.scene.enter("mp_beginScene");
-    storage.get(ctx.chat.id).user1.ctx.scene.enter("mp_beginScene");
+    storage.get(ctx.chat.id).user2.ctx.scene.enter("mp_beginScene");
     return;
 });
 
@@ -147,12 +147,12 @@ mp_ongoingScene.hears(/.*/, (ctx) => {
         // storage.get(ctx.chat.id).user1.ctx.scene.enter("mp_beginScene");
         // storage.get(ctx.chat.id).user2.ctx.scene.enter("mp_beginScene");
 
+        deleteSessionFeatures();
+
         return ctx.reply(
             `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${winner.number.join("")}</b>.\nYou found it in ${
                 winner.guesses
-            } tries. 🤯\n\n
-            ${user1.name} won ${user1.wins || 0} times\n
-            ${user2.name} won ${user2.wins || 0} times`,
+            } tries. 🤯\n\n${user1.name} won ${user1.wins || 0} times\n${user2.name} won ${user2.wins || 0} times`,
             Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "FIN_PLAY_AGAIN")]))
         );
 
