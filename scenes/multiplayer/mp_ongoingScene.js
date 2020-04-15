@@ -3,6 +3,7 @@ const Scene = require("telegraf/scenes/base");
 const Markup = require("telegraf/markup");
 const db = require("../../models/gameModel");
 const { getResult, notDistinct, extractUsername, formatTime } = require("../../utils");
+const { generateRandomNumber, playerLog } = require("../../utils");
 const _ = require("lodash");
 
 const { storage } = require("../../cache");
