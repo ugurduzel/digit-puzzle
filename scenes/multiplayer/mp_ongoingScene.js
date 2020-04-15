@@ -10,6 +10,14 @@ const { storage } = require("../../cache");
 const mp_ongoingScene = new Scene("mp_ongoingScene");
 
 mp_ongoingScene.enter((ctx) => {
+    if (!storage.has(ctx.chat.id)) {
+        storage.set(ctx.chat.id, {
+            user1: null,
+            user2: null,
+            turn: null,
+        });
+    }
+
     let mpGame = storage.get(ctx.chat.id);
     return ctx.reply(
         `A ${mpGame.get("user1").number.length} digit number is set for both of you.\n\nStart guessing... 🧐\n\n${
@@ -50,7 +58,15 @@ mp_ongoingScene.action("History", (ctx) => {
 });
 
 mp_ongoingScene.hears(/.*/, (ctx) => {
+    if (!storage.has(ctx.chat.id)) {
+        storage.set(ctx.chat.id, {
+            user1: null,
+            user2: null,
+            turn: null,
+        });
+    }
     let mpGame = storage.get(ctx.chat.id);
+
     let currentPlayer = getCurrentPlayer(ctx);
 
     const { history, number, guesses } = currentPlayer;
@@ -141,6 +157,13 @@ function deleteSessionFeatures() {
 }
 
 function getCurrentPlayer(ctx) {
+    if (!storage.has(ctx.chat.id)) {
+        storage.set(ctx.chat.id, {
+            user1: null,
+            user2: null,
+            turn: null,
+        });
+    }
     let mpGame = storage.get(ctx.chat.id);
 
     const id = mpGame.get("turn");

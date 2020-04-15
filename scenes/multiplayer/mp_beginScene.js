@@ -14,6 +14,13 @@ const levels = _.range(minLevel, maxLevel + 1);
 const mp_beginScene = new Scene("mp_beginScene");
 
 mp_beginScene.action(/^[0-9] digits/, (ctx) => {
+    if (!storage.has(ctx.chat.id)) {
+        storage.set(ctx.chat.id, {
+            user1: null,
+            user2: null,
+            turn: null,
+        });
+    }
     let mpGame = storage.get(ctx.chat.id);
 
     if (mpGame.get("user1").has("number") && mpGame.get("user1").has("number")) {

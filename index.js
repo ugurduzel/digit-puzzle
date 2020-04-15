@@ -63,16 +63,14 @@ bot.action("NEW_MP_GAME", (ctx) => {
 });
 
 bot.action("JOIN_GAME", (ctx) => {
-    let mpGame = storage.get(ctx.chat.id);
-
-    if (!mpGame.has(ctx.chat.id) && !mpGame.has("user1")) {
-        mpGame.set(ctx.chat.id, {
+    if (!storage.has(ctx.chat.id)) {
+        storage.set(ctx.chat.id, {
             user1: null,
             user2: null,
             turn: null,
         });
     }
-    mpGame = mpGame.get(ctx.chat.id);
+    let mpGame = storage.get(ctx.chat.id);
 
     if (howMany(ctx) === 0) {
         const name = extractUsername(ctx);
