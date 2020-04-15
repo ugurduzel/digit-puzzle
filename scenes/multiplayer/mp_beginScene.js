@@ -78,7 +78,7 @@ mp_beginScene.enter((ctx) => {
     console.log("In begin scene now, ", mpGame);
     console.log("In begin scene now, in if -> ", mpGame.user1);
 
-    if (mpGame.user1 && mpGame.user1.id === ctx.message.id && !mpGame.user1.has("ready")) {
+    if (mpGame.user1 && mpGame.user1.id === ctx.from.id && !mpGame.user1.has("ready")) {
         let copy = { ...mpGame };
         copy.user1.ready = true;
         storage.set(ctx.chat.id, copy);
@@ -91,7 +91,7 @@ mp_beginScene.enter((ctx) => {
             );
         }
     }
-    if (mpGame.user2 && mpGame.user2.id === ctx.message.id && !mpGame.user2.has("ready")) {
+    if (mpGame.user2 && mpGame.user2.id === ctx.from.id && !mpGame.user2.has("ready")) {
         let copy = { ...mpGame };
         copy.user2.ready = true;
         storage.set(ctx.chat.id, copy);
