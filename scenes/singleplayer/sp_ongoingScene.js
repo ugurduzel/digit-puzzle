@@ -284,8 +284,7 @@ function getStepLeaderboard(lst) {
         const item = lst[i];
         s += item.username;
         s += " ".repeat(avg_len - item.username.length) + "  ";
-        let tmp = item.avgScore.toString().length > 4 ? _.take(item.avgScore.toString(), 4) : item.avgScore.toString();
-        s += tmp;
+        s += item.avgScore.toString();
         s += " ".repeat(total_len - (item.username.length + (tmp.length - 2))) + "  ";
         s += item.numberOfGames + "\n";
     }
