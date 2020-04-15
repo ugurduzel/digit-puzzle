@@ -78,7 +78,7 @@ mp_ongoingScene.action(/^[0-9] digits/, (ctx) => {
 });
 
 mp_ongoingScene.action("Quit", (ctx) => {
-    deleteSessionFeatures(ctx);
+    //deleteSessionFeatures(ctx);
     return ctx.reply(
         `Quit is not fully implemented.`,
         Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "FIN_PLAY_AGAIN")]))
