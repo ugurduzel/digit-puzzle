@@ -9,6 +9,10 @@ const { storage } = require("../../cache");
 
 const mp_ongoingScene = new Scene("mp_ongoingScene");
 
+mp_ongoingScene.action("OK", (ctx) => {
+    return ctx.reply("OK!");
+});
+
 mp_ongoingScene.action("FIN_PLAY_AGAIN", (ctx) => {
     storage.get(ctx.chat.id).user1.ctx.scene.enter("mp_beginScene");
     storage.get(ctx.chat.id).user1.ctx.scene.enter("mp_beginScene");
@@ -42,11 +46,29 @@ mp_ongoingScene.action("History", (ctx) => {
     return ctx.reply(s);
 });
 
-mp_ongoingScene.action("OK", (ctx) => {
-    ctx.reply("OK!");
+mp_ongoingScene.enter((ctx) => {
+    if (!storage.has(ctx.chat.id)) {
+        storage.set(ctx.chat.id, {
+            user1: null,
+            user2: null,
+            turn: null,
+        });
+    }
+
+    if (ctx.from.id === storage.get(ctx.chat.id).user2.id) {
+        return ctx.reply(
+            `A ${
+                storage.get(ctx.chat.id).user1.number.length
+            } digit number is set for both of you.\n\nStart guessing... 🧐\n\n${
+                storage.get(ctx.chat.id).user1.name
+            }\'s turn.`,
+            Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("OK", "OK")]))
+        );
+    }
+    return;
 });
 
-mp_ongoingScene.on("text", (ctx) => {
+mp_ongoingScene.hears(/.*/, (ctx) => {
     console.log("Message: ", ctx.message.text);
 
     ctx.reply("We got your number " + ctx.message.text);
@@ -139,28 +161,6 @@ mp_ongoingScene.on("text", (ctx) => {
                 m.inlineKeyboard([m.callbackButton("Get History", "History"), m.callbackButton("Quit", "Quit")])
             )
     );
-});
-
-mp_ongoingScene.enter((ctx) => {
-    if (!storage.has(ctx.chat.id)) {
-        storage.set(ctx.chat.id, {
-            user1: null,
-            user2: null,
-            turn: null,
-        });
-    }
-
-    if (ctx.from.id === storage.get(ctx.chat.id).user2.id) {
-        return ctx.reply(
-            `A ${
-                storage.get(ctx.chat.id).user1.number.length
-            } digit number is set for both of you.\n\nStart guessing... 🧐\n\n${
-                storage.get(ctx.chat.id).user1.name
-            }\'s turn.`,
-            Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("OK", "OK")]))
-        );
-    }
-    return;
 });
 
 module.exports = mp_ongoingScene;
