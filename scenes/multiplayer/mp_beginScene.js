@@ -23,7 +23,7 @@ mp_beginScene.action(/^[0-9] digits/, (ctx) => {
     }
     let mpGame = storage.get(ctx.chat.id);
 
-    if (mpGame.user1.has("number") && mpGame.user1.has("number")) {
+    if (mpGame.user1.hasOwnProperty("number") && mpGame.user2.hasOwnProperty("number")) {
         return;
     }
 
@@ -78,11 +78,11 @@ mp_beginScene.enter((ctx) => {
     console.log("In begin scene now, ", mpGame);
     console.log("In begin scene now, in if -> ", mpGame.user1);
 
-    if (mpGame.user1 && mpGame.user1.id === ctx.from.id && !mpGame.user1.has("ready")) {
+    if (mpGame.user1 && mpGame.user1.id === ctx.from.id && !mpGame.user1.hasOwnProperty("ready")) {
         let copy = { ...mpGame };
         copy.user1.ready = true;
         storage.set(ctx.chat.id, copy);
-        if (mpGame.user2.has("ready") && mpGame.user2.ready) {
+        if (mpGame.user2.hasOwnProperty("ready") && mpGame.user2.ready) {
             return ctx.reply(
                 `Both players have joined.\n\nWe may begin now. Choose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun`,
                 Extra.HTML().markup((m) =>
@@ -91,11 +91,11 @@ mp_beginScene.enter((ctx) => {
             );
         }
     }
-    if (mpGame.user2 && mpGame.user2.id === ctx.from.id && !mpGame.user2.has("ready")) {
+    if (mpGame.user2 && mpGame.user2.id === ctx.from.id && !mpGame.user2.hasOwnProperty("ready")) {
         let copy = { ...mpGame };
         copy.user2.ready = true;
         storage.set(ctx.chat.id, copy);
-        if (mpGame.user1.has("ready") && mpGame.user1.ready) {
+        if (mpGame.user1.hasOwnProperty("ready") && mpGame.user1.ready) {
             return ctx.reply(
                 `Both players have joined.\n\nWe may begin now. Choose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun`,
                 Extra.HTML().markup((m) =>
