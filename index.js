@@ -61,6 +61,15 @@ bot.action("NEW_MP_GAME", (ctx) => {
 });
 
 bot.action("JOIN_GAME", (ctx) => {
+    if (!mpGame.has(ctx.chat.id) && !mpGame.has("user1")) {
+        mpGame.set(ctx.chat.id, {
+            user1: null,
+            user2: null,
+            turn: null,
+        });
+    }
+    mpGame = mpGame.get(ctx.chat.id);
+
     if (howMany(mpGame) === 0) {
         const name = extractUsername(ctx);
         mpGame.set("user1", { id: ctx.from.id, name });
@@ -73,7 +82,7 @@ bot.action("JOIN_GAME", (ctx) => {
 
     if (howMany(mpGame) === 1) {
         if (ctx.from.id === mpGame.get("user1").id) {
-            return ctx.reply("You have already joined.", Extra.HTML().inReplyTo(ctx.message.message_id));
+            return ctx.reply(`${mpGame.get("user1").name} You have already joined.`);
         }
 
         const name = extractUsername(ctx);
@@ -97,7 +106,7 @@ bot.command("start", (ctx) => {
             Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play now!", "NEW_GAME")]))
         );
     }
-    if (!mpGame.has(ctx.chat.id)) {
+    if (!mpGame.has(ctx.chat.id) && !mpGame.has("user1")) {
         mpGame.set(ctx.chat.id, {
             user1: null,
             user2: null,

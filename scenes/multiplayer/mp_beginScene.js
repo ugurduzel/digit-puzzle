@@ -55,9 +55,14 @@ mp_beginScene.action(/^[0-9] digits/, (ctx) => {
 mp_beginScene.enter((ctx) => {
     ctx.reply(`Hello ${extractUsername(ctx)}`);
 
-    if (mpGame.has(ctx.chat.id)) {
-        mpGame = mpGame.get(ctx.chat.id);
+    if (!mpGame.has(ctx.chat.id) && !mpGame.has("user1")) {
+        mpGame.set(ctx.chat.id, {
+            user1: null,
+            user2: null,
+            turn: null,
+        });
     }
+    mpGame = mpGame.get(ctx.chat.id);
 
     if (mpGame.get("user1").id === ctx.message.id && !mpGame.get("user1").has("ready")) {
         mpGame.get("user1").set("ready", true);
