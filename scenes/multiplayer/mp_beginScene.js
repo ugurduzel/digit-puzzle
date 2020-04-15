@@ -5,7 +5,7 @@ const Extra = require("telegraf/extra");
 const Scene = require("telegraf/scenes/base");
 const _ = require("lodash");
 
-const { storage: mpGame } = require("../../cache");
+const { storage } = require("../../cache");
 
 const { extractUsername } = require("../../utils");
 
@@ -14,6 +14,8 @@ const levels = _.range(minLevel, maxLevel + 1);
 const mp_beginScene = new Scene("mp_beginScene");
 
 mp_beginScene.action(/^[0-9] digits/, (ctx) => {
+    let mpGame = storage.get(ctx.chat.id);
+
     if (mpGame.get("user1").has("number") && mpGame.get("user1").has("number")) {
         return;
     }
@@ -55,14 +57,14 @@ mp_beginScene.action(/^[0-9] digits/, (ctx) => {
 mp_beginScene.enter((ctx) => {
     ctx.reply(`Hello ${extractUsername(ctx)}`);
 
-    if (!mpGame.has(ctx.chat.id) && !mpGame.has("user1")) {
-        mpGame.set(ctx.chat.id, {
+    if (!storage.has(ctx.chat.id)) {
+        storage.set(ctx.chat.id, {
             user1: null,
             user2: null,
             turn: null,
         });
     }
-    mpGame = mpGame.get(ctx.chat.id);
+    let mpGame = storage.get(ctx.chat.id);
 
     if (mpGame.get("user1").id === ctx.message.id && !mpGame.get("user1").has("ready")) {
         mpGame.get("user1").set("ready", true);

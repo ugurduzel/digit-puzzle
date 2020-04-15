@@ -10,6 +10,7 @@ const { storage: mpGame } = require("../../cache");
 const mp_ongoingScene = new Scene("mp_ongoingScene");
 
 mp_ongoingScene.enter((ctx) => {
+    let mpGame = storage.get(ctx.chat.id);
     return ctx.reply(
         `A ${mpGame.get("user1").number.length} digit number is set for both of you.\n\nStart guessing... 🧐\n\n${
             mpGame.get("user1").name
@@ -36,7 +37,7 @@ mp_ongoingScene.action("Quit", (ctx) => {
 });
 
 mp_ongoingScene.action("History", (ctx) => {
-    const currentPlayer = getCurrentPlayer();
+    const currentPlayer = getCurrentPlayer(ctx);
 
     const { history } = currentPlayer;
 
@@ -49,7 +50,8 @@ mp_ongoingScene.action("History", (ctx) => {
 });
 
 mp_ongoingScene.hears(/.*/, (ctx) => {
-    let currentPlayer = getCurrentPlayer();
+    let mpGame = storage.get(ctx.chat.id);
+    let currentPlayer = getCurrentPlayer(ctx);
 
     const { history, number, guesses } = currentPlayer;
 
@@ -87,7 +89,7 @@ mp_ongoingScene.hears(/.*/, (ctx) => {
     if (won) {
         currentPlayer.wins = currentPlayer.wins + 1 || 1;
 
-        setPlayer(currentPlayer);
+        setPlayer(ctx, currentPlayer);
 
         const user1 = mpGame.get("user1");
         const user2 = mpGame.get("user2");
@@ -113,7 +115,7 @@ mp_ongoingScene.hears(/.*/, (ctx) => {
         mpGame.set("turn", mpGame.get("user1").id);
     }
 
-    ctx.reply(`It's your turn ${getCurrentPlayer().name}`);
+    ctx.reply(`It's your turn ${getCurrentPlayer(ctx).name}`);
 
     return ctx.reply(
         result,
@@ -138,13 +140,16 @@ function deleteSessionFeatures() {
     delete session.ready;
 }
 
-function getCurrentPlayer() {
+function getCurrentPlayer(ctx) {
+    let mpGame = storage.get(ctx.chat.id);
+
     const id = mpGame.get("turn");
     const user1 = mpGame.get("user1");
     return user1.id === id ? { ...user1 } : { ...mpGame.get("user2") };
 }
 
-function setPlayer(player) {
+function setPlayer(ctx, player) {
+    let mpGame = storage.get(ctx.chat.id);
     const id = player.id;
     if (mpGame.get("user1").id === id) {
         mpGame.set("user1", player);

@@ -22,7 +22,7 @@ const db = require("./models/gameModel");
 const sessionModel = require("./models/sessionModel");
 
 const { extractUsername, howMany } = require("./utils");
-let { storage: mpGame } = require("./cache");
+let { storage } = require("./cache");
 
 const stage = new Stage([navigationScene, sp_beginScene, sp_ongoingScene, mp_beginScene, mp_ongoingScene]);
 
@@ -54,6 +54,8 @@ bot.action("NEW_GAME", (ctx) => {
 });
 
 bot.action("NEW_MP_GAME", (ctx) => {
+    let mpGame = storage.get(ctx.chat.id);
+
     return ctx.reply(
         `Only 2 players should join the game.\nCurrently ${howMany(mpGame)}/2`,
         Markup.inlineKeyboard([Markup.callbackButton("Join!", "JOIN_GAME")]).extra()
@@ -61,6 +63,8 @@ bot.action("NEW_MP_GAME", (ctx) => {
 });
 
 bot.action("JOIN_GAME", (ctx) => {
+    let mpGame = storage.get(ctx.chat.id);
+
     if (!mpGame.has(ctx.chat.id) && !mpGame.has("user1")) {
         mpGame.set(ctx.chat.id, {
             user1: null,
@@ -106,14 +110,13 @@ bot.command("start", (ctx) => {
             Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play now!", "NEW_GAME")]))
         );
     }
-    if (!mpGame.has(ctx.chat.id) && !mpGame.has("user1")) {
-        mpGame.set(ctx.chat.id, {
+    if (!storage.has(ctx.chat.id)) {
+        storage.set(ctx.chat.id, {
             user1: null,
             user2: null,
             turn: null,
         });
     }
-    mpGame = mpGame.get(ctx.chat.id);
 
     return ctx.reply(
         `Hi group ${ctx.chat.title},\nWelcome to Digit Puzzle! 🧩\n\nUse /howto command to see the detailed explanation.`,
