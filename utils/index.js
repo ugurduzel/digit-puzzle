@@ -96,6 +96,10 @@ function notDistinct(_digits) {
     return false;
 }
 
+function extractUsername(ctx) {
+    return ctx.from.username || "" + (ctx.from.first_name || "") + (ctx.from.last_name || "") || ctx.from.id;
+}
+
 module.exports = {
     generateRandomNumber,
     getResult,
@@ -103,4 +107,5 @@ module.exports = {
     playerLog,
     logMessage,
     formatTime,
+    extractUsername,
 };

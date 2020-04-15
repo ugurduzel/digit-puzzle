@@ -7,16 +7,16 @@ const _ = require("lodash");
 
 const levels = _.range(minLevel, maxLevel + 1);
 
-const sp_beginScene = new Scene("sp_beginScene");
+const mp_beginScene = new Scene("mp_beginScene");
 
-sp_beginScene.enter((ctx) => {
+mp_beginScene.enter((ctx) => {
     return ctx.reply(
         "Choose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun",
         Extra.HTML().markup((m) => m.inlineKeyboard(levels.map((l) => m.callbackButton(`${l} digits`, `${l} digits`))))
     );
 });
 
-sp_beginScene.action(/^[0-9] digits/, (ctx) => {
+mp_beginScene.action(/^[0-9] digits/, (ctx) => {
     const level = eval(ctx.match[0][0]);
 
     if (level < minLevel || level > maxLevel) {
@@ -29,12 +29,17 @@ sp_beginScene.action(/^[0-9] digits/, (ctx) => {
         );
     }
 
-    ctx.session.number = ctx.session.number ? ctx.session.number : generateRandomNumber(level);
-    ctx.session.guesses = 1;
-    ctx.session.history = [];
-    playerLog(ctx);
+    ctx.session.users[0].number = ctx.session.users[0].number || generateRandomNumber(level);
+    ctx.session.users[1].number = ctx.session.users[1].number || generateRandomNumber(level);
 
-    return ctx.scene.enter("sp_ongoingScene");
+    ctx.session.users[0].guesses = 1;
+    ctx.session.users[1].guesses = 1;
+
+    ctx.session.users[0].history = [];
+    ctx.session.users[1].history = [];
+    //playerLog(ctx);
+
+    return ctx.scene.enter("mp_ongoingScene");
 });
 
-module.exports = sp_beginScene;
+module.exports = mp_beginScene;

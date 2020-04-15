@@ -72,21 +72,8 @@ sp_ongoingScene.hears(/.*/, (ctx) => {
     ctx.session.history.push({ guess: ctx.message.text, result });
 
     if (won) {
-        const { number, guesses, start } = ctx.session;
+        const { number, guesses } = ctx.session;
 
-        if (start) {
-            const now = Date.now();
-            const result = formatTime(start, now);
-            //addSpTimeResult(ctx, result);
-            ctx.reply(
-                `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${number.join("")}</b>.\nYou found it in ${
-                    result.formattedTime
-                }. 🤯\n\n`, //${getTimeLeaderboard(ctx.gameStat.sp_time_top10)}`,
-                Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "FIN_PLAY_AGAIN")]))
-            );
-            deleteSessionFeatures(ctx.session);
-            return;
-        }
         addSpStepResult(ctx, guesses, number.length);
 
         ctx.reply(
@@ -116,76 +103,8 @@ module.exports = sp_ongoingScene;
 function deleteSessionFeatures(session) {
     delete session.number;
     delete session.guesses;
-    delete session.start;
 }
 
-function addSpTimeResult(ctx, result) {
-    // if (!ctx.gameStat.players[ctx.from.id].sp_time) {
-    //     ctx.gameStat.players[ctx.from.id].sp_time = {};
-    // }
-    // const numberOfGames = getTimeGameNumber(ctx);
-    // if (numberOfGames) {
-    //     setTimeGameNumber(ctx, numberOfGames + 1 || 1);
-    // }
-    // let avgScore = getAvgTimeScore(ctx);
-    // if (!avgScore) {
-    //     setAvgTimeScore(ctx, result);
-    // } else {
-    //     setAvgTimeScore(ctx, calculateTimeAvg(avgScore, numberOfGames + 1 || 1, result));
-    // }
-    // numberOfGames = getTimeGameNumber(ctx);
-    // avgScore = getAvgTimeScore(ctx);
-    // handleTop10Time(ctx, numberOfGames, avgScore);
-}
-
-function getTimeGameNumber(ctx) {
-    const tuple = ctx.gameStat.players[ctx.from.id].sp_time[ctx.session.number.length];
-    return tuple ? tuple[0] : undefined;
-}
-
-function setTimeGameNumber(ctx, number) {
-    if (!ctx.gameStat.players[ctx.from.id].sp_time[ctx.session.number.length]) {
-        ctx.gameStat.players[ctx.from.id].sp_time[ctx.session.number.length] = [];
-    }
-    ctx.gameStat.players[ctx.from.id].sp_time[ctx.session.number.length][0] = number;
-}
-
-function getAvgTimeScore(ctx) {
-    const tuple = ctx.gameStat.players[ctx.from.id].sp_time[ctx.session.number.length];
-    return tuple ? tuple[1] : undefined;
-}
-
-function setAvgTimeScore(ctx, result) {
-    if (!ctx.gameStat.players[ctx.from.id].sp_time[ctx.session.number.length]) {
-        ctx.gameStat.players[ctx.from.id].sp_time[ctx.session.number.length] = [];
-    }
-
-    let totalMillis = 0;
-
-    if (result.seconds) totalMillis += result.seconds * 1000;
-    if (result.minutes) totalMillis += result.minutes * 60 * 1000;
-    if (result.hours) totalMillis += result.hours * 60 * 60 * 1000;
-    if (result.days) totalMillis += result.days * 24 * 60 * 60 * 1000;
-
-    ctx.gameStat.players[ctx.from.id].sp_time[ctx.session.number.length][1] = totalMillis;
-}
-
-function calculateTimeAvg(avgScore, numberOfGames, result) {
-    let totalMillis = avgScore;
-
-    if (result.seconds) totalMillis += result.seconds * 1000;
-    if (result.minutes) totalMillis += result.minutes * 60 * 1000;
-    if (result.hours) totalMillis += result.hours * 60 * 60 * 1000;
-    if (result.days) totalMillis += result.days * 24 * 60 * 60 * 1000;
-
-    totalMillis /= numberOfGames + 1;
-    totalMillis = Math.floor(totalMillis);
-
-    return totalMillis;
-}
-
-//
-//
 function addSpStepResult(ctx, step, level) {
     let result = db.get("players").find({ id: ctx.from.id });
     console.log(result.value());
@@ -212,33 +131,6 @@ function addSpStepResult(ctx, step, level) {
     handleTop10Step(ctx, newCount, newAvg, `sp${level}`);
 }
 
-function calculateStepAvg(avgScore, numberOfGames, step) {
-    return (avgScore * numberOfGames + step) / (numberOfGames + 1);
-}
-
-function handleTop10Time(ctx, numberOfGames, avgScore) {
-    if (!ctx.gameStat.sp_time_top10) {
-        ctx.gameStat.sp_time_top10 = [];
-    }
-    if (ctx.gameStat.sp_time_top10.length < 10) {
-        ctx.gameStat.sp_time_top10.push({
-            avgScore,
-            numberOfGames,
-            username: (ctx.chat.first_name || "") + (ctx.chat.last_name || ""),
-        });
-        ctx.gameStat.sp_time_top10.sort((e1, e2) => (e1.avgScore < e2.avgScore ? -1 : 1));
-        return;
-    }
-    if (ctx.gameStat.sp_time_top10[9] > avgScore) {
-        ctx.gameStat.sp_time_top10[9] = {
-            avgScore,
-            numberOfGames,
-            username: (ctx.chat.first_name || "") + (ctx.chat.last_name || ""),
-        };
-        ctx.gameStat.sp_time_top10.sort((e1, e2) => (e1.avgScore < e2.avgScore ? -1 : 1));
-    }
-}
-
 function handleTop10Step(ctx, numberOfGames, avgScore, sp) {
     const username = (ctx.chat.first_name || "") + (ctx.chat.last_name || "") + "";
     let top10 = db.get(sp + "_step_top10");
@@ -254,12 +146,15 @@ function handleTop10Step(ctx, numberOfGames, avgScore, sp) {
                 numberOfGames,
                 username,
             })
+            .sortBy("avgScore")
             .write();
+        return;
     }
-}
-
-function getTimeLeaderboard(lst) {
-    return "Time leaderboard is under construction.";
+    let array = top10.value();
+    if (array[9] > avgScore) {
+        array[9] = avgScore;
+        db.set(sp + "_step_top10", array).write;
+    }
 }
 
 function getStepLeaderboard(lst) {
