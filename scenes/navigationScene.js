@@ -10,16 +10,11 @@ navigationScene.action("MULTIPLAYER_GAME", (ctx) => ctx.reply("Multiplayer is un
 
 navigationScene.action("NEW_GAME", (ctx) => {
     let player = db.get("players").find({ id: ctx.from.id });
-    player.value();
     if (!player.value()) {
         ctx.reply("Just a second...");
         db.get("players")
             .push({
                 id: ctx.from.id,
-                "3": { count: 0, avgScore: 0 },
-                "4": { count: 0, avgScore: 0 },
-                "5": { count: 0, avgScore: 0 },
-                "6": { count: 0, avgScore: 0 },
             })
             .write();
         ctx.reply("We have added you to our userbase. 👏\n\nHave fun! ");

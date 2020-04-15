@@ -31,7 +31,6 @@ bot.use(stage.middleware());
 
 bot.action("NEW_GAME", (ctx) => {
     let player = db.get("players").find({ id: ctx.from.id });
-    player.value();
     if (!player.value()) {
         ctx.reply("Just a second...");
         db.get("players")
