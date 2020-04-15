@@ -197,7 +197,7 @@ function addSpStepResult(ctx, step, level) {
             .find({ id: ctx.from.id })
             .assign({ [`${level}_count`]: 1, [`${level}_avg`]: step })
             .write();
-        handleTop10Step(ctx, 1, step);
+        handleTop10Step(ctx, 1, step, `sp${level}`);
         return;
     }
     const newAvg = (avgScore * count + step) / (count + 1);
