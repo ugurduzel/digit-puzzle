@@ -47,7 +47,7 @@ mp_ongoingScene.action("OK", (ctx) => {
 });
 
 mp_ongoingScene.hears(/.*/, (ctx) => {
-    console.log("Message: ", ctx.message);
+    console.log("Message: ", ctx.message.text);
     if (!storage.has(ctx.chat.id)) {
         storage.set(ctx.chat.id, {
             user1: null,

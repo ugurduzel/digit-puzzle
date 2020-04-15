@@ -27,11 +27,11 @@ const stage = new Stage([navigationScene, sp_beginScene, sp_ongoingScene, mp_beg
 
 const bot = new Telegraf(process.env.BOT_TOKEN || "");
 
-bot.use(commandParts());
-bot.use(howto());
+//bot.use(commandParts());
+//bot.use(howto());
 //bot.use(mpFilter());
 bot.use(sessionModel.middleware());
-bot.use(underMaintenanceMiddleware());
+//bot.use(underMaintenanceMiddleware());
 bot.use(stage.middleware());
 
 bot.action("NEW_GAME", (ctx) => {
