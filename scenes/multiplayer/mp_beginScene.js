@@ -4,6 +4,8 @@ const Markup = require("telegraf/markup");
 const Extra = require("telegraf/extra");
 const Scene = require("telegraf/scenes/base");
 const _ = require("lodash");
+const EventEmitter = require("events");
+const myEmitter = new EventEmitter();
 
 const { storage } = require("../../cache");
 
@@ -42,6 +44,13 @@ mp_beginScene.action(/^[0-9] digits/, (ctx) => {
                 m.inlineKeyboard(levels.map((l) => m.callbackButton(`${l} digits`, `${l} digits`)))
             )
         );
+    }
+
+    if (!storage.get(ctx.chat.id).hasOwnProperty("digitDecided")) {
+        let copy = { ...storage.get(ctx.chat.id) };
+        copy.digitDecided = true;
+        storage.set(ctx.chat.id, copy);
+        return ctx.scene.enter("mp_ongoingScene");
     }
 
     let user1 = { ...mpGame.user1 };
