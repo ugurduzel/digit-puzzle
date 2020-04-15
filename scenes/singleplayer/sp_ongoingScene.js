@@ -79,6 +79,7 @@ sp_ongoingScene.hears(/.*/, (ctx) => {
             const result = formatTime(start, now);
             //addSpTimeResult(ctx, result);
             ctx.gameStatDB.write();
+            ctx.gameStatDB.read();
             ctx.reply(
                 `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${number.join("")}</b>.\nYou found it in ${
                     result.formattedTime
@@ -90,10 +91,11 @@ sp_ongoingScene.hears(/.*/, (ctx) => {
         }
         addSpStepResult(ctx, guesses);
         ctx.gameStatDB.write();
+        ctx.gameStatDB.read();
         ctx.reply(
             `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${number.join(
                 ""
-            )}</b>.\nYou found it in ${guesses} tries. 🤯\n\n${getStepLeaderboard(ctx.gameStat.sp_step_top10)}`,
+            )}</b>.\nYou found it in ${guesses} tries. 🤯\n\n${getStepLeaderboard(ctx.gameStat.get("sp_step_top10"))}`,
             Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "FIN_PLAY_AGAIN")]))
         );
         deleteSessionFeatures(ctx.session);
@@ -203,7 +205,7 @@ function addSpStepResult(ctx, step) {
 
     console.log("Player: ", ctx.gameStat.players[ctx.from.id]);
     handleTop10Step(ctx, getStepGameNumber(ctx), getAvgStepScore(ctx));
-    console.log("Leaderboard:", ctx.gameStat.sp_step_top10);
+    console.log("Leaderboard:", ctx.gameStatDB.get("sp_step_top10"));
 }
 
 function getStepGameNumber(ctx) {

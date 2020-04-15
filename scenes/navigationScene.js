@@ -20,6 +20,7 @@ navigationScene.action("NEW_GAME", (ctx) => {
         ctx.reply("We have added you to our userbase. 👏\n\nHave fun! ");
     }
     ctx.gameStatDB.write();
+    ctx.gameStatDB.read();
 
     return ctx.reply(
         `Singleplayer or Multiplayer?`,
