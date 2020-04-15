@@ -2,7 +2,7 @@ const Extra = require("telegraf/extra");
 const Scene = require("telegraf/scenes/base");
 const Markup = require("telegraf/markup");
 const db = require("../../models/gameModel");
-const { getResult, notDistinct, formatTime } = require("../../utils");
+const { getResult, notDistinct, extractUsername, formatTime } = require("../../utils");
 const _ = require("lodash");
 
 const { storage } = require("../../cache");
@@ -37,7 +37,7 @@ mp_ongoingScene.action("History", (ctx) => {
     const currentPlayer = getCurrentPlayer(ctx);
 
     if (currentPlayer.id !== ctx.from.id) {
-        return ctx.reply("It's not your turn please wait.");
+        return;
     }
 
     const { history } = currentPlayer;
@@ -65,8 +65,7 @@ mp_ongoingScene.enter((ctx) => {
                 storage.get(ctx.chat.id).user1.number.length
             } digit number is set for both of you.\n\nStart guessing... 🧐\n\n${
                 storage.get(ctx.chat.id).user1.name
-            }\'s turn.`,
-            Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("OK", "OK")]))
+            }\'s turn.`
         );
     }
     return;
@@ -74,7 +73,7 @@ mp_ongoingScene.enter((ctx) => {
 
 mp_ongoingScene.on("text", (ctx) => {
     if (storage.get(ctx.chat.id).turn !== ctx.from.id) {
-        return ctx.reply("It's not your turn.", Extra.HTML().inReplyTo(ctx.message.message_id));
+        return ctx.reply("It's not your turn. " + extractUsername(ctx), Extra.HTML().inReplyTo(ctx.message.message_id));
     }
 
     if (!storage.has(ctx.chat.id)) {
