@@ -121,7 +121,6 @@ mp_ongoingScene.hears(/.*/, (ctx) => {
     const { won, result } = getResult(ctx.message.text, number);
 
     if (won) {
-        console.log("Won: ", won);
         currentPlayer.wins = currentPlayer.wins + 1 || 1;
 
         mpGame = storage.get(ctx.chat.id);
@@ -136,8 +135,6 @@ mp_ongoingScene.hears(/.*/, (ctx) => {
         } else {
             winner = user2;
         }
-
-        console.log("Winner: ", winner);
 
         // storage.get(ctx.chat.id).user1.ctx.scene.enter("mp_beginScene");
         // storage.get(ctx.chat.id).user2.ctx.scene.enter("mp_beginScene");
