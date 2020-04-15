@@ -36,6 +36,10 @@ mp_ongoingScene.action("Quit", (ctx) => {
 mp_ongoingScene.action("History", (ctx) => {
     const currentPlayer = getCurrentPlayer(ctx);
 
+    if (currentPlayer.id !== ctx.from.id) {
+        return;
+    }
+
     const { history } = currentPlayer;
 
     let s = "Your guesses,\n";
