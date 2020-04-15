@@ -83,7 +83,7 @@ mp_ongoingScene.hears(/.*/, (ctx) => {
     //         turn: null,
     //     });
     // }
-    // let mpGame = storage.get(ctx.chat.id);
+    let mpGame = storage.get(ctx.chat.id);
 
     let currentPlayer = getCurrentPlayer(ctx);
 
