@@ -20,13 +20,13 @@ mp_ongoingScene.action("FIN_PLAY_AGAIN", (ctx) => {
 });
 
 mp_ongoingScene.action("Quit", (ctx) => {
-    deleteSessionFeatures();
+    deleteSessionFeatures(ctx);
     return ctx.reply(
         `Quit is not fully implemented.`,
         Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "FIN_PLAY_AGAIN")]))
     );
     const { number } = ctx.session;
-    deleteSessionFeatures();
+    deleteSessionFeatures(ctxctx);
     return ctx.reply(
         `Quitted\nThe number was ${number.join("")}`,
         Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "FIN_PLAY_AGAIN")]))
@@ -147,7 +147,7 @@ mp_ongoingScene.hears(/.*/, (ctx) => {
         // storage.get(ctx.chat.id).user1.ctx.scene.enter("mp_beginScene");
         // storage.get(ctx.chat.id).user2.ctx.scene.enter("mp_beginScene");
 
-        deleteSessionFeatures();
+        deleteSessionFeatures(ctx);
 
         return ctx.reply(
             `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${winner.number.join("")}</b>.\nYou found it in ${
@@ -156,7 +156,7 @@ mp_ongoingScene.hears(/.*/, (ctx) => {
             Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "FIN_PLAY_AGAIN")]))
         );
 
-        //deleteSessionFeatures();
+        //deleteSessionFeatures(ctx);
         storage.get(ctx.chat.id).user1.ctx.scene.enter("mp_beginScene");
         storage.get(ctx.chat.id).user2.ctx.scene.enter("mp_beginScene");
         return;
@@ -190,15 +190,19 @@ mp_ongoingScene.hears(/.*/, (ctx) => {
 
 module.exports = mp_ongoingScene;
 
-function deleteSessionFeatures() {
-    session.users1.number = null;
-    session.users1.guesses = null;
-    session.users1.history = null;
-    session.users2.number = null;
-    session.users2.guesses = null;
-    session.users2.history = null;
-    session.turn = null;
-    session.ready = null;
+function deleteSessionFeatures(ctx) {
+    let copy = { ...storage.get(ctx.chat.id) };
+
+    copy.users1.number = null;
+    copy.users1.guesses = null;
+    copy.users1.history = null;
+    copy.users2.number = null;
+    copy.users2.guesses = null;
+    copy.users2.history = null;
+    copy.turn = null;
+    copy.ready = null;
+
+    storage.set(ctx.chat.id, copy);
 }
 
 function getCurrentPlayer(ctx) {
