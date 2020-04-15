@@ -19,7 +19,7 @@ sp_ongoingScene.action("Quit", (ctx) => {
     const { number } = ctx.session;
     deleteSessionFeatures(ctx.session);
     return ctx.reply(
-        `Quitted\nThe number was ${number.join("")}`,
+        `Quitted\nThe number was `, //${number.join("")}
         Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "FIN_PLAY_AGAIN")]))
     );
 });
