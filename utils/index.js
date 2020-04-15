@@ -2,7 +2,6 @@ const _ = require("lodash");
 const { admin_from_id, admin_chat_id: chat_id } = require("../configs/constants.json");
 const Telegram = require("telegraf/telegram");
 const telegram = new Telegram(process.env.BOT_TOKEN || "");
-const { storage: mpGame } = require("../cache");
 
 function howMany() {
     if (!mpGame.get("user1")) return 0;

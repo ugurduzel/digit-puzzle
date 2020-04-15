@@ -55,13 +55,13 @@ bot.action("NEW_GAME", (ctx) => {
 
 bot.action("NEW_MP_GAME", (ctx) => {
     return ctx.reply(
-        `Only 2 players should join the game.\nCurrently ${howMany()}/2`,
+        `Only 2 players should join the game.\nCurrently ${howMany(mpGame)}/2`,
         Markup.inlineKeyboard([Markup.callbackButton("Join!", "JOIN_GAME")]).extra()
     );
 });
 
 bot.action("JOIN_GAME", (ctx) => {
-    if (howMany() === 0) {
+    if (howMany(mpGame) === 0) {
         const name = extractUsername(ctx);
         mpGame.set("user1", { id: ctx.from.id, name });
         return ctx.reply(
@@ -70,7 +70,7 @@ bot.action("JOIN_GAME", (ctx) => {
         );
     }
 
-    if (howMany() === 1) {
+    if (howMany(mpGame) === 1) {
         const name = extractUsername(ctx);
         mpGame.set("user2", { id: ctx.from.id, name });
         ctx.reply(` Both players joind.\n\n${mpGame.get("user1").name} vs ${name}\n\nLet\'s begin...`);
