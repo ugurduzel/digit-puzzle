@@ -64,16 +64,21 @@ bot.action("JOIN_GAME", (ctx) => {
     if (howMany(mpGame) === 0) {
         const name = extractUsername(ctx);
         mpGame.set("user1", { id: ctx.from.id, name });
-        return ctx.reply(
+        ctx.reply(
             `I added ${name}. Currently 1/2.\n\nWe are waiting for another player`,
             Markup.inlineKeyboard([Markup.callbackButton("Join!", "JOIN_GAME")]).extra()
         );
+        return ctx.scene.enter("mp_beginScene");
     }
 
     if (howMany(mpGame) === 1) {
+        if (ctx.from.id === mpGame.get("user1").id) {
+            return ctx.reply("You have already joined.", Extra.HTML().inReplyTo(ctx.message.message_id));
+        }
+
         const name = extractUsername(ctx);
         mpGame.set("user2", { id: ctx.from.id, name });
-        ctx.reply(` Both players joind.\n\n${mpGame.get("user1").name} vs ${name}\n\nLet\'s begin...`);
+        ctx.reply(` Both players joined.\n\n${mpGame.get("user1").name} vs ${name}\n\nLet\'s begin...`);
         return ctx.scene.enter("mp_beginScene");
     }
 

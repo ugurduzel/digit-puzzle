@@ -7,12 +7,16 @@ const _ = require("lodash");
 
 const { storage: mpGame } = require("../../cache");
 
+const { extractUsername } = require("../../utils");
+
 const levels = _.range(minLevel, maxLevel + 1);
 
 const mp_beginScene = new Scene("mp_beginScene");
 
 mp_beginScene.action(/^[0-9] digits/, (ctx) => {
-    console.log("Action received", ctx.from);
+    if (mpGame.get("user1").has("number") && mpGame.get("user1").has("number")) {
+        return;
+    }
 
     const level = eval(ctx.match[0][0]);
 
@@ -49,12 +53,34 @@ mp_beginScene.action(/^[0-9] digits/, (ctx) => {
 });
 
 mp_beginScene.enter((ctx) => {
-    return ctx.reply(
-        `Welcome ${mpGame.get("user1").name} and ${
-            mpGame.get("user2").name
-        }\n\nChoose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun`,
-        Extra.HTML().markup((m) => m.inlineKeyboard(levels.map((l) => m.callbackButton(`${l} digits`, `${l} digits`))))
-    );
+    ctx.reply(`Hello ${extractUsername(ctx)}`);
+
+    if (mpGame.has(ctx.chat.id)) {
+        mpGame = mpGame.get(ctx.chat.id);
+    }
+
+    if (mpGame.get("user1").id === ctx.message.id && !mpGame.get("user1").has("ready")) {
+        mpGame.get("user1").set("ready", true);
+        if (mpGame.get("user2").has("ready") && mpGame.get("user2").ready) {
+            return ctx.reply(
+                `Both players have joined.\n\nWe may begin now. Choose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun`,
+                Extra.HTML().markup((m) =>
+                    m.inlineKeyboard(levels.map((l) => m.callbackButton(`${l} digits`, `${l} digits`)))
+                )
+            );
+        }
+    }
+    if (mpGame.get("user2").id === ctx.message.id && !mpGame.get("user2").has("ready")) {
+        mpGame.get("user2").set("ready", true);
+        if (mpGame.get("user1").has("ready") && mpGame.get("user1").ready) {
+            return ctx.reply(
+                `Both players have joined.\n\nWe may begin now. Choose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun`,
+                Extra.HTML().markup((m) =>
+                    m.inlineKeyboard(levels.map((l) => m.callbackButton(`${l} digits`, `${l} digits`)))
+                )
+            );
+        }
+    }
 });
 
 module.exports = mp_beginScene;

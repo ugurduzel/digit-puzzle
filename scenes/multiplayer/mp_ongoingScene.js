@@ -135,6 +135,7 @@ function deleteSessionFeatures() {
     delete session.users[1].guesses;
     delete session.users[1].history;
     delete session.turn;
+    delete session.ready;
 }
 
 function getCurrentPlayer() {
