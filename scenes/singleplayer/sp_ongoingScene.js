@@ -92,7 +92,7 @@ sp_ongoingScene.hears(/.*/, (ctx) => {
         ctx.reply(
             `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${number.join(
                 ""
-            )}</b>.\nYou found it in ${guesses} tries. 🤯\n\n${getStepLeaderboard(db.get("sp3_step_top10").values())}`,
+            )}</b>.\nYou found it in ${guesses} tries. 🤯\n\n${getStepLeaderboard(db.get("sp3_step_top10").value())}`,
             Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "FIN_PLAY_AGAIN")]))
         );
         deleteSessionFeatures(ctx.session);
@@ -206,7 +206,7 @@ function addSpStepResult(ctx, step) {
     const newAvg = (avgScore * count + step) / (count + 1);
     const newCount = count + 1;
     db.get("players").find({ id: ctx.from.id }).assign({ count: newCount, avgScore: newAvg }).write();
-    console.log("db.get: ", db.get("players").values());
+    console.log("db.get: ", db.get("players").value());
     handleTop10Step(ctx, newCount, newAvg);
 }
 
