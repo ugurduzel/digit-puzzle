@@ -87,7 +87,7 @@ mp_ongoingScene.on("text", (ctx) => {
 
     let currentPlayer = getCurrentPlayer(ctx);
 
-    const { history, number, guesses } = currentPlayer;
+    const { history, number } = currentPlayer;
 
     if (isNaN(ctx.message.text)) {
         return ctx.reply(
@@ -135,6 +135,9 @@ mp_ongoingScene.on("text", (ctx) => {
         } else {
             winner = user2;
         }
+
+        storage.get(ctx.chat.id).user1.ctx.scene.enter("mp_beginScene");
+        storage.get(ctx.chat.id).user2.ctx.scene.enter("mp_beginScene");
 
         return ctx.reply(
             `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${winner.number.join("")}</b>.\nYou found it in ${
