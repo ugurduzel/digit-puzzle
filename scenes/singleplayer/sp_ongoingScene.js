@@ -205,6 +205,7 @@ function addSpStepResult(ctx, step) {
 
     let { count, avgScore } = result.value();
     if (!count && !avgScore) {
+        console.log("In if " + count + " " + avgScore);
         db.get("players").find({ id: ctx.from.id }).assign({ "3_count": 1, "3_avg": step }).write();
         handleTop10Step(ctx, 1, step);
         return;
