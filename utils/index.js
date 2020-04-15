@@ -3,7 +3,7 @@ const { admin_from_id, admin_chat_id: chat_id } = require("../configs/constants.
 const Telegram = require("telegraf/telegram");
 const telegram = new Telegram(process.env.BOT_TOKEN || "");
 
-function howMany() {
+function howMany(mpGame) {
     if (!mpGame.get("user1")) return 0;
     if (!mpGame.get("user2")) return 1;
     return 2;
