@@ -8,6 +8,9 @@ const mpFilter = () => (ctx, next) => {
     if (ctx.chat.type === "group") {
         if (mpGame.has(ctx.chat.id)) {
             mpGame = mpGame.get(ctx.chat.id);
+            if (mpGame.user1 || mpGame.user2) {
+                return next();
+            }
             if (ctx.message.id === mpGame.user1.id || ctx.message.id === mpGame.user2.id) {
                 if (mpGame.get("turn") && ctx.message.id === mpGame.get("turn")) {
                     return next();

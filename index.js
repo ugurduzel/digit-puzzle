@@ -74,7 +74,7 @@ bot.action("JOIN_GAME", (ctx) => {
         const name = extractUsername(ctx);
         mpGame.set("user2", { id: ctx.from.id, name });
         ctx.reply(` Both players joind.\n\n${mpGame.get("user1").name} vs ${name}\n\nLet\'s begin...`);
-        ctx.scene.enter("mp_beginScene");
+        return ctx.scene.enter("mp_beginScene");
     }
 
     return ctx.reply(

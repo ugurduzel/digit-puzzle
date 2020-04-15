@@ -11,16 +11,9 @@ const levels = _.range(minLevel, maxLevel + 1);
 
 const mp_beginScene = new Scene("mp_beginScene");
 
-mp_beginScene.enter((ctx) => {
-    return ctx.reply(
-        `Welcome ${mpGame.get("user1").name} and ${
-            mpGame.get("user2").name
-        }\n\nChoose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun`,
-        Extra.HTML().markup((m) => m.inlineKeyboard(levels.map((l) => m.callbackButton(`${l} digits`, `${l} digits`))))
-    );
-});
-
 mp_beginScene.action(/^[0-9] digits/, (ctx) => {
+    console.log("Action received", ctx.from);
+
     const level = eval(ctx.match[0][0]);
 
     if (level < minLevel || level > maxLevel) {
@@ -53,6 +46,15 @@ mp_beginScene.action(/^[0-9] digits/, (ctx) => {
     //playerLog(ctx);
 
     return ctx.scene.enter("mp_ongoingScene");
+});
+
+mp_beginScene.enter((ctx) => {
+    return ctx.reply(
+        `Welcome ${mpGame.get("user1").name} and ${
+            mpGame.get("user2").name
+        }\n\nChoose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun`,
+        Extra.HTML().markup((m) => m.inlineKeyboard(levels.map((l) => m.callbackButton(`${l} digits`, `${l} digits`))))
+    );
 });
 
 module.exports = mp_beginScene;
