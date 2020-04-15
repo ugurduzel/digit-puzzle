@@ -203,9 +203,7 @@ function addSpStepResult(ctx, step) {
     console.log(result.value());
     if (!result.value()) return null;
 
-    let { count, avgScore } = result.value();
-    if (!count && !avgScore) {
-        console.log("In if " + count + " " + avgScore);
+    if (!result.value()["3_count"] && result.value()["3_score"]) {
         db.get("players").find({ id: ctx.from.id }).assign({ "3_count": 1, "3_avg": step }).write();
         handleTop10Step(ctx, 1, step);
         return;
@@ -273,11 +271,9 @@ function handleTop10Step(ctx, numberOfGames, avgScore) {
     //     };
     //     ctx.gameStat.sp_step_top10.sort((e1, e2) => (e1.avgScore < e2.avgScore ? -1 : 1));
     // }
-    console.log("Callig with " + numberOfGames + " " + avgScore);
     const username = (ctx.chat.first_name || "") + (ctx.chat.last_name || "") + "";
     let top10 = db.get("sp3_step_top10");
     let found = top10.find({ username });
-    console.log("Found.value", found.value());
     if (found.value()) {
         found.assign({ avgScore, numberOfGames }).write();
         return;
