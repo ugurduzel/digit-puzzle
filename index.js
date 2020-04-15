@@ -37,10 +37,6 @@ bot.action("NEW_GAME", (ctx) => {
         db.get("players")
             .push({
                 id: ctx.from.id,
-                "3": { count: 0, avgScore: 0 },
-                "4": { count: 0, avgScore: 0 },
-                "5": { count: 0, avgScore: 0 },
-                "6": { count: 0, avgScore: 0 },
             })
             .write();
         ctx.reply("We have added you to our userbase. 👏\n\nHave fun! ");
