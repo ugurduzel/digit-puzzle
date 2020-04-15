@@ -21,6 +21,8 @@ const mp_ongoingScene = require("./scenes/multiplayer/mp_ongoingScene");
 const db = require("./models/gameModel");
 const sessionModel = require("./models/sessionModel");
 
+const { extractUsername } = require("./utils");
+
 const stage = new Stage([
     navigationScene,
     sp_beginScene,
@@ -57,8 +59,31 @@ bot.action("NEW_GAME", (ctx) => {
     return ctx.scene.enter("navigationScene");
 });
 
+bot.action("JOIN_GAME", (ctx) => {
+    if (ctx.session.users.length < 2) {
+        ctx.session.users.push({ id: ctx.from.id, name: extractUsername(ctx) });
+        let addedPlayer = ctx.session.users.find((u) => u.id === ctx.from.id);
+        let replyStr = `We added ${addedPlayer.name}. Currently ${ctx.session.users.length}/2\n\n`;
+        if (ctx.session.users.length < 2) {
+            replyStr += `We are waiting for another player`;
+            return ctx.reply(replyStr, Markup.inlineKeyboard([Markup.callbackButton("Join!", "JOIN_GAME")]).extra());
+        }
+        if (ctx.session.users.length === 2) {
+            replyStr += `Both players joind.\n\n${ctx.session.users[0].name} vs ${ctx.session.users[1].name}\n\nLet\'s begin...`;
+            ctx.reply(replyStr);
+            return ctx.scene.enter("mp_beginScene");
+        }
+    }
+    return ctx.reply(
+        `This session is currently full.\nThere is a heating match between ${ctx.session.users[0].name} and ${ctx.session.users[1].name}`
+    );
+});
+
 bot.action("NEW_MP_GAME", (ctx) => {
-    return ctx.scene.enter("mp_navigationScene");
+    return ctx.reply(
+        `Only 2 players can join the game.\nCurrently ${ctx.session.users.length}/2`,
+        Markup.inlineKeyboard([Markup.callbackButton("Join!", "JOIN_GAME")]).extra()
+    );
 });
 
 bot.command("start", (ctx) => {

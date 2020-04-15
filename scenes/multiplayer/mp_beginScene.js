@@ -11,7 +11,7 @@ const mp_beginScene = new Scene("mp_beginScene");
 
 mp_beginScene.enter((ctx) => {
     return ctx.reply(
-        "Choose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun",
+        `Welcome ${ctx.session.users[0].name} and ${ctx.session.users[1].name}\n\nChoose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun`,
         Extra.HTML().markup((m) => m.inlineKeyboard(levels.map((l) => m.callbackButton(`${l} digits`, `${l} digits`))))
     );
 });
