@@ -15,8 +15,4 @@ const sessionModel = new LocalSession({
     },
 });
 
-sessionModel.DB.then((DB) => {
-    console.log("Current sessionModel:", DB.value());
-});
-
 module.exports = sessionModel;

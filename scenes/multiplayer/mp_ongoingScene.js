@@ -103,6 +103,9 @@ mp_ongoingScene.hears(/.*/, (ctx) => {
 
     const { won, result } = getResult(ctx.message.text, number);
 
+    console.log(currentPlayer.name + " - Number: ", number);
+    console.log(currentPlayer.name + " - Result: ", result);
+
     if (won) {
         currentPlayer.wins = currentPlayer.wins + 1 || 1;
 
