@@ -285,7 +285,7 @@ function getStepLeaderboard(lst) {
         s += item.username;
         s += " ".repeat(avg_len - item.username.length) + "  ";
         s += item.avgScore.toString();
-        s += " ".repeat(total_len - (item.username.length + (tmp.length - 2))) + "  ";
+        s += " ".repeat(total_len - item.username.length) + "  ";
         s += item.numberOfGames + "\n";
     }
 
