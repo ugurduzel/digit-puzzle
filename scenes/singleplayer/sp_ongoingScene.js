@@ -6,6 +6,10 @@ const { getResult, notDistinct, formatTime } = require("../../utils");
 const _ = require("lodash");
 const sp_ongoingScene = new Scene("sp_ongoingScene");
 
+sp_ongoingScene.telegram.getMe().then((botInfo) => {
+    sp_ongoingScene.options.username = botInfo.username;
+});
+
 sp_ongoingScene.enter((ctx) => {
     return ctx.reply(`I have a ${ctx.session.number.length} digit number in mind.\n\nStart guessing... 🧐`);
 });
