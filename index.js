@@ -23,30 +23,32 @@ const bot = new Telegraf(process.env.BOT_TOKEN || "");
 
 bot.use(commandParts());
 bot.use(howto());
-//bot.use(gameModel.middleware());
 bot.use(sessionModel.middleware());
 bot.use(underMaintenanceMiddleware());
 bot.use(stage.middleware());
 //bot.use(log());
 
 bot.action("NEW_GAME", (ctx) => {
-    let player = db.get("players").find({ id: ctx.from.id });
-    if (!player.value()) {
-        ctx.reply("Just a second...");
-        db.get("players")
-            .push({
-                id: ctx.from.id,
-            })
-            .write();
-        ctx.reply("We have added you to our userbase. 👏\n\nHave fun! ");
-    } else {
-        console.log("Player " + ctx.from.id + " is found\n" + player);
-    }
+    // let player = db.get("players").find({ id: ctx.from.id });
+    // if (!player.value()) {
+    //     ctx.reply("Just a second...");
+    //     db.get("players")
+    //         .push({
+    //             id: ctx.from.id,
+    //         })
+    //         .write();
+    //     ctx.reply("We have added you to our userbase. 👏\n\nHave fun! ");
+    // } else {
+    //     console.log("Player " + ctx.from.id + " is found\n" + player);
+    // }
 
     return ctx.scene.enter("navigationScene");
 });
 
 bot.command("start", (ctx) => {
+    console.log("AT START \n\n\n");
+    console.log("From: \n", ctx.from);
+    console.log("Chat: \n", ctx.chat);
     return ctx.reply(
         `Hi ${ctx.chat.first_name},\nWelcome to Digit Puzzle! 🧩\n\nUse /howto command to see the detailed explanation.`,
         Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play now!", "NEW_GAME")]))
