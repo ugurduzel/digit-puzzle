@@ -27,6 +27,10 @@ const stage = new Stage([navigationScene, sp_beginScene, sp_ongoingScene, mp_beg
 
 const bot = new Telegraf(process.env.BOT_TOKEN || "");
 
+bot.telegram.getMe().then((botInfo) => {
+    bot.options.username = botInfo.username;
+});
+
 //bot.use(commandParts());
 //bot.use(howto());
 //bot.use(mpFilter());
