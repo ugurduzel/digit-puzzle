@@ -85,21 +85,21 @@ bot.action("JOIN_GAME", (ctx) => {
     }
 
     if (howMany(ctx) === 1) {
-        if (ctx.from.id === mpGame.get("user1").id) {
-            return ctx.reply(`${mpGame.get("user1").name} You have already joined.`);
+        if (ctx.from.id === mpGame["user1"].id) {
+            return ctx.reply(`${mpGame["user1"].name} You have already joined.`);
         }
 
         const name = extractUsername(ctx);
         let copy = { ...mpGame };
         copy.user2 = { id: ctx.from.id, name };
         storage.set(ctx.chat.id, copy);
-        ctx.reply(` Both players joined.\n\n${mpGame.get("user1").name} vs ${name}\n\nLet\'s begin...`);
+        ctx.reply(` Both players joined.\n\n${mpGame["user1"].name} vs ${name}\n\nLet\'s begin...`);
         return ctx.scene.enter("mp_beginScene");
     }
 
     return ctx.reply(
         `This session is currently full.\nThere is a heating match between 
-        ${mpGame.get("user1").name} vs ${mpGame.get("user2").name}`
+        ${mpGame["user1"].name} vs ${mpGame["user2"].name}`
     );
 });
 
