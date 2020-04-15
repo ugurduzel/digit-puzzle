@@ -2,7 +2,7 @@ const Extra = require("telegraf/extra");
 const Scene = require("telegraf/scenes/base");
 const Markup = require("telegraf/markup");
 
-const { storage: mpGame } = require("../cache");
+let { storage: mpGame } = require("../cache");
 
 const mpFilter = () => (ctx, next) => {
     if (ctx.chat.type === "group") {
