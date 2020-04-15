@@ -251,14 +251,13 @@ module.exports = mp_ongoingScene;
 function deleteSessionFeatures(ctx) {
     let copy = { ...storage.get(ctx.chat.id) };
 
-    copy.users1.number = null;
-    copy.users1.guesses = null;
-    copy.users1.history = null;
-    copy.users2.number = null;
-    copy.users2.guesses = null;
-    copy.users2.history = null;
+    delete copy.users1.number;
+    delete copy.users1.guesses;
+    delete copy.users1.history;
+    delete copy.users2.number;
+    delete copy.users2.guesses;
+    delete copy.users2.history;
     copy.turn = null;
-    copy.ready = null;
 
     storage.set(ctx.chat.id, copy);
 }
