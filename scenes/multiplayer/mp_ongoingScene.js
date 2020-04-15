@@ -163,8 +163,10 @@ mp_ongoingScene.hears(/.*/, (ctx) => {
 
     let copy = { ...mpGame };
     if (mpGame.user1.id === currentPlayer.id) {
+        copy.user1 = currentPlayer;
         copy.turn = mpGame.user2.id;
     } else {
+        copy.user2 = currentPlayer;
         copy.turn = mpGame.user1.id;
     }
     storage.set(ctx.chat.id, copy);
