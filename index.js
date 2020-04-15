@@ -73,7 +73,7 @@ bot.action("JOIN_GAME", (ctx) => {
     if (howMany(ctx) === 0) {
         const name = extractUsername(ctx);
         let copy = { ...mpGame };
-        copy.user1 = { id: ctx.from.id, name };
+        copy.user1 = { id: ctx.from.id, name, ctx };
         storage.set(ctx.chat.id, copy);
         ctx.reply(
             `I added ${name}. Currently 1/2.\n\nWe are waiting for another player`,
@@ -89,7 +89,7 @@ bot.action("JOIN_GAME", (ctx) => {
 
         const name = extractUsername(ctx);
         let copy = { ...mpGame };
-        copy.user2 = { id: ctx.from.id, name };
+        copy.user2 = { id: ctx.from.id, name, ctx };
         storage.set(ctx.chat.id, copy);
 
         ctx.reply(` Both players joined.\n\n${mpGame.user1.name} vs ${name}\n\nLet\'s begin...`);
