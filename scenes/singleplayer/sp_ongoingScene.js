@@ -200,6 +200,7 @@ function addSpStepResult(ctx, step) {
     // handleTop10Step(ctx, getStepGameNumber(ctx), getAvgStepScore(ctx));
     // console.log("Leaderboard:", ctx.gameStatDB.get("sp_step_top10"));
     let result = db.get("players").find({ id: ctx.from.id });
+    console.log(result.value());
     if (!result.value()) return null;
 
     let { count, avgScore } = result.value();
