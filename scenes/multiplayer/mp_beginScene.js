@@ -23,7 +23,12 @@ mp_beginScene.action(/^[0-9] digits/, (ctx) => {
     }
     let mpGame = storage.get(ctx.chat.id);
 
-    if (mpGame.user1.hasOwnProperty("number") && mpGame.user2.hasOwnProperty("number")) {
+    if (
+        mpGame.user1 &&
+        mpGame.user1.hasOwnProperty("number") &&
+        mpGame.user2 &&
+        mpGame.user2.hasOwnProperty("number")
+    ) {
         return;
     }
 
@@ -74,7 +79,6 @@ mp_beginScene.enter((ctx) => {
         });
     }
     let mpGame = storage.get(ctx.chat.id);
-
 
     if (mpGame.user1 && mpGame.user1.id === ctx.from.id && !mpGame.user1.hasOwnProperty("ready")) {
         let copy = { ...mpGame };
