@@ -71,19 +71,19 @@ mp_ongoingScene.enter((ctx) => {
     return;
 });
 
-mp_ongoingScene.on("text", (ctx) => {
+mp_ongoingScene.hears(/.*/, (ctx) => {
     if (storage.get(ctx.chat.id).turn && storage.get(ctx.chat.id).turn !== ctx.from.id) {
         return ctx.reply("It's not your turn. " + extractUsername(ctx), Extra.HTML().inReplyTo(ctx.message.message_id));
     }
 
-    if (!storage.has(ctx.chat.id)) {
-        storage.set(ctx.chat.id, {
-            user1: null,
-            user2: null,
-            turn: null,
-        });
-    }
-    let mpGame = storage.get(ctx.chat.id);
+    // if (!storage.has(ctx.chat.id)) {
+    //     storage.set(ctx.chat.id, {
+    //         user1: null,
+    //         user2: null,
+    //         turn: null,
+    //     });
+    // }
+    // let mpGame = storage.get(ctx.chat.id);
 
     let currentPlayer = getCurrentPlayer(ctx);
 
@@ -121,6 +121,7 @@ mp_ongoingScene.on("text", (ctx) => {
     const { won, result } = getResult(ctx.message.text, number);
 
     if (won) {
+        console.log("Won: ", won);
         currentPlayer.wins = currentPlayer.wins + 1 || 1;
 
         mpGame = storage.get(ctx.chat.id);
@@ -136,8 +137,10 @@ mp_ongoingScene.on("text", (ctx) => {
             winner = user2;
         }
 
-        storage.get(ctx.chat.id).user1.ctx.scene.enter("mp_beginScene");
-        storage.get(ctx.chat.id).user2.ctx.scene.enter("mp_beginScene");
+        console.log("Winner: ", winner);
+
+        // storage.get(ctx.chat.id).user1.ctx.scene.enter("mp_beginScene");
+        // storage.get(ctx.chat.id).user2.ctx.scene.enter("mp_beginScene");
 
         return ctx.reply(
             `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${winner.number.join("")}</b>.\nYou found it in ${
