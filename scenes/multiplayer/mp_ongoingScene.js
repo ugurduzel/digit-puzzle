@@ -6,7 +6,8 @@ const { getResult, notDistinct, extractUsername, formatTime } = require("../../u
 const _ = require("lodash");
 
 const { storage } = require("../../cache");
-
+const { minLevel, maxLevel } = require("../../configs/constants.json");
+const levels = _.range(minLevel, maxLevel + 1);
 const mp_ongoingScene = new Scene("mp_ongoingScene");
 
 mp_ongoingScene.action("OK", (ctx) => {
