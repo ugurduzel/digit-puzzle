@@ -205,14 +205,13 @@ function addSpStepResult(ctx, step) {
 
     let { count, avgScore } = result.value();
     if (!count && !avgScore) {
-        console.log("INITIALIZING");
         db.get("players").find({ id: ctx.from.id }).assign({ "3_count": 1, "3_avg": step }).write();
+        handleTop10Step(ctx, 1, step);
         return;
     }
     const newAvg = (avgScore * count + step) / (count + 1);
     const newCount = count + 1;
     db.get("players").find({ id: ctx.from.id }).assign({ "3_count": newCount, "3_avg": newAvg }).write();
-    console.log("db.get: ", db.get("players").value());
     handleTop10Step(ctx, newCount, newAvg);
 }
 
