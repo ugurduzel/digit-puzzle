@@ -18,7 +18,9 @@ mp_ongoingScene.enter((ctx) => {
         });
     }
     return ctx.reply(
-        `A ${mpGame.user1.number.length} digit number is set for both of you.\n\nStart guessing... 🧐\n\n${
+        `A ${
+            torage.get(ctx.chat.id).user1.number.length
+        } digit number is set for both of you.\n\nStart guessing... 🧐\n\n${
             storage.get(ctx.chat.id).user1.name
         }\'s turn.`
     );
