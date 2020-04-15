@@ -5,7 +5,7 @@ const db = require("../../models/gameModel");
 const { getResult, notDistinct, formatTime } = require("../../utils");
 const _ = require("lodash");
 
-const { storage: mpGame } = require("../../cache");
+const { storage } = require("../../cache");
 
 const mp_ongoingScene = new Scene("mp_ongoingScene");
 

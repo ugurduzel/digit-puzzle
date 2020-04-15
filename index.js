@@ -57,7 +57,7 @@ bot.action("NEW_MP_GAME", (ctx) => {
     let mpGame = storage.get(ctx.chat.id);
 
     return ctx.reply(
-        `Only 2 players should join the game.\nCurrently ${howMany(mpGame)}/2`,
+        `Only 2 players should join the game.\nCurrently ${howMany(ctx)}/2`,
         Markup.inlineKeyboard([Markup.callbackButton("Join!", "JOIN_GAME")]).extra()
     );
 });
@@ -74,7 +74,7 @@ bot.action("JOIN_GAME", (ctx) => {
     }
     mpGame = mpGame.get(ctx.chat.id);
 
-    if (howMany(mpGame) === 0) {
+    if (howMany(ctx) === 0) {
         const name = extractUsername(ctx);
         mpGame.set("user1", { id: ctx.from.id, name });
         ctx.reply(
@@ -84,7 +84,7 @@ bot.action("JOIN_GAME", (ctx) => {
         return ctx.scene.enter("mp_beginScene");
     }
 
-    if (howMany(mpGame) === 1) {
+    if (howMany(ctx) === 1) {
         if (ctx.from.id === mpGame.get("user1").id) {
             return ctx.reply(`${mpGame.get("user1").name} You have already joined.`);
         }
