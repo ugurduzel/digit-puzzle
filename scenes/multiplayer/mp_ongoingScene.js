@@ -14,15 +14,10 @@ mp_ongoingScene.action("OK", (ctx) => {
 });
 
 mp_ongoingScene.action("FIN_PLAY_AGAIN", (ctx) => {
-    let mpGame = storage.get(ctx.chat.id);
-    if (mpGame.user1 && mpGame.user1.hasOwnProperty("ready") && mpGame.user1.ready) {
-        return ctx.reply(
-            `Both players have joined.\n\nWe may begin now. Choose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun`,
-            Extra.HTML().markup((m) =>
-                m.inlineKeyboard(levels.map((l) => m.callbackButton(`${l} digits`, `${l} digits`)))
-            )
-        );
-    }
+    return ctx.reply(
+        `Both players have joined.\n\nWe may begin now. Choose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun`,
+        Extra.HTML().markup((m) => m.inlineKeyboard(levels.map((l) => m.callbackButton(`${l} digits`, `${l} digits`))))
+    );
 });
 
 mp_ongoingScene.action(/^[0-9] digits/, (ctx) => {
