@@ -108,7 +108,7 @@ bot.action("JOIN_GAME", (ctx) => {
 
 bot.command("start", (ctx) => {
     console.log("CHAT: ", ctx.chat);
-    if (ctx.chat.type !== "super") {
+    if (ctx.chat.type !== "supergroup") {
         return ctx.reply(
             `Hi ${ctx.chat.first_name},\nWelcome to Digit Puzzle! 🧩\n\nUse /howto command to see the detailed explanation.`,
             Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play now!", "NEW_GAME")]))
