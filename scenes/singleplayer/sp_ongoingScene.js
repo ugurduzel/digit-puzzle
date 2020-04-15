@@ -204,6 +204,10 @@ function addSpStepResult(ctx, step) {
     if (!result.value()) return null;
 
     let { count, avgScore } = result.value();
+    if (!count && !avgScore) {
+        db.get("players").find({ id: ctx.from.id }).assign({ "3_count": 1, "3_avg": step }).write();
+        return;
+    }
     const newAvg = (avgScore * count + step) / (count + 1);
     const newCount = count + 1;
     db.get("players").find({ id: ctx.from.id }).assign({ "3_count": newCount, "3_avg": newAvg }).write();
