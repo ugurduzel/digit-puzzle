@@ -7,13 +7,9 @@ const { storage } = require("../cache");
 
 function howMany(ctx) {
     let mpGame = storage.get(ctx.chat.id);
-    console.log(mpGame);
-    if (!mpGame) {
-        return 0;
-    }
 
-    if (mpGame.has("user2")) return 2;
-    if (mpGame.has("user1")) return 1;
+    if (mpGame.user2) return 2;
+    if (mpGame.user1) return 1;
     return 0;
 }
 
