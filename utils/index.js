@@ -11,9 +11,9 @@ function howMany(ctx) {
         return 0;
     }
 
-    if (!mpGame.get("user1")) return 0;
-    if (!mpGame.get("user2")) return 1;
-    return 2;
+    if (mpGame.has("user2")) return 2;
+    if (mpGame.has("user1")) return 1;
+    return 0;
 }
 
 function logMessage(msg) {
