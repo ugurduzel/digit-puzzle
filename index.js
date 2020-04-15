@@ -74,7 +74,9 @@ bot.action("JOIN_GAME", (ctx) => {
 
     if (howMany(ctx) === 0) {
         const name = extractUsername(ctx);
-        mpGame.set("user1", { id: ctx.from.id, name });
+        let copy = { ...mpGame };
+        copy.user1 = { id: ctx.from.id, name };
+        storage.set(ctx.chat.id, copy);
         ctx.reply(
             `I added ${name}. Currently 1/2.\n\nWe are waiting for another player`,
             Markup.inlineKeyboard([Markup.callbackButton("Join!", "JOIN_GAME")]).extra()
@@ -88,7 +90,9 @@ bot.action("JOIN_GAME", (ctx) => {
         }
 
         const name = extractUsername(ctx);
-        mpGame.set("user2", { id: ctx.from.id, name });
+        let copy = { ...mpGame };
+        copy.user2 = { id: ctx.from.id, name };
+        storage.set(ctx.chat.id, copy);
         ctx.reply(` Both players joined.\n\n${mpGame.get("user1").name} vs ${name}\n\nLet\'s begin...`);
         return ctx.scene.enter("mp_beginScene");
     }

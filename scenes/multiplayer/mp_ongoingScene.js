@@ -125,11 +125,13 @@ mp_ongoingScene.hears(/.*/, (ctx) => {
 
     currentPlayer.history.push({ guess: ctx.message.text, result });
 
+    let copy = { ...mpGame };
     if (mpGame.get("user1").id === currentPlayer) {
-        mpGame.set("turn", mpGame.get("user2").id);
+        copy.turn = mpGame.get("user2").id;
     } else {
-        mpGame.set("turn", mpGame.get("user1").id);
+        copy.turn = mpGame.get("user1").id;
     }
+    storage.set(ctx.chat.id, copy);
 
     ctx.reply(`It's your turn ${getCurrentPlayer(ctx).name}`);
 
@@ -173,10 +175,12 @@ function getCurrentPlayer(ctx) {
 
 function setPlayer(ctx, player) {
     let mpGame = storage.get(ctx.chat.id);
+    let copy = { ...mpGame };
     const id = player.id;
     if (mpGame.get("user1").id === id) {
-        mpGame.set("user1", player);
-        return;
+        copy.user1 = player;
+    } else {
+        copy.user2 = player;
     }
-    mpGame.set("user2", player);
+    storage.set(ctx.chat.id, copy);
 }

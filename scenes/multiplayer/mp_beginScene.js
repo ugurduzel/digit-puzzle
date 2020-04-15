@@ -51,10 +51,12 @@ mp_beginScene.action(/^[0-9] digits/, (ctx) => {
     user1.history = [];
     user2.history = [];
 
-    mpGame.set("user1", user1);
-    mpGame.set("user2", user2);
+    let copy = { ...mpGame };
+    copy.user1 = user1;
+    copy.user2 = user2;
+    copy.turn = user1.id;
 
-    mpGame.set("turn", user1.id);
+    storage.set(ctx.chat.id, copy);
 
     //playerLog(ctx);
 
@@ -74,7 +76,9 @@ mp_beginScene.enter((ctx) => {
     let mpGame = storage.get(ctx.chat.id);
 
     if (mpGame.get("user1").id === ctx.message.id && !mpGame.get("user1").has("ready")) {
-        mpGame.get("user1").set("ready", true);
+        let copy = { ...mpGame };
+        copy.user1.ready = true;
+        storage.set(ctx.chat.id, copy);
         if (mpGame.get("user2").has("ready") && mpGame.get("user2").ready) {
             return ctx.reply(
                 `Both players have joined.\n\nWe may begin now. Choose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun`,
@@ -85,7 +89,9 @@ mp_beginScene.enter((ctx) => {
         }
     }
     if (mpGame.get("user2").id === ctx.message.id && !mpGame.get("user2").has("ready")) {
-        mpGame.get("user2").set("ready", true);
+        let copy = { ...mpGame };
+        copy.user2.ready = true;
+        storage.set(ctx.chat.id, copy);
         if (mpGame.get("user1").has("ready") && mpGame.get("user1").ready) {
             return ctx.reply(
                 `Both players have joined.\n\nWe may begin now. Choose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun`,
