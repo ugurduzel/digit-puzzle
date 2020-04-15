@@ -125,8 +125,16 @@ mp_ongoingScene.hears(/.*/, (ctx) => {
 
         mpGame = storage.get(ctx.chat.id);
 
-        const user1 = mpGame.user1;
-        const user2 = mpGame.user2;
+        let copy = { ...mpGame };
+        if (mpGame.user1.id === currentPlayer.id) {
+            copy.user1 = currentPlayer;
+        } else {
+            copy.user2 = currentPlayer;
+        }
+        storage.set(ctx.chat.id, copy);
+
+        const user1 = copy.user1;
+        const user2 = copy.user2;
 
         let winner = null;
 
