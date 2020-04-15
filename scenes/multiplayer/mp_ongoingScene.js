@@ -117,9 +117,6 @@ mp_ongoingScene.on("text", (ctx) => {
 
     const { won, result } = getResult(ctx.message.text, number);
 
-    console.log(currentPlayer.name + " - Number: ", number);
-    console.log(currentPlayer.name + " - Result: ", result);
-
     if (won) {
         currentPlayer.wins = currentPlayer.wins + 1 || 1;
 
@@ -144,7 +141,7 @@ mp_ongoingScene.on("text", (ctx) => {
     currentPlayer.history.push({ guess: ctx.message.text, result });
 
     let copy = { ...mpGame };
-    if (mpGame.user1.id === currentPlayer) {
+    if (mpGame.user1.id === currentPlayer.id) {
         copy.turn = mpGame.user2.id;
     } else {
         copy.turn = mpGame.user1.id;
