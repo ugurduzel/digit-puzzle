@@ -3,7 +3,7 @@ const Scene = require("telegraf/scenes/base");
 const Markup = require("telegraf/markup");
 const db = require("../../models/gameModel");
 const { getResult, notDistinct, formatTime } = require("../../utils");
-
+const _ = require("lodash");
 const sp_ongoingScene = new Scene("sp_ongoingScene");
 
 sp_ongoingScene.enter((ctx) => {
@@ -284,7 +284,7 @@ function getStepLeaderboard(lst) {
         const item = lst[i];
         s += item.username;
         s += " ".repeat(avg_len - item.username.length) + "| ";
-        s += item.avgScore;
+        s += item.avgScore.toString().length > 3 ? _.take(item.avgScore.toString(), 3) : item.avgScore.toString();
         s += " ".repeat(total_len - item.username.length) + "| ";
         s += item.numberOfGames + "\n";
     }
