@@ -14,7 +14,6 @@ const mpFilter = require("./middleware/mpFilter");
 const navigationScene = require("./scenes/navigationScene");
 const sp_beginScene = require("./scenes/singleplayer/sp_beginScene");
 const sp_ongoingScene = require("./scenes/singleplayer/sp_ongoingScene");
-const mp_navigationScene = require("./scenes/multiplayer/mp_navigationScene");
 const mp_beginScene = require("./scenes/multiplayer/mp_beginScene");
 const mp_ongoingScene = require("./scenes/multiplayer/mp_ongoingScene");
 
@@ -22,16 +21,10 @@ const mp_ongoingScene = require("./scenes/multiplayer/mp_ongoingScene");
 const db = require("./models/gameModel");
 const sessionModel = require("./models/sessionModel");
 
-const { extractUsername } = require("./utils");
+const { extractUsername, howMany } = require("./utils");
+let { storage: mpGame } = require("./cache");
 
-const stage = new Stage([
-    navigationScene,
-    sp_beginScene,
-    sp_ongoingScene,
-    mp_navigationScene,
-    mp_beginScene,
-    mp_ongoingScene,
-]);
+const stage = new Stage([navigationScene, sp_beginScene, sp_ongoingScene, mp_beginScene, mp_ongoingScene]);
 
 const bot = new Telegraf(process.env.BOT_TOKEN || "");
 
@@ -62,46 +55,54 @@ bot.action("NEW_GAME", (ctx) => {
 
 bot.action("NEW_MP_GAME", (ctx) => {
     return ctx.reply(
-        `Only 2 players should join the game.\nCurrently ${ctx.session.users.length}/2`,
+        `Only 2 players should join the game.\nCurrently ${howMany()}/2`,
         Markup.inlineKeyboard([Markup.callbackButton("Join!", "JOIN_GAME")]).extra()
     );
 });
 
 bot.action("JOIN_GAME", (ctx) => {
-    if (ctx.session.users.length < 2) {
-        ctx.session.users.push({ id: ctx.from.id, name: extractUsername(ctx) });
-        let addedPlayer = ctx.session.users.find((u) => u.id === ctx.from.id);
-        let replyStr = `We added ${addedPlayer.name}. Currently ${ctx.session.users.length}/2\n\n`;
-        if (ctx.session.users.length < 2) {
-            replyStr += `We are waiting for another player`;
-            return ctx.reply(replyStr, Markup.inlineKeyboard([Markup.callbackButton("Join!", "JOIN_GAME")]).extra());
-        }
-        if (ctx.session.users.length === 2) {
-            replyStr += `Both players joind.\n\n${ctx.session.users[0].name} vs ${ctx.session.users[1].name}\n\nLet\'s begin...`;
-            ctx.reply(replyStr);
-            return ctx.scene.enter("mp_beginScene");
-        }
+    if (howMany() === 0) {
+        const name = extractUsername(ctx);
+        mpGame.set("user1", { id: ctx.from.id, name });
+        return ctx.reply(
+            `I added ${name}. Currently 1/2.\n\nWe are waiting for another player`,
+            Markup.inlineKeyboard([Markup.callbackButton("Join!", "JOIN_GAME")]).extra()
+        );
     }
+
+    if (howMany() === 1) {
+        const name = extractUsername(ctx);
+        mpGame.set("user2", { id: ctx.from.id, name });
+        ctx.reply(` Both players joind.\n\n${mpGame.get("user1").name} vs ${name}\n\nLet\'s begin...`);
+        ctx.scene.enter("mp_beginScene");
+    }
+
     return ctx.reply(
-        `This session is currently full.\nThere is a heating match between ${ctx.session.users[0].name} and ${ctx.session.users[1].name}`
+        `This session is currently full.\nThere is a heating match between 
+        ${mpGame.get("user1").name} vs ${mpGame.get("user2").name}`
     );
 });
 
 bot.command("start", (ctx) => {
-    console.log("Chat: ", ctx.chat);
-    console.log("\n\nFrom: ", ctx.from);
+    // console.log("Chat: ", ctx.chat);
+    // console.log("\n\nFrom: ", ctx.from);
     if (ctx.chat.type !== "group") {
         return ctx.reply(
             `Hi ${ctx.chat.first_name},\nWelcome to Digit Puzzle! 🧩\n\nUse /howto command to see the detailed explanation.`,
             Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play now!", "NEW_GAME")]))
         );
     }
-    if (!ctx.session.users) {
-        ctx.session.users = [];
+    if (!mpGame.has(ctx.chat.id)) {
+        mpGame.set(ctx.chat.id, {
+            user1: null,
+            user2: null,
+            turn: null,
+        });
     }
+    mpGame = mpGame.get(ctx.chat.id);
 
     return ctx.reply(
-        `Hi ${ctx.chat.first_name},\nWelcome to Digit Puzzle! 🧩\n\nUse /howto command to see the detailed explanation.`,
+        `Hi group ${ctx.chat.title},\nWelcome to Digit Puzzle! 🧩\n\nUse /howto command to see the detailed explanation.`,
         Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play now!", "NEW_MP_GAME")]))
     );
 });

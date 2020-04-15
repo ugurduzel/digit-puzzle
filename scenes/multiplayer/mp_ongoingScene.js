@@ -5,17 +5,15 @@ const db = require("../../models/gameModel");
 const { getResult, notDistinct, formatTime } = require("../../utils");
 const _ = require("lodash");
 
-function getCurrentPlayer(ctx) {
-    const id = ctx.session.turn;
-    return ctx.session.users.find((entry) => entry.id === id);
-}
+const { storage: mpGame } = require("../../cache");
 
 const mp_ongoingScene = new Scene("mp_ongoingScene");
 
 mp_ongoingScene.enter((ctx) => {
-    ctx.session.turn = ctx.session.users[0].id;
     return ctx.reply(
-        `A ${ctx.session.users[0].number.length} digit number is set for both of you.\n\nStart guessing... 🧐\n\n${ctx.session.users[0].name}\'s turn.`
+        `A ${mpGame.get("user1").number.length} digit number is set for both of you.\n\nStart guessing... 🧐\n\n${
+            mpGame.get("user1").name
+        }\'s turn.`
     );
 });
 
@@ -24,14 +22,13 @@ mp_ongoingScene.action("FIN_PLAY_AGAIN", (ctx) => {
 });
 
 mp_ongoingScene.action("Quit", (ctx) => {
-    deleteSessionFeatures(ctx.session);
-
+    deleteSessionFeatures();
     return ctx.reply(
         `Quit is not fully implemented.`,
         Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "FIN_PLAY_AGAIN")]))
     );
     const { number } = ctx.session;
-    deleteSessionFeatures(ctx.session);
+    deleteSessionFeatures();
     return ctx.reply(
         `Quitted\nThe number was ${number.join("")}`,
         Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "FIN_PLAY_AGAIN")]))
@@ -39,7 +36,7 @@ mp_ongoingScene.action("Quit", (ctx) => {
 });
 
 mp_ongoingScene.action("History", (ctx) => {
-    const currentPlayer = getCurrentPlayer(ctx);
+    const currentPlayer = getCurrentPlayer();
 
     const { history } = currentPlayer;
 
@@ -52,13 +49,9 @@ mp_ongoingScene.action("History", (ctx) => {
 });
 
 mp_ongoingScene.hears(/.*/, (ctx) => {
-    if (!ctx.session) {
-        return null;
-    }
+    let currentPlayer = getCurrentPlayer();
 
-    let currentPlayer = getCurrentPlayer(ctx);
-
-    const { history, number } = currentPlayer;
+    const { history, number, guesses } = currentPlayer;
 
     if (isNaN(ctx.message.text)) {
         return ctx.reply(
@@ -91,34 +84,36 @@ mp_ongoingScene.hears(/.*/, (ctx) => {
 
     const { won, result } = getResult(ctx.message.text, number);
 
-    ctx.session.users.find((e) => e.id === ctx.session.turn).history.push({ guess: ctx.message.text, result });
-
-    currentPlayer = getCurrentPlayer(ctx);
-
     if (won) {
-        const { number, guesses } = currentPlayer;
+        currentPlayer.wins = currentPlayer.wins + 1 || 1;
+
+        setPlayer(currentPlayer);
+
+        const user1 = mpGame.get("user1");
+        const user2 = mpGame.get("user2");
 
         ctx.reply(
             `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${number.join("")}</b>.\nYou found it in ${guesses} tries. 🤯\n\n
-            ${ctx.session.users[0].name} won ${ctx.session.users[0].wins || 0} times\n
-            ${ctx.session.users[1].name} won ${ctx.session.users[1].wins || 0} times`,
+            ${user1.name} won ${user1.wins || 0} times\n
+            ${user2.name} won ${user2.wins || 0} times`,
             Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "FIN_PLAY_AGAIN")]))
         );
 
-        currentPlayer.wins = currentPlayer.wins + 1 || 1;
-
-        deleteSessionFeatures(ctx.session);
+        deleteSessionFeatures();
         return;
     }
+
     currentPlayer.guesses += 1;
 
-    if (ctx.session.users[0].id !== ctx.session.turn) {
-        ctx.session.turn = ctx.session.users[0].id;
+    currentPlayer.history.push({ guess: ctx.message.text, result });
+
+    if (mpGame.get("user1").id === currentPlayer) {
+        mpGame.set("turn", mpGame.get("user2").id);
     } else {
-        ctx.session.turn = ctx.session.users[1].id;
+        mpGame.set("turn", mpGame.get("user1").id);
     }
-    currentPlayer = getCurrentPlayer(ctx);
-    ctx.reply(`It's your turn ${getCurrentPlayer(ctx).name}`);
+
+    ctx.reply(`It's your turn ${getCurrentPlayer().name}`);
 
     return ctx.reply(
         result,
@@ -132,7 +127,7 @@ mp_ongoingScene.hears(/.*/, (ctx) => {
 
 module.exports = mp_ongoingScene;
 
-function deleteSessionFeatures(session) {
+function deleteSessionFeatures() {
     delete session.users[0].number;
     delete session.users[0].guesses;
     delete session.users[0].history;
@@ -140,4 +135,19 @@ function deleteSessionFeatures(session) {
     delete session.users[1].guesses;
     delete session.users[1].history;
     delete session.turn;
+}
+
+function getCurrentPlayer() {
+    const id = mpGame.get("turn");
+    const user1 = mpGame.get("user1");
+    return user1.id === id ? { ...user1 } : { ...mpGame.get("user2") };
+}
+
+function setPlayer(player) {
+    const id = player.id;
+    if (mpGame.get("user1").id === id) {
+        mpGame.set("user1", player);
+        return;
+    }
+    mpGame.set("user2", player);
 }
