@@ -272,6 +272,7 @@ function handleTop10Step(ctx, numberOfGames, avgScore) {
     //     };
     //     ctx.gameStat.sp_step_top10.sort((e1, e2) => (e1.avgScore < e2.avgScore ? -1 : 1));
     // }
+    console.log("Callig with " + numberOfGames + " " + avgScore);
     const username = (ctx.chat.first_name || "") + (ctx.chat.last_name || "") + "";
     let top10 = db.get("sp3_step_top10");
     let found = top10.find({ username });
