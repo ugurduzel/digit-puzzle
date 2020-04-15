@@ -107,7 +107,7 @@ function notDistinct(_digits) {
 }
 
 function extractUsername(ctx) {
-    return ctx.from.username || "" + (ctx.from.first_name || "") + (ctx.from.last_name || "") || ctx.from.id;
+    return ctx.from.username || "" + (ctx.from.first_name + " " || "") + (ctx.from.last_name || "") || ctx.from.id;
 }
 
 module.exports = {

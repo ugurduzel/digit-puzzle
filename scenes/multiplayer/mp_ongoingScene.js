@@ -37,7 +37,7 @@ mp_ongoingScene.action("History", (ctx) => {
     const currentPlayer = getCurrentPlayer(ctx);
 
     if (currentPlayer.id !== ctx.from.id) {
-        return;
+        return ctx.reply("It's not your turn please wait.");
     }
 
     const { history } = currentPlayer;
