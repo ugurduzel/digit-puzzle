@@ -275,7 +275,7 @@ function getStepLeaderboard(lst) {
     temp_s += " ".repeat(max - 4);
     temp_s += "  | ";
     const avg_len = temp_s.length - 5;
-    temp_s += "Avg Steps | ";
+    temp_s += "Avg Steps |   ";
     const total_len = temp_s.length - 1;
     temp_s += "Total Games\n";
     s += temp_s;
