@@ -2,7 +2,7 @@ const Extra = require("telegraf/extra");
 const Scene = require("telegraf/scenes/base");
 const Markup = require("telegraf/markup");
 
-const { extractUsername } = require("./utils");
+const { extractUsername } = require("../../utils");
 
 const mp_navigationScene = new Scene("mp_navigationScene");
 
