@@ -147,7 +147,7 @@ mp_ongoingScene.hears(/.*/, (ctx) => {
         // storage.get(ctx.chat.id).user1.ctx.scene.enter("mp_beginScene");
         // storage.get(ctx.chat.id).user2.ctx.scene.enter("mp_beginScene");
 
-        deleteSessionFeatures(ctx);
+        //deleteSessionFeatures(ctx);
 
         return ctx.reply(
             `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${winner.number.join("")}</b>.\nYou found it in ${
