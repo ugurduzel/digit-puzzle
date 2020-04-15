@@ -123,13 +123,23 @@ mp_ongoingScene.on("text", (ctx) => {
     if (won) {
         currentPlayer.wins = currentPlayer.wins + 1 || 1;
 
-        setPlayer(ctx, currentPlayer);
+        mpGame = storage.get(ctx.chat.id);
 
         const user1 = mpGame.user1;
         const user2 = mpGame.user2;
 
+        const winner = null;
+
+        if (currentPlayer.id === user1.id) {
+            winner = user1;
+        } else {
+            winner = user2;
+        }
+
         ctx.reply(
-            `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${number.join("")}</b>.\nYou found it in ${guesses} tries. 🤯\n\n
+            `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${winner.number.join("")}</b>.\nYou found it in ${
+                winner.guesses
+            } tries. 🤯\n\n
             ${user1.name} won ${user1.wins || 0} times\n
             ${user2.name} won ${user2.wins || 0} times`,
             Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "FIN_PLAY_AGAIN")]))
@@ -166,14 +176,14 @@ mp_ongoingScene.on("text", (ctx) => {
 module.exports = mp_ongoingScene;
 
 function deleteSessionFeatures() {
-    delete session.users[0].number;
-    delete session.users[0].guesses;
-    delete session.users[0].history;
-    delete session.users[1].number;
-    delete session.users[1].guesses;
-    delete session.users[1].history;
-    delete session.turn;
-    delete session.ready;
+    session.users1.number = null;
+    session.users1.guesses = null;
+    session.users1.history = null;
+    session.users2.number = null;
+    session.users2.guesses = null;
+    session.users2.history = null;
+    session.turn = null;
+    session.ready = null;
 }
 
 function getCurrentPlayer(ctx) {
