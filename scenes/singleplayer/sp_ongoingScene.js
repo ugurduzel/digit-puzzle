@@ -275,6 +275,8 @@ function handleTop10Step(ctx, numberOfGames, avgScore) {
     const username = (ctx.chat.first_name || "") + (ctx.chat.last_name || "") + "";
     let top10 = db.get("sp3_step_top10");
     let found = top10.find({ username });
+    console.log("Found", found);
+    console.log("Found.value", found.value);
     if (found.value()) {
         found.assign({ avgScore, numberOfGames }).write();
     }
