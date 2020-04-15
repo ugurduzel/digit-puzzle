@@ -75,8 +75,6 @@ mp_beginScene.enter((ctx) => {
     }
     let mpGame = storage.get(ctx.chat.id);
 
-    console.log("In begin scene now, ", mpGame);
-    console.log("In begin scene now, in if -> ", mpGame.user1);
 
     if (mpGame.user1 && mpGame.user1.id === ctx.from.id && !mpGame.user1.hasOwnProperty("ready")) {
         let copy = { ...mpGame };

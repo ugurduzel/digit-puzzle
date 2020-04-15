@@ -4,7 +4,6 @@ const Markup = require("telegraf/markup");
 const Extra = require("telegraf/extra");
 
 // Middlewares
-const log = require("./middleware/log");
 const howto = require("./middleware/howto");
 const commandParts = require("telegraf-command-parts");
 const underMaintenanceMiddleware = require("./middleware/maintenance");
@@ -34,7 +33,6 @@ bot.use(howto());
 bot.use(sessionModel.middleware());
 bot.use(underMaintenanceMiddleware());
 bot.use(stage.middleware());
-//bot.use(log());
 
 bot.action("NEW_GAME", (ctx) => {
     let player = db.get("players").find({ id: ctx.from.id });
@@ -75,10 +73,8 @@ bot.action("JOIN_GAME", (ctx) => {
     if (howMany(ctx) === 0) {
         const name = extractUsername(ctx);
         let copy = { ...mpGame };
-        console.log("Storage was: ", mpGame);
         copy.user1 = { id: ctx.from.id, name };
         storage.set(ctx.chat.id, copy);
-        console.log("Storage is set to: ", storage.get(ctx.chat.id));
         ctx.reply(
             `I added ${name}. Currently 1/2.\n\nWe are waiting for another player`,
             Markup.inlineKeyboard([Markup.callbackButton("Join!", "JOIN_GAME")]).extra()

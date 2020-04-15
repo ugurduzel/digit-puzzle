@@ -56,6 +56,7 @@ mp_ongoingScene.action("History", (ctx) => {
 });
 
 mp_ongoingScene.hears(/.*/, (ctx) => {
+    console.log("Message: ", ctx.message);
     if (!storage.has(ctx.chat.id)) {
         storage.set(ctx.chat.id, {
             user1: null,
