@@ -278,6 +278,7 @@ function handleTop10Step(ctx, numberOfGames, avgScore) {
     console.log("Found.value", found.value());
     if (found.value()) {
         found.assign({ avgScore, numberOfGames }).write();
+        return;
     }
     if (top10.value() && top10.value().length < 10) {
         db.get("sp3_step_top10")
