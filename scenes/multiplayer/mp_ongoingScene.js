@@ -136,7 +136,7 @@ mp_ongoingScene.on("text", (ctx) => {
             winner = user2;
         }
 
-        ctx.reply(
+        return ctx.reply(
             `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${winner.number.join("")}</b>.\nYou found it in ${
                 winner.guesses
             } tries. 🤯\n\n
@@ -145,7 +145,7 @@ mp_ongoingScene.on("text", (ctx) => {
             Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "FIN_PLAY_AGAIN")]))
         );
 
-        deleteSessionFeatures();
+        //deleteSessionFeatures();
         storage.get(ctx.chat.id).user1.ctx.scene.enter("mp_beginScene");
         storage.get(ctx.chat.id).user2.ctx.scene.enter("mp_beginScene");
         return;
