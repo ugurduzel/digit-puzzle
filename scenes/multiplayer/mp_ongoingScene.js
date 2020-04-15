@@ -69,9 +69,9 @@ mp_ongoingScene.enter((ctx) => {
 });
 
 mp_ongoingScene.on("text", (ctx) => {
-    console.log("Message: ", ctx.message.text);
-
-    ctx.reply("We got your number " + ctx.message.text);
+    if (storage.get(ctx.chat.id).turn !== ctx.from.id) {
+        return ctx.reply("It's not your turn.", Extra.HTML().inReplyTo(ctx.message.message_id));
+    }
 
     if (!storage.has(ctx.chat.id)) {
         storage.set(ctx.chat.id, {

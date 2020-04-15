@@ -7,7 +7,6 @@ const Extra = require("telegraf/extra");
 const howto = require("./middleware/howto");
 const commandParts = require("telegraf-command-parts");
 const underMaintenanceMiddleware = require("./middleware/maintenance");
-const mpFilter = require("./middleware/mpFilter");
 
 // Scenes
 const navigationScene = require("./scenes/navigationScene");
@@ -33,7 +32,6 @@ bot.telegram.getMe().then((botInfo) => {
 
 //bot.use(commandParts());
 bot.use(howto());
-bot.use(mpFilter());
 bot.use(sessionModel.middleware());
 //bot.use(underMaintenanceMiddleware());
 bot.use(stage.middleware());
