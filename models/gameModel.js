@@ -1,13 +1,12 @@
 const LocalSession = require("telegraf-session-local");
 
 const low = require("lowdb");
-const FileAsync = require("lowdb/adapters/FileAsync");
+const FileSync = require("lowdb/adapters/FileSync");
 
-const adapter = new FileAsync("myDb.json");
+const adapter = new FileSync("myDb.json");
 const db = low(adapter);
 
 db.defaults({ sp_step_top10: [], players: [] }).write();
-
 // const gameModel = new LocalSession({
 //     database: "gameInformation.json",
 //     property: "gameStat",
