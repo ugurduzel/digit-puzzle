@@ -68,7 +68,7 @@ mp_ongoingScene.enter((ctx) => {
     return;
 });
 
-mp_ongoingScene.hears(/.*/, (ctx) => {
+mp_ongoingScene.on("text", (ctx) => {
     console.log("Message: ", ctx.message.text);
 
     ctx.reply("We got your number " + ctx.message.text);
