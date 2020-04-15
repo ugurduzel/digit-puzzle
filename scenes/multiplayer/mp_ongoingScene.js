@@ -167,6 +167,8 @@ function getCurrentPlayer(ctx) {
     }
     let mpGame = storage.get(ctx.chat.id);
 
+    console.log("Error is: ", mpGame);
+
     const id = mpGame.turn;
     const user1 = mpGame.user1;
     return user1.id === id ? { ...user1 } : { ...mpGame.user2 };
