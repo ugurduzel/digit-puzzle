@@ -1,7 +1,7 @@
 const Extra = require("telegraf/extra");
 const Scene = require("telegraf/scenes/base");
 const Markup = require("telegraf/markup");
-const db = require("./models/gameModel");
+const db = require("../../models/gameModel");
 const { getResult, notDistinct, formatTime } = require("../../utils");
 
 const sp_ongoingScene = new Scene("sp_ongoingScene");
