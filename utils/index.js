@@ -7,6 +7,7 @@ const { storage } = require("../cache");
 
 function howMany(ctx) {
     let mpGame = storage.get(ctx.chat.id);
+    console.log(mpGame);
     if (!mpGame) {
         return 0;
     }
