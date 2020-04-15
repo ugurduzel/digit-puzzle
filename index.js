@@ -32,8 +32,8 @@ bot.telegram.getMe().then((botInfo) => {
 });
 
 //bot.use(commandParts());
-//bot.use(howto());
-//bot.use(mpFilter());
+bot.use(howto());
+bot.use(mpFilter());
 bot.use(sessionModel.middleware());
 //bot.use(underMaintenanceMiddleware());
 bot.use(stage.middleware());
