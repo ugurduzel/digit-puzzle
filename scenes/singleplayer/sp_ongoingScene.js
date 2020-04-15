@@ -93,6 +93,7 @@ sp_ongoingScene.hears(/.*/, (ctx) => {
         ctx.gameStatDB.write();
         ctx.gameStatDB.read();
         console.log("After read ctx is: ", ctx.gameStat.sp_step_top10);
+
         ctx.reply(
             `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${number.join(
                 ""

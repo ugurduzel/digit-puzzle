@@ -14,7 +14,7 @@ const sp_beginScene = require("./scenes/singleplayer/sp_beginScene");
 const sp_ongoingScene = require("./scenes/singleplayer/sp_ongoingScene");
 
 // Models
-const gameModel = require("./models/gameModel");
+const db = require("./models/gameModel");
 const sessionModel = require("./models/sessionModel");
 
 const stage = new Stage([navigationScene, sp_beginScene, sp_ongoingScene]);
@@ -23,16 +23,16 @@ const bot = new Telegraf(process.env.BOT_TOKEN || "");
 
 bot.use(commandParts());
 bot.use(howto());
-bot.use(gameModel.middleware());
+//bot.use(gameModel.middleware());
 bot.use(sessionModel.middleware());
 bot.use(underMaintenanceMiddleware());
 bot.use(stage.middleware());
 //bot.use(log());
 
 bot.action("NEW_GAME", (ctx) => {
-    if (!ctx.gameStat.players) {
-        ctx.gameStat.players = {};
-    }
+    const player = db.get("players").find({ id: ctx.from.id });
+    console.log(player);
+    return;
     if (ctx.gameStat.players[ctx.from.id]) {
         console.log("Player " + ctx.from.id + " is found\n" + ctx.gameStat.players[ctx.from.id]);
     } else {

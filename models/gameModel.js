@@ -1,34 +1,42 @@
 const LocalSession = require("telegraf-session-local");
 
-const gameModel = new LocalSession({
-    database: "gameInformation.json",
-    property: "gameStat",
-    storage: LocalSession.storageFileAsync,
-    format: {
-        serialize: (obj) => JSON.stringify(obj, null, 2),
-        deserialize: (str) => JSON.parse(str),
-    },
-    state: {
-        sp_step_top10: [],
-        sp_time_top10: [],
-        mp_step_wins_top10: [],
-        mp_time_wins_top10: [],
-        mp_total_wins_top10: [],
-        players: {},
-    },
-});
-
-gameModel.DB.then((DB) => {
-    console.log("Current gameModel:", DB.value());
-});
-
 const low = require("lowdb");
-const FileSync = require("lowdb/adapters/FileSync");
+const FileAsync = require("lowdb/adapters/FileAsync");
 
-const adapter = new FileSync("db.json");
+const adapter = new FileAsync("db.json");
 const db = low(adapter);
 
-module.exports = gameModel;
+db.defaults({ sp_step_top10: [], players: [] }).write();
+
+// const gameModel = new LocalSession({
+//     database: "gameInformation.json",
+//     property: "gameStat",
+//     storage: LocalSession.storageFileAsync,
+//     format: {
+//         serialize: (obj) => JSON.stringify(obj, null, 2),
+//         deserialize: (str) => JSON.parse(str),
+//     },
+//     state: {
+//         sp_step_top10: [],
+//         sp_time_top10: [],
+//         mp_step_wins_top10: [],
+//         mp_time_wins_top10: [],
+//         mp_total_wins_top10: [],
+//         players: {},
+//     },
+// });
+
+// gameModel.DB.then((DB) => {
+//     console.log("Current gameModel:", DB.value());
+// });
+
+// const low = require("lowdb");
+// const FileSync = require("lowdb/adapters/FileSync");
+
+// const adapter = new FileSync("db.json");
+// const db = low(adapter);
+
+module.exports = db;
 
 /**
     sp_step_top10: [ids],
