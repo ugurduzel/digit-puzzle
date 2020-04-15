@@ -149,6 +149,10 @@ mp_ongoingScene.enter((ctx) => {
     );
 });
 
+mp_ongoingScene.on("text", (ctx) => {
+    ctx.reply(ctx.message);
+});
+
 module.exports = mp_ongoingScene;
 
 function deleteSessionFeatures() {
