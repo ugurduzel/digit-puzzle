@@ -1,7 +1,7 @@
 const Extra = require("telegraf/extra");
 const Scene = require("telegraf/scenes/base");
 const Markup = require("telegraf/markup");
-
+const db = require("./models/gameModel");
 const { getResult, notDistinct, formatTime } = require("../../utils");
 
 const sp_ongoingScene = new Scene("sp_ongoingScene");
@@ -78,8 +78,6 @@ sp_ongoingScene.hears(/.*/, (ctx) => {
             const now = Date.now();
             const result = formatTime(start, now);
             //addSpTimeResult(ctx, result);
-            ctx.gameStatDB.write();
-            ctx.gameStatDB.read();
             ctx.reply(
                 `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${number.join("")}</b>.\nYou found it in ${
                     result.formattedTime
@@ -90,9 +88,6 @@ sp_ongoingScene.hears(/.*/, (ctx) => {
             return;
         }
         addSpStepResult(ctx, guesses);
-        ctx.gameStatDB.write();
-        ctx.gameStatDB.read();
-        console.log("After read ctx is: ", ctx.gameStat.sp_step_top10);
 
         ctx.reply(
             `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${number.join(
@@ -123,24 +118,22 @@ function deleteSessionFeatures(session) {
 }
 
 function addSpTimeResult(ctx, result) {
-    if (!ctx.gameStat.players[ctx.from.id].sp_time) {
-        ctx.gameStat.players[ctx.from.id].sp_time = {};
-    }
-    const numberOfGames = getTimeGameNumber(ctx);
-    if (numberOfGames) {
-        setTimeGameNumber(ctx, numberOfGames + 1 || 1);
-    }
-
-    let avgScore = getAvgTimeScore(ctx);
-    if (!avgScore) {
-        setAvgTimeScore(ctx, result);
-    } else {
-        setAvgTimeScore(ctx, calculateTimeAvg(avgScore, numberOfGames + 1 || 1, result));
-    }
-
-    numberOfGames = getTimeGameNumber(ctx);
-    avgScore = getAvgTimeScore(ctx);
-    handleTop10Time(ctx, numberOfGames, avgScore);
+    // if (!ctx.gameStat.players[ctx.from.id].sp_time) {
+    //     ctx.gameStat.players[ctx.from.id].sp_time = {};
+    // }
+    // const numberOfGames = getTimeGameNumber(ctx);
+    // if (numberOfGames) {
+    //     setTimeGameNumber(ctx, numberOfGames + 1 || 1);
+    // }
+    // let avgScore = getAvgTimeScore(ctx);
+    // if (!avgScore) {
+    //     setAvgTimeScore(ctx, result);
+    // } else {
+    //     setAvgTimeScore(ctx, calculateTimeAvg(avgScore, numberOfGames + 1 || 1, result));
+    // }
+    // numberOfGames = getTimeGameNumber(ctx);
+    // avgScore = getAvgTimeScore(ctx);
+    // handleTop10Time(ctx, numberOfGames, avgScore);
 }
 
 function getTimeGameNumber(ctx) {
@@ -192,46 +185,28 @@ function calculateTimeAvg(avgScore, numberOfGames, result) {
 //
 //
 function addSpStepResult(ctx, step) {
-    if (!ctx.gameStat.players[ctx.from.id].sp_step) {
-        ctx.gameStat.players[ctx.from.id].sp_step = {};
-    }
-    let numberOfGames = getStepGameNumber(ctx);
-    setStepGameNumber(ctx, numberOfGames + 1 || 1);
+    // if (!ctx.gameStat.players[ctx.from.id].sp_step) {
+    //     ctx.gameStat.players[ctx.from.id].sp_step = {};
+    // }
+    // let numberOfGames = getStepGameNumber(ctx);
+    // setStepGameNumber(ctx, numberOfGames + 1 || 1);
+    // let avgScore = getAvgStepScore(ctx);
+    // if (!avgScore) {
+    //     setAvgStepScore(ctx, step);
+    // } else {
+    //     setAvgStepScore(ctx, calculateStepAvg(avgScore, numberOfGames, step));
+    // }
+    // console.log("Player: ", ctx.gameStat.players[ctx.from.id]);
+    // handleTop10Step(ctx, getStepGameNumber(ctx), getAvgStepScore(ctx));
+    // console.log("Leaderboard:", ctx.gameStatDB.get("sp_step_top10"));
+    let result = db.get("players").find({ id: ctx.from.id });
+    if (!result.value()) return null;
 
-    let avgScore = getAvgStepScore(ctx);
-    if (!avgScore) {
-        setAvgStepScore(ctx, step);
-    } else {
-        setAvgStepScore(ctx, calculateStepAvg(avgScore, numberOfGames, step));
-    }
-
-    console.log("Player: ", ctx.gameStat.players[ctx.from.id]);
-    handleTop10Step(ctx, getStepGameNumber(ctx), getAvgStepScore(ctx));
-    console.log("Leaderboard:", ctx.gameStatDB.get("sp_step_top10"));
-}
-
-function getStepGameNumber(ctx) {
-    const tuple = ctx.gameStat.players[ctx.from.id].sp_step[ctx.session.number.length];
-    return tuple ? tuple[0] : undefined;
-}
-
-function setStepGameNumber(ctx, number) {
-    if (!ctx.gameStat.players[ctx.from.id].sp_step[ctx.session.number.length]) {
-        ctx.gameStat.players[ctx.from.id].sp_step[ctx.session.number.length] = [];
-    }
-    ctx.gameStat.players[ctx.from.id].sp_step[ctx.session.number.length][0] = number;
-}
-
-function getAvgStepScore(ctx) {
-    const tuple = ctx.gameStat.players[ctx.from.id].sp_step[ctx.session.number.length];
-    return tuple ? tuple[1] : undefined;
-}
-
-function setAvgStepScore(ctx, step) {
-    if (!ctx.gameStat.players[ctx.from.id].sp_step[ctx.session.number.length]) {
-        ctx.gameStat.players[ctx.from.id].sp_step[ctx.session.number.length] = [];
-    }
-    ctx.gameStat.players[ctx.from.id].sp_step[ctx.session.number.length][1] = step;
+    let { count, avgScore } = result.value();
+    const newAvg = (avgScore * count + step) / (count + 1);
+    const newCount = count + 1;
+    db.get("players").find({ id: ctx.from.id }).assign({ count: newCount, avgScore: newAvg }).write();
+    handleTop10Step(ctx, newCount, newAvg);
 }
 
 function calculateStepAvg(avgScore, numberOfGames, step) {
@@ -262,34 +237,49 @@ function handleTop10Time(ctx, numberOfGames, avgScore) {
 }
 
 function handleTop10Step(ctx, numberOfGames, avgScore) {
-    if (!ctx.gameStat.sp_step_top10) {
-        ctx.gameStat.sp_step_top10 = [];
-    }
-    let player = ctx.gameStat.sp_step_top10.find(
-        (e) => e.username === (ctx.chat.first_name || "") + (ctx.chat.last_name || "") + ""
-    );
-    if (player) {
-        player.avgScore = avgScore;
-        player.numberOfGames = numberOfGames;
-        return;
-    }
+    // if (!ctx.gameStat.sp_step_top10) {
+    //     ctx.gameStat.sp_step_top10 = [];
+    // }
+    // let player = ctx.gameStat.sp_step_top10.find(
+    //     (e) => e.username === (ctx.chat.first_name || "") + (ctx.chat.last_name || "") + ""
+    // );
+    // if (player) {
+    //     player.avgScore = avgScore;
+    //     player.numberOfGames = numberOfGames;
+    //     return;
+    // }
 
-    if (ctx.gameStat.sp_step_top10.length < 10) {
-        ctx.gameStat.sp_step_top10.push({
-            avgScore,
-            numberOfGames,
-            username: (ctx.chat.first_name || "") + (ctx.chat.last_name || "") + "",
-        });
-        ctx.gameStat.sp_step_top10.sort((e1, e2) => (e1.avgScore < e2.avgScore ? -1 : 1));
-        return;
+    // if (ctx.gameStat.sp_step_top10.length < 10) {
+    //     ctx.gameStat.sp_step_top10.push({
+    //         avgScore,
+    //         numberOfGames,
+    //         username: (ctx.chat.first_name || "") + (ctx.chat.last_name || "") + "",
+    //     });
+    //     ctx.gameStat.sp_step_top10.sort((e1, e2) => (e1.avgScore < e2.avgScore ? -1 : 1));
+    //     return;
+    // }
+    // if (ctx.gameStat.sp_step_top10[9] > avgScore) {
+    //     ctx.gameStat.sp_step_top10[9] = {
+    //         avgScore,
+    //         numberOfGames,
+    //         username: (ctx.chat.first_name || "") + (ctx.chat.last_name || "") + "",
+    //     };
+    //     ctx.gameStat.sp_step_top10.sort((e1, e2) => (e1.avgScore < e2.avgScore ? -1 : 1));
+    // }
+    const username = (ctx.chat.first_name || "") + (ctx.chat.last_name || "") + "";
+    let top10 = db.get("sp3_step_top10");
+    let found = top10.find({ username });
+    if (found.value()) {
+        found.assign({ avgScore, numberOfGames }).write();
     }
-    if (ctx.gameStat.sp_step_top10[9] > avgScore) {
-        ctx.gameStat.sp_step_top10[9] = {
-            avgScore,
-            numberOfGames,
-            username: (ctx.chat.first_name || "") + (ctx.chat.last_name || "") + "",
-        };
-        ctx.gameStat.sp_step_top10.sort((e1, e2) => (e1.avgScore < e2.avgScore ? -1 : 1));
+    if (top10.value() && top10.value().length < 10) {
+        db.get("sp3_step_top10")
+            .push({
+                avgScore,
+                numberOfGames,
+                username,
+            })
+            .write();
     }
 }
 

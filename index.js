@@ -33,6 +33,7 @@ bot.action("NEW_GAME", (ctx) => {
     let player = db.get("players").find({ id: ctx.from.id });
     player.value();
     if (!player.value()) {
+        ctx.reply("Just a second...");
         db.get("players")
             .push({
                 id: ctx.from.id,
@@ -42,19 +43,10 @@ bot.action("NEW_GAME", (ctx) => {
                 "6": { count: 0, avgScore: 0 },
             })
             .write();
-    }
-    player = db.get("players").find({ id: ctx.from.id });
-    console.log(player.value());
-    return;
-    if (ctx.gameStat.players[ctx.from.id]) {
-        console.log("Player " + ctx.from.id + " is found\n" + ctx.gameStat.players[ctx.from.id]);
-    } else {
-        ctx.gameStat.players[ctx.from.id] = {};
-        console.log("Adding a player with id" + ctx.from.id);
         ctx.reply("We have added you to our userbase. 👏\n\nHave fun! ");
+    } else {
+        console.log("Player " + ctx.from.id + " is found\n" + player);
     }
-    ctx.gameStatDB.write();
-    ctx.gameStatDB.read();
 
     return ctx.scene.enter("navigationScene");
 });

@@ -6,7 +6,7 @@ const FileSync = require("lowdb/adapters/FileSync");
 const adapter = new FileSync("myDb.json");
 const db = low(adapter);
 
-db.defaults({ sp_step_top10: [], players: [] }).write();
+db.defaults({ sp3_step_top10: [], players: [] }).write();
 
 
 // const gameModel = new LocalSession({
