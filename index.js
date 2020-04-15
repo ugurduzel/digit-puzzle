@@ -1,5 +1,6 @@
 const Telegraf = require("telegraf");
 const Stage = require("telegraf/stage");
+const Markup = require("telegraf/markup");
 const Extra = require("telegraf/extra");
 
 // Middlewares
@@ -59,6 +60,13 @@ bot.action("NEW_GAME", (ctx) => {
     return ctx.scene.enter("navigationScene");
 });
 
+bot.action("NEW_MP_GAME", (ctx) => {
+    return ctx.reply(
+        `Only 2 players should join the game.\nCurrently ${ctx.session.users.length}/2`,
+        Markup.inlineKeyboard([Markup.callbackButton("Join!", "JOIN_GAME")]).extra()
+    );
+});
+
 bot.action("JOIN_GAME", (ctx) => {
     if (ctx.session.users.length < 2) {
         ctx.session.users.push({ id: ctx.from.id, name: extractUsername(ctx) });
@@ -79,14 +87,9 @@ bot.action("JOIN_GAME", (ctx) => {
     );
 });
 
-bot.action("NEW_MP_GAME", (ctx) => {
-    return ctx.reply(
-        `Only 2 players can join the game.\nCurrently ${ctx.session.users.length}/2`,
-        Markup.inlineKeyboard([Markup.callbackButton("Join!", "JOIN_GAME")]).extra()
-    );
-});
-
 bot.command("start", (ctx) => {
+    console.log("Chat: ", ctx.chat);
+    console.log("\n\nFrom: ", ctx.from);
     if (ctx.chat.type !== "group") {
         return ctx.reply(
             `Hi ${ctx.chat.first_name},\nWelcome to Digit Puzzle! 🧩\n\nUse /howto command to see the detailed explanation.`,
