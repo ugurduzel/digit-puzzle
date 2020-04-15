@@ -9,23 +9,6 @@ const { storage } = require("../../cache");
 
 const mp_ongoingScene = new Scene("mp_ongoingScene");
 
-mp_ongoingScene.enter((ctx) => {
-    if (!storage.has(ctx.chat.id)) {
-        storage.set(ctx.chat.id, {
-            user1: null,
-            user2: null,
-            turn: null,
-        });
-    }
-    return ctx.reply(
-        `A ${
-            storage.get(ctx.chat.id).user1.number.length
-        } digit number is set for both of you.\n\nStart guessing... 🧐\n\n${
-            storage.get(ctx.chat.id).user1.name
-        }\'s turn.`
-    );
-});
-
 mp_ongoingScene.action("FIN_PLAY_AGAIN", (ctx) => {
     return ctx.scene.enter("mp_navigationScene");
 });
@@ -146,6 +129,23 @@ mp_ongoingScene.hears(/.*/, (ctx) => {
             .markup((m) =>
                 m.inlineKeyboard([m.callbackButton("Get History", "History"), m.callbackButton("Quit", "Quit")])
             )
+    );
+});
+
+mp_ongoingScene.enter((ctx) => {
+    if (!storage.has(ctx.chat.id)) {
+        storage.set(ctx.chat.id, {
+            user1: null,
+            user2: null,
+            turn: null,
+        });
+    }
+    return ctx.reply(
+        `A ${
+            storage.get(ctx.chat.id).user1.number.length
+        } digit number is set for both of you.\n\nStart guessing... 🧐\n\n${
+            storage.get(ctx.chat.id).user1.name
+        }\'s turn.`
     );
 });
 

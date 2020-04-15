@@ -89,10 +89,9 @@ bot.action("JOIN_GAME", (ctx) => {
 
         const name = extractUsername(ctx);
         let copy = { ...mpGame };
-        console.log("Storage was: ", mpGame);
         copy.user2 = { id: ctx.from.id, name };
         storage.set(ctx.chat.id, copy);
-        console.log("Storage is set to: ", storage.get(ctx.chat.id));
+
         ctx.reply(` Both players joined.\n\n${mpGame.user1.name} vs ${name}\n\nLet\'s begin...`);
         return ctx.scene.enter("mp_beginScene");
     }
@@ -104,8 +103,6 @@ bot.action("JOIN_GAME", (ctx) => {
 });
 
 bot.command("start", (ctx) => {
-    // console.log("Chat: ", ctx.chat);
-    // console.log("\n\nFrom: ", ctx.from);
     if (ctx.chat.type !== "group") {
         return ctx.reply(
             `Hi ${ctx.chat.first_name},\nWelcome to Digit Puzzle! 🧩\n\nUse /howto command to see the detailed explanation.`,
