@@ -48,6 +48,9 @@ mp_ongoingScene.action("OK", (ctx) => {
 
 mp_ongoingScene.hears(/.*/, (ctx) => {
     console.log("Message: ", ctx.message.text);
+
+    ctx.reply("We got your number " + ctx.message.text);
+
     if (!storage.has(ctx.chat.id)) {
         storage.set(ctx.chat.id, {
             user1: null,
@@ -63,7 +66,7 @@ mp_ongoingScene.hears(/.*/, (ctx) => {
 
     if (isNaN(ctx.message.text)) {
         return ctx.reply(
-            `Only send numbers!`,
+            `Only send numbers! asdasd`,
             Extra.HTML().markup((m) =>
                 m.inlineKeyboard([m.callbackButton("Get History", "History"), m.callbackButton("Quit", "Quit")])
             )
@@ -182,8 +185,6 @@ function getCurrentPlayer(ctx) {
         });
     }
     let mpGame = storage.get(ctx.chat.id);
-
-    console.log("Error is: ", mpGame);
 
     const id = mpGame.turn;
     const user1 = mpGame.user1;
