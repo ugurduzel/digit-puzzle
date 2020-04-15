@@ -33,13 +33,15 @@ bot.action("NEW_GAME", (ctx) => {
     let player = db.get("players").find({ id: ctx.from.id });
     player.value();
     if (!player.value()) {
-        db.get("players").push({
-            id: ctx.from.id,
-            "3": { count: 0, avgScore: 0 },
-            "4": { count: 0, avgScore: 0 },
-            "5": { count: 0, avgScore: 0 },
-            "6": { count: 0, avgScore: 0 },
-        });
+        db.get("players")
+            .push({
+                id: ctx.from.id,
+                "3": { count: 0, avgScore: 0 },
+                "4": { count: 0, avgScore: 0 },
+                "5": { count: 0, avgScore: 0 },
+                "6": { count: 0, avgScore: 0 },
+            })
+            .write();
     }
     player = db.get("players").find({ id: ctx.from.id });
     console.log(player.value());
