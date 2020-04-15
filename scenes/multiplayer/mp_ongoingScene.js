@@ -129,7 +129,7 @@ mp_ongoingScene.hears(/.*/, (ctx) => {
         const user1 = mpGame.user1;
         const user2 = mpGame.user2;
 
-        const winner = null;
+        let winner = null;
 
         if (currentPlayer.id === user1.id) {
             winner = user1;
