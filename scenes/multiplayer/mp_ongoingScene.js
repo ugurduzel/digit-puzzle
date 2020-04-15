@@ -17,10 +17,10 @@ mp_ongoingScene.enter((ctx) => {
             turn: null,
         });
     }
-
-    let mpGame = storage.get(ctx.chat.id);
     return ctx.reply(
-        `A ${mpGame.user1.number.length} digit number is set for both of you.\n\nStart guessing... 🧐\n\n${mpGame.user1.name}\'s turn.`
+        `A ${mpGame.user1.number.length} digit number is set for both of you.\n\nStart guessing... 🧐\n\n${
+            storage.get(ctx.chat.id).user1.name
+        }\'s turn.`
     );
 });
 
@@ -166,7 +166,7 @@ function getCurrentPlayer(ctx) {
     }
     let mpGame = storage.get(ctx.chat.id);
 
-    const id = mpGame.get("turn");
+    const id = mpGame.turn;
     const user1 = mpGame.user1;
     return user1.id === id ? { ...user1 } : { ...mpGame.user2 };
 }
