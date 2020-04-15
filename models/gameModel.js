@@ -7,6 +7,8 @@ const adapter = new FileSync("myDb.json");
 const db = low(adapter);
 
 db.defaults({ sp_step_top10: [], players: [] }).write();
+
+
 // const gameModel = new LocalSession({
 //     database: "gameInformation.json",
 //     property: "gameStat",
