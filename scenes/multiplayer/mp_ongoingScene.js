@@ -16,6 +16,7 @@ mp_ongoingScene.action("OK", (ctx) => {
 });
 
 mp_ongoingScene.action("FIN_PLAY_AGAIN", (ctx) => {
+    deleteSessionFeatures(ctx);
     return ctx.reply(
         `Both players have joined.\n\nWe may begin now. Choose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun`,
         Extra.HTML().markup((m) => m.inlineKeyboard(levels.map((l) => m.callbackButton(`${l} digits`, `${l} digits`))))
@@ -204,8 +205,6 @@ mp_ongoingScene.hears(/.*/, (ctx) => {
 
         // storage.get(ctx.chat.id).user1.ctx.scene.enter("mp_beginScene");
         // storage.get(ctx.chat.id).user2.ctx.scene.enter("mp_beginScene");
-
-        deleteSessionFeatures(ctx);
 
         return ctx.reply(
             `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${winner.number.join("")}</b>.\nYou found it in ${
