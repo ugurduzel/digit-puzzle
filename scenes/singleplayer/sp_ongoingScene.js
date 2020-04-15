@@ -203,7 +203,10 @@ function addSpStepResult(ctx, step) {
     console.log(result.value());
     if (!result.value()) return null;
 
-    if (!result.value()["3_count"] && result.value()["3_score"]) {
+    const count = result.value()["3_count"];
+    const avgScore = result.value()["3_score"];
+
+    if (!count && !avgScore) {
         db.get("players").find({ id: ctx.from.id }).assign({ "3_count": 1, "3_avg": step }).write();
         handleTop10Step(ctx, 1, step);
         return;
