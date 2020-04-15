@@ -214,6 +214,7 @@ function addSpStepResult(ctx, step) {
     const newAvg = (avgScore * count + step) / (count + 1);
     const newCount = count + 1;
     db.get("players").find({ id: ctx.from.id }).assign({ "3_count": newCount, "3_avg": newAvg }).write();
+    console.log("Updated player is : ", db.get("players").find({ id: ctx.from.id }).value());
     handleTop10Step(ctx, newCount, newAvg);
 }
 
