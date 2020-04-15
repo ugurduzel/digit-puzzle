@@ -92,7 +92,9 @@ sp_ongoingScene.hears(/.*/, (ctx) => {
         ctx.reply(
             `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${number.join(
                 ""
-            )}</b>.\nYou found it in ${guesses} tries. 🤯\n\n${getStepLeaderboard(db.get("sp3_step_top10").value())}`,
+            )}</b>.\nYou found it in ${guesses} tries. 🤯\n\n${getStepLeaderboard(
+                db.get(`sp${level}_step_top10`).value()
+            )}`,
             Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "FIN_PLAY_AGAIN")]))
         );
         deleteSessionFeatures(ctx.session);
