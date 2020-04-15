@@ -29,8 +29,8 @@ bot.use(underMaintenanceMiddleware());
 bot.use(stage.middleware());
 //bot.use(log());
 
-bot.action("NEW_GAME", (ctx) => {
-    const player = db.get("players").find({ id: ctx.from.id });
+bot.action("NEW_GAME", async (ctx) => {
+    const player = await db.get("players").find({ id: ctx.from.id });
     console.log(player);
     return;
     if (ctx.gameStat.players[ctx.from.id]) {

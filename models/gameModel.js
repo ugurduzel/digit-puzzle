@@ -3,7 +3,7 @@ const LocalSession = require("telegraf-session-local");
 const low = require("lowdb");
 const FileAsync = require("lowdb/adapters/FileAsync");
 
-const adapter = new FileAsync("db.json");
+const adapter = new FileAsync("myDb.json");
 const db = low(adapter);
 
 db.defaults({ sp_step_top10: [], players: [] }).write();
