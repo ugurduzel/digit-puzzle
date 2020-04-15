@@ -20,7 +20,7 @@ mp_ongoingScene.enter((ctx) => {
 
     let mpGame = storage.get(ctx.chat.id);
     return ctx.reply(
-        `A ${mpGame["user1"].number.length} digit number is set for both of you.\n\nStart guessing... 🧐\n\n${mpGame["user1"].name}\'s turn.`
+        `A ${mpGame.user1.number.length} digit number is set for both of you.\n\nStart guessing... 🧐\n\n${mpGame.user1.name}\'s turn.`
     );
 });
 
@@ -105,8 +105,8 @@ mp_ongoingScene.hears(/.*/, (ctx) => {
 
         setPlayer(ctx, currentPlayer);
 
-        const user1 = mpGame["user1"];
-        const user2 = mpGame["user2"];
+        const user1 = mpGame.user1;
+        const user2 = mpGame.user2;
 
         ctx.reply(
             `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${number.join("")}</b>.\nYou found it in ${guesses} tries. 🤯\n\n
@@ -124,10 +124,10 @@ mp_ongoingScene.hears(/.*/, (ctx) => {
     currentPlayer.history.push({ guess: ctx.message.text, result });
 
     let copy = { ...mpGame };
-    if (mpGame["user1"].id === currentPlayer) {
-        copy.turn = mpGame["user2"].id;
+    if (mpGame.user1.id === currentPlayer) {
+        copy.turn = mpGame.user2.id;
     } else {
-        copy.turn = mpGame["user1"].id;
+        copy.turn = mpGame.user1.id;
     }
     storage.set(ctx.chat.id, copy);
 
@@ -167,15 +167,15 @@ function getCurrentPlayer(ctx) {
     let mpGame = storage.get(ctx.chat.id);
 
     const id = mpGame.get("turn");
-    const user1 = mpGame["user1"];
-    return user1.id === id ? { ...user1 } : { ...mpGame["user2"] };
+    const user1 = mpGame.user1;
+    return user1.id === id ? { ...user1 } : { ...mpGame.user2 };
 }
 
 function setPlayer(ctx, player) {
     let mpGame = storage.get(ctx.chat.id);
     let copy = { ...mpGame };
     const id = player.id;
-    if (mpGame["user1"].id === id) {
+    if (mpGame.user1.id === id) {
         copy.user1 = player;
     } else {
         copy.user2 = player;
