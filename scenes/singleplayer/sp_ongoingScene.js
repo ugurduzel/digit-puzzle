@@ -283,10 +283,10 @@ function getStepLeaderboard(lst) {
     for (let i = 0; i < lst.length; i++) {
         const item = lst[i];
         s += item.username;
-        s += " ".repeat(avg_len - item.username.length) + "| ";
-        let tmp = item.avgScore.toString().length > 3 ? _.take(item.avgScore.toString(), 3) : item.avgScore.toString();
+        s += " ".repeat(avg_len - item.username.length) + "  ";
+        let tmp = item.avgScore.toString().length > 4 ? _.take(item.avgScore.toString(), 4) : item.avgScore.toString();
         s += tmp;
-        s += " ".repeat(total_len - (item.username.length + (tmp.length - 1))) + "| ";
+        s += " ".repeat(total_len - (item.username.length + (tmp.length - 2))) + "  ";
         s += item.numberOfGames + "\n";
     }
 
