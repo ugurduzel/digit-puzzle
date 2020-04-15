@@ -72,7 +72,7 @@ mp_ongoingScene.enter((ctx) => {
 });
 
 mp_ongoingScene.on("text", (ctx) => {
-    if (storage.get(ctx.chat.id).turn !== ctx.from.id) {
+    if (storage.get(ctx.chat.id).turn && storage.get(ctx.chat.id).turn !== ctx.from.id) {
         return ctx.reply("It's not your turn. " + extractUsername(ctx), Extra.HTML().inReplyTo(ctx.message.message_id));
     }
 
@@ -146,6 +146,8 @@ mp_ongoingScene.on("text", (ctx) => {
         );
 
         deleteSessionFeatures();
+        storage.get(ctx.chat.id).user1.ctx.scene.enter("mp_beginScene");
+        storage.get(ctx.chat.id).user2.ctx.scene.enter("mp_beginScene");
         return;
     }
 
