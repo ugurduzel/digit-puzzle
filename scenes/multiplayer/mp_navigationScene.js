@@ -9,12 +9,17 @@ const mp_navigationScene = new Scene("mp_navigationScene");
 mp_navigationScene.action("JOIN_GAME", (ctx) => {
     if (ctx.session.users.length < 2) {
         ctx.session.users.push({ id: ctx.from.id, name: extractUsername(ctx) });
-        ctx.reply(
-            `We added ${ctx.session.users[0].name}\n\nCurrently ${ctx.session.users.length}/2${
-                ctx.session.users.length === 2 ? "\nBoth players joind. Let's begin." : ""
-            }`
-        );
-        return ctx.scene.enter("mp_beginScene");
+        let addedPlayer = ctx.session.users.find((u) => u.id === ctx.from.id);
+        let replyStr = `We added ${addedPlayer.name}. Currently ${ctx.session.users.length}/2\n\n`;
+        if (ctx.session.users.length < 2) {
+            replyStr += `We are waiting for another player`;
+            return ctx.reply(replyStr);
+        }
+        if (ctx.session.users.length === 2) {
+            replyStr += `Both players joind.\n\n${ctx.session.users[0].name} vs ${ctx.session.users[1].name}\n\nLet\'s begin...`;
+            ctx.reply(replyStr);
+            return ctx.scene.enter("mp_beginScene");
+        }
     }
     return ctx.reply(
         `This session is currently full.\nThere is a heating match between ${ctx.session.users[0].name} and ${ctx.session.users[1].name}`
