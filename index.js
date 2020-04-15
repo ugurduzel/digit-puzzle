@@ -30,7 +30,7 @@ const bot = new Telegraf(process.env.BOT_TOKEN || "");
 
 bot.use(commandParts());
 bot.use(howto());
-bot.use(mpFilter());
+//bot.use(mpFilter());
 bot.use(sessionModel.middleware());
 bot.use(underMaintenanceMiddleware());
 bot.use(stage.middleware());
