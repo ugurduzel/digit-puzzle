@@ -82,7 +82,7 @@ mp_beginScene.enter((ctx) => {
         let copy = { ...mpGame };
         copy.user1.ready = true;
         storage.set(ctx.chat.id, copy);
-        if (mpGame.user2.hasOwnProperty("ready") && mpGame.user2.ready) {
+        if (mpGame.user2 && mpGame.user2.hasOwnProperty("ready") && mpGame.user2.ready) {
             return ctx.reply(
                 `Both players have joined.\n\nWe may begin now. Choose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun`,
                 Extra.HTML().markup((m) =>
@@ -95,7 +95,7 @@ mp_beginScene.enter((ctx) => {
         let copy = { ...mpGame };
         copy.user2.ready = true;
         storage.set(ctx.chat.id, copy);
-        if (mpGame.user1.hasOwnProperty("ready") && mpGame.user1.ready) {
+        if (mpGame.user1 && mpGame.user1.hasOwnProperty("ready") && mpGame.user1.ready) {
             return ctx.reply(
                 `Both players have joined.\n\nWe may begin now. Choose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun`,
                 Extra.HTML().markup((m) =>
