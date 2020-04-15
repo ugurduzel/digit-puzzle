@@ -88,7 +88,7 @@ mp_beginScene.enter((ctx) => {
         storage.set(ctx.chat.id, copy);
         if (mpGame.user2 && mpGame.user2.hasOwnProperty("ready") && mpGame.user2.ready) {
             return ctx.reply(
-                `Both players have joined.\n\nWe may begin now. Choose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun`,
+                `Both players have joined.\n\n${mpGame.user1.name} vs ${mpGame.user2.name}\n\nWe may begin now. Choose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun`,
                 Extra.HTML().markup((m) =>
                     m.inlineKeyboard(levels.map((l) => m.callbackButton(`${l} digits`, `${l} digits`)))
                 )
@@ -101,7 +101,7 @@ mp_beginScene.enter((ctx) => {
         storage.set(ctx.chat.id, copy);
         if (mpGame.user1 && mpGame.user1.hasOwnProperty("ready") && mpGame.user1.ready) {
             return ctx.reply(
-                `Both players have joined.\n\nWe may begin now. Choose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun`,
+                `Both players have joined.\n\n${mpGame.user1.name} vs ${mpGame.user2.name}\n\nWe may begin now. Choose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun`,
                 Extra.HTML().markup((m) =>
                     m.inlineKeyboard(levels.map((l) => m.callbackButton(`${l} digits`, `${l} digits`)))
                 )

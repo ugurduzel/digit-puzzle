@@ -56,8 +56,8 @@ mp_ongoingScene.action(/^[0-9] digits/, (ctx) => {
     let user1 = { ...mpGame.user1 };
     let user2 = { ...mpGame.user2 };
 
-    user1.number = user1.number || generateRandomNumber(level);
-    user2.number = user2.number || generateRandomNumber(level);
+    user1.number = generateRandomNumber(level);
+    user2.number = generateRandomNumber(level);
 
     console.log(`${user1.name}'s number is ${user1.number}`);
     console.log(`${user2.name}'s number is ${user2.number}`);
@@ -74,7 +74,12 @@ mp_ongoingScene.action(/^[0-9] digits/, (ctx) => {
     copy.turn = user1.id;
 
     storage.set(ctx.chat.id, copy);
-    return;
+    return ctx.reply(
+        `Two different ${user1.number} digit numbers have been set for you guys.\n\nStart guessing....`,
+        Extra.HTML().markup((m) =>
+            m.inlineKeyboard([m.callbackButton("Get History", "History"), m.callbackButton("Quit", "Quit")])
+        )
+    );
 });
 
 mp_ongoingScene.action("Quit", (ctx) => {
