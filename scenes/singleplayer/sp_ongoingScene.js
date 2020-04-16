@@ -104,7 +104,8 @@ sp_ongoingScene.hears(/.*/, (ctx) => {
                 `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${number.join(
                     ""
                 )}</b>.\nYou found it in ${guesses} tries. 🤯\n\n${getStepLeaderboard(
-                    db.get(`sp${number.length}_step_top10`).value()
+                    db.get(`sp${number.length}_step_top10`).value(),
+                    number.length
                 )}`,
                 Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "FIN_PLAY_AGAIN")]))
             );
@@ -201,7 +202,7 @@ function handleTop10Step(ctx, numberOfGames, avgScore, level) {
     }
 }
 
-function getStepLeaderboard(lst) {
+function getStepLeaderboard(lst, level) {
     let s = "<b>Singleplayer Step Leaderboard</b>\n\n";
     let max = -1;
     for (let i = 0; i < lst.length; i++) {
@@ -225,7 +226,7 @@ function getStepLeaderboard(lst) {
         const item = lst[i];
         s += item.username;
         s += " ".repeat(avg_len - item.username.length) + "  ";
-        let tmp = _.take(item.avgScore.toString(), 5).join("");
+        let tmp = _.take(item[[`${level}_avg`]].toString(), 5).join("");
         s += tmp;
         s += " ".repeat(total_len - (item.username.length + (tmp.length - 2))) + "  ";
         s += item.numberOfGames + "\n";
