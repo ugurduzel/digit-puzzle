@@ -150,5 +150,9 @@ bot.command("start", (ctx) => {
     }
 });
 
-console.log("Launching the application... " + new Date(Date.now()).toTimeString().substring(0, 8));
+console.log(
+    "#############################\n#############################\nLaunching the application... " +
+        new Date(Date.now()).toTimeString().substring(0, 8) +
+        "\n#############################\n\n"
+);
 bot.launch();

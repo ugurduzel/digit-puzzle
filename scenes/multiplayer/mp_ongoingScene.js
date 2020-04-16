@@ -27,6 +27,7 @@ mp_ongoingScene.action("FIN_PLAY_AGAIN", (ctx) => {
         `Okay, let's play again.\n\nChoose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun`,
         Markup.keyboard(levels.map((l) => `${l} digits`))
             .removeKeyboard(true)
+            .forceReply(true)
             .oneTime()
             .resize()
             .extra()
@@ -77,9 +78,19 @@ mp_ongoingScene.action("History", (ctx) => {
     try {
         const currentPlayer = getCurrentPlayer(ctx);
 
-        const { history } = currentPlayer;
+        let players = storage.get(ctx.chat.id);
 
-        let s = extractUsername(ctx) + "\n";
+        let history = null;
+        let s = null;
+
+        if (players.user1.id === ctx.from.id) {
+            history = players.user1.history;
+            s = user1.name + "\n";
+        } else {
+            history = players.user2.history;
+            s = user2.name + "\n";
+        }
+
         for (let i = 0; i < history.length; i++) {
             s += "▪️ " + history[i].guess + " ➡️ ";
             s += history[i].result + "\n";
@@ -132,10 +143,9 @@ mp_ongoingScene.hears(/.*/, (ctx) => {
             user1.number = generateRandomNumber(level);
             user2.number = generateRandomNumber(level);
 
-            console.log(`${user1.name}'s number is ${user1.number}`);
-            console.log(`${user2.name}'s number is ${user2.number}`);
-
-            logMessage(`${user1.name}'s number is ${user1.number}` + `${user2.name}'s number is ${user2.number}`);
+            logMessage(
+                `****** Multiplayer Game ******\n${user1.name}'s number is ${user1.number}\n${user2.name}'s number is ${user2.number}\n`
+            );
 
             user1.guesses = 1;
             user2.guesses = 1;

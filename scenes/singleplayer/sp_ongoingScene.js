@@ -164,8 +164,6 @@ function handleTop10Step(ctx, numberOfGames, avgScore, level) {
     let arr = [...top10.value()];
     let found = arr.find((e) => e.username === username);
 
-    console.log(username + " updated to " + numberOfGames + " games and " + avgScore + " avgScore");
-
     if (found) {
         found[`${level}_count`] = numberOfGames;
         found[`${level}_avg`] = avgScore;
