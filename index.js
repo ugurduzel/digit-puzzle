@@ -30,6 +30,10 @@ bot.telegram.getMe().then((botInfo) => {
     bot.options.username = botInfo.username;
 });
 
+bot.catch((err, ctx) => {
+    console.log(`Ooops, encountered an error for ${ctx.updateType}`, err);
+});
+
 //bot.use(commandParts());
 bot.use(howto());
 bot.use(sessionModel.middleware());
@@ -54,6 +58,7 @@ bot.action("NEW_GAME", (ctx) => {
         return ctx.scene.enter("navigationScene");
     } catch (ex) {
         console.log("Unexpected error. " + ex);
+        return;
     }
 });
 
@@ -67,6 +72,7 @@ bot.action("NEW_MP_GAME", (ctx) => {
         );
     } catch (ex) {
         console.log("Unexpected error. " + ex);
+        return;
     }
 });
 
@@ -113,6 +119,7 @@ bot.action("JOIN_GAME", (ctx) => {
         );
     } catch (ex) {
         console.log("Unexpected error. " + ex);
+        return;
     }
 });
 
@@ -139,6 +146,7 @@ bot.command("start", (ctx) => {
         );
     } catch (ex) {
         console.log("Unexpected error. " + ex);
+        return;
     }
 });
 
