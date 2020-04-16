@@ -7,97 +7,118 @@ const _ = require("lodash");
 const sp_ongoingScene = new Scene("sp_ongoingScene");
 
 sp_ongoingScene.enter((ctx) => {
-    return ctx
-        .reply(`I have a ${ctx.session.number.length} digit number in mind.\n\nStart guessing... 🧐`)
-        .forceReply();
+    try {
+        return ctx.reply(`I have a ${ctx.session.number.length} digit number in mind.\n\nStart guessing... 🧐`);
+    } catch (ex) {
+        console.log("Unexpected error. " + ex);
+    }
 });
 
 sp_ongoingScene.action("FIN_PLAY_AGAIN", (ctx) => {
-    deleteSessionFeatures(ctx.session);
-    return ctx.scene.enter("navigationScene");
+    try {
+        deleteSessionFeatures(ctx.session);
+        return ctx.scene.enter("navigationScene");
+    } catch (ex) {
+        console.log("Unexpected error. " + ex);
+    }
 });
 
 sp_ongoingScene.action("Quit", (ctx) => {
-    const { number } = ctx.session;
-    deleteSessionFeatures(ctx.session);
-    return ctx.reply(
-        `Quitted\nThe number was ${number.join("")}`,
-        Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "FIN_PLAY_AGAIN")]))
-    );
+    try {
+        const { number } = ctx.session;
+        deleteSessionFeatures(ctx.session);
+        return ctx.reply(
+            `Quitted\nThe number was ${number.join("")}`,
+            Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "FIN_PLAY_AGAIN")]))
+        );
+    } catch (ex) {
+        console.log("Unexpected error. " + ex);
+    }
 });
 
 sp_ongoingScene.action("History", (ctx) => {
-    const { history } = ctx.session;
+    try {
+        const { history } = ctx.session;
 
-    let s = "Your guesses,\n";
-    for (let i = 0; i < history.length; i++) {
-        s += "▪️ " + history[i].guess + " ➡️ ";
-        s += history[i].result + "\n";
+        let s = "Your guesses,\n";
+        for (let i = 0; i < history.length; i++) {
+            s += "▪️ " + history[i].guess + " ➡️ ";
+            s += history[i].result + "\n";
+        }
+        return ctx.reply(s);
+    } catch (ex) {
+        console.log("Unexpected error. " + ex);
     }
-    return ctx.reply(s);
 });
 
 sp_ongoingScene.hears(/.*/, (ctx) => {
-    if (!ctx.session) {
-        return null;
-    }
-    if (isNaN(ctx.message.text)) {
+    try {
+        if (!ctx.session) {
+            return null;
+        }
+        if (isNaN(ctx.message.text)) {
+            return ctx.reply(
+                `Only send numbers!`,
+                Extra.HTML().markup((m) =>
+                    m.inlineKeyboard([m.callbackButton("Get History", "History"), m.callbackButton("Quit", "Quit")])
+                )
+            );
+        }
+        let withHistoryKeyboard = [];
+        if (ctx.session.history && ctx.session.history.length > 0) {
+            withHistoryKeyboard.push(Markup.callbackButton("Get History", "History"));
+        }
+        withHistoryKeyboard.push(Markup.callbackButton("Quit", "Quit"));
+
+        if (isNaN(ctx.message.text) || ctx.message.text.length !== ctx.session.number.length) {
+            return ctx.reply(
+                `Only send ${ctx.session.number.length} digit numbers!`,
+                Markup.inlineKeyboard([withHistoryKeyboard]).extra()
+            );
+        }
+        const digits = ctx.message.text.split("");
+        if (digits.includes("0")) {
+            return ctx.reply(
+                `Cannot send a number with 0 in it!`,
+                Markup.inlineKeyboard([withHistoryKeyboard]).extra()
+            );
+        }
+        if (notDistinct(digits) === true) {
+            return ctx.reply(`All digits must be different!`, Markup.inlineKeyboard([withHistoryKeyboard]).extra());
+        }
+
+        const { won, result } = getResult(ctx.message.text, ctx.session.number);
+
+        ctx.session.history.push({ guess: ctx.message.text, result });
+
+        if (won) {
+            const { number, guesses } = ctx.session;
+
+            addSpStepResult(ctx, guesses, number.length);
+
+            ctx.reply(
+                `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${number.join(
+                    ""
+                )}</b>.\nYou found it in ${guesses} tries. 🤯\n\n${getStepLeaderboard(
+                    db.get(`sp${number.length}_step_top10`).value()
+                )}`,
+                Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "FIN_PLAY_AGAIN")]))
+            );
+            deleteSessionFeatures(ctx.session);
+            return;
+        }
+        ctx.session.guesses += 1;
         return ctx.reply(
-            `Only send numbers!`,
-            Extra.HTML().markup((m) =>
-                m.inlineKeyboard([m.callbackButton("Get History", "History"), m.callbackButton("Quit", "Quit")])
-            )
+            result,
+            Extra.HTML()
+                .inReplyTo(ctx.message.message_id)
+                .markup((m) =>
+                    m.inlineKeyboard([m.callbackButton("Get History", "History"), m.callbackButton("Quit", "Quit")])
+                )
         );
+    } catch (ex) {
+        console.log("Unexpected error. " + ex);
     }
-    let withHistoryKeyboard = [];
-    if (ctx.session.history && ctx.session.history.length > 0) {
-        withHistoryKeyboard.push(Markup.callbackButton("Get History", "History"));
-    }
-    withHistoryKeyboard.push(Markup.callbackButton("Quit", "Quit"));
-
-    if (isNaN(ctx.message.text) || ctx.message.text.length !== ctx.session.number.length) {
-        return ctx.reply(
-            `Only send ${ctx.session.number.length} digit numbers!`,
-            Markup.inlineKeyboard([withHistoryKeyboard]).extra()
-        );
-    }
-    const digits = ctx.message.text.split("");
-    if (digits.includes("0")) {
-        return ctx.reply(`Cannot send a number with 0 in it!`, Markup.inlineKeyboard([withHistoryKeyboard]).extra());
-    }
-    if (notDistinct(digits) === true) {
-        return ctx.reply(`All digits must be different!`, Markup.inlineKeyboard([withHistoryKeyboard]).extra());
-    }
-
-    const { won, result } = getResult(ctx.message.text, ctx.session.number);
-
-    ctx.session.history.push({ guess: ctx.message.text, result });
-
-    if (won) {
-        const { number, guesses } = ctx.session;
-
-        addSpStepResult(ctx, guesses, number.length);
-
-        ctx.reply(
-            `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${number.join(
-                ""
-            )}</b>.\nYou found it in ${guesses} tries. 🤯\n\n${getStepLeaderboard(
-                db.get(`sp${number.length}_step_top10`).value()
-            )}`,
-            Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "FIN_PLAY_AGAIN")]))
-        );
-        deleteSessionFeatures(ctx.session);
-        return;
-    }
-    ctx.session.guesses += 1;
-    return ctx.reply(
-        result,
-        Extra.HTML()
-            .inReplyTo(ctx.message.message_id)
-            .markup((m) =>
-                m.inlineKeyboard([m.callbackButton("Get History", "History"), m.callbackButton("Quit", "Quit")])
-            )
-    );
 });
 
 module.exports = sp_ongoingScene;

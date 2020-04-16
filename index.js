@@ -37,93 +37,109 @@ bot.use(sessionModel.middleware());
 bot.use(stage.middleware());
 
 bot.action("NEW_GAME", (ctx) => {
-    let player = db.get("players").find({ id: ctx.from.id });
-    if (!player.value()) {
-        ctx.reply("Just a second...");
-        db.get("players")
-            .push({
-                id: ctx.from.id,
-            })
-            .write();
-        ctx.reply("We have added you to our userbase. 👏\n\nHave fun! ");
-    } else {
-        console.log("Player " + ctx.from.id + " is found\n" + player);
-    }
+    try {
+        let player = db.get("players").find({ id: ctx.from.id });
+        if (!player.value()) {
+            ctx.reply("Just a second...");
+            db.get("players")
+                .push({
+                    id: ctx.from.id,
+                })
+                .write();
+            ctx.reply("We have added you to our userbase. 👏\n\nHave fun! ");
+        } else {
+            console.log("Player " + ctx.from.id + " is found\n" + player);
+        }
 
-    return ctx.scene.enter("navigationScene");
+        return ctx.scene.enter("navigationScene");
+    } catch (ex) {
+        console.log("Unexpected error. " + ex);
+    }
 });
 
 bot.action("NEW_MP_GAME", (ctx) => {
-    let mpGame = storage.get(ctx.chat.id);
+    try {
+        let mpGame = storage.get(ctx.chat.id);
 
-    return ctx.reply(
-        `Only 2 players should join the game.\nCurrently ${howMany(ctx)}/2`,
-        Markup.inlineKeyboard([Markup.callbackButton("Join!", "JOIN_GAME")]).extra()
-    );
+        return ctx.reply(
+            `Only 2 players should join the game.\nCurrently ${howMany(ctx)}/2`,
+            Markup.inlineKeyboard([Markup.callbackButton("Join!", "JOIN_GAME")]).extra()
+        );
+    } catch (ex) {
+        console.log("Unexpected error. " + ex);
+    }
 });
 
 bot.action("JOIN_GAME", (ctx) => {
-    if (!storage.has(ctx.chat.id)) {
-        storage.set(ctx.chat.id, {
-            user1: null,
-            user2: null,
-            turn: null,
-        });
-    }
-    let mpGame = storage.get(ctx.chat.id);
+    try {
+        if (!storage.has(ctx.chat.id)) {
+            storage.set(ctx.chat.id, {
+                user1: null,
+                user2: null,
+                turn: null,
+            });
+        }
+        let mpGame = storage.get(ctx.chat.id);
 
-    if (howMany(ctx) === 0) {
-        const name = extractUsername(ctx);
-        let copy = { ...mpGame };
-        copy.user1 = { id: ctx.from.id, name, ctx };
-        storage.set(ctx.chat.id, copy);
-        ctx.reply(
-            `I added ${name}. Currently 1/2.\n\nWe are waiting for another player`,
-            Markup.inlineKeyboard([Markup.callbackButton("Join!", "JOIN_GAME")]).extra()
-        );
-        return ctx.scene.enter("mp_beginScene");
-    }
-
-    if (howMany(ctx) === 1) {
-        if (ctx.from.id === mpGame.user1.id) {
-            return ctx.reply(`${mpGame.user1.name} You have already joined.`);
+        if (howMany(ctx) === 0) {
+            const name = extractUsername(ctx);
+            let copy = { ...mpGame };
+            copy.user1 = { id: ctx.from.id, name, ctx };
+            storage.set(ctx.chat.id, copy);
+            ctx.reply(
+                `I added ${name}. Currently 1/2.\n\nWe are waiting for another player`,
+                Markup.inlineKeyboard([Markup.callbackButton("Join!", "JOIN_GAME")]).extra()
+            );
+            return ctx.scene.enter("mp_beginScene");
         }
 
-        const name = extractUsername(ctx);
-        let copy = { ...mpGame };
-        copy.user2 = { id: ctx.from.id, name, ctx };
-        storage.set(ctx.chat.id, copy);
+        if (howMany(ctx) === 1) {
+            if (ctx.from.id === mpGame.user1.id) {
+                return ctx.reply(`${mpGame.user1.name} You have already joined.`);
+            }
 
-        ctx.reply(` Both players joined.\n\n${mpGame.user1.name} vs ${name}\n\nLet\'s begin...`);
-        return ctx.scene.enter("mp_beginScene");
-    }
+            const name = extractUsername(ctx);
+            let copy = { ...mpGame };
+            copy.user2 = { id: ctx.from.id, name, ctx };
+            storage.set(ctx.chat.id, copy);
 
-    return ctx.reply(
-        `This session is currently full.\nThere is a heating match between 
+            ctx.reply(` Both players joined.\n\n${mpGame.user1.name} vs ${name}\n\nLet\'s begin...`);
+            return ctx.scene.enter("mp_beginScene");
+        }
+
+        return ctx.reply(
+            `This session is currently full.\nThere is a heating match between 
         ${mpGame.user1.name} vs ${mpGame.user2.name}`
-    );
+        );
+    } catch (ex) {
+        console.log("Unexpected error. " + ex);
+    }
 });
 
 bot.command("start", (ctx) => {
-    console.log("CHAT: ", ctx.chat);
-    if (ctx.chat.type !== "supergroup") {
-        return ctx.reply(
-            `Hi ${ctx.chat.first_name},\nWelcome to Digit Puzzle! 🧩\n\nUse /howto command to see the detailed explanation.`,
-            Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play now!", "NEW_GAME")]))
-        );
-    }
-    if (!storage.has(ctx.chat.id)) {
-        storage.set(ctx.chat.id, {
-            user1: null,
-            user2: null,
-            turn: null,
-        });
-    }
+    try {
+        console.log("CHAT: ", ctx.chat);
+        if (ctx.chat.type !== "supergroup") {
+            return ctx.reply(
+                `Hi ${ctx.chat.first_name},\nWelcome to Digit Puzzle! 🧩\n\nUse /howto command to see the detailed explanation.`,
+                Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play now!", "NEW_GAME")]))
+            );
+        }
+        if (!storage.has(ctx.chat.id)) {
+            storage.set(ctx.chat.id, {
+                user1: null,
+                user2: null,
+                turn: null,
+            });
+        }
 
-    return ctx.reply(
-        `Hi group ${ctx.chat.title},\nWelcome to Digit Puzzle! 🧩\n\nUse /howto command to see the detailed explanation.`,
-        Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play now!", "NEW_MP_GAME")]))
-    );
+        return ctx.reply(
+            `Hi group ${ctx.chat.title},\nWelcome to Digit Puzzle! 🧩\n\nUse /howto command to see the detailed explanation.`,
+            Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play now!", "NEW_MP_GAME")]))
+        );
+    } catch (ex) {
+        console.log("Unexpected error. " + ex);
+    }
 });
 
 console.log("Launching the application... " + new Date(Date.now()).toTimeString().substring(0, 8));

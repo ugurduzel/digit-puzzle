@@ -6,11 +6,15 @@ const telegram = new Telegram(process.env.BOT_TOKEN || "");
 const { storage } = require("../cache");
 
 function howMany(ctx) {
-    let mpGame = storage.get(ctx.chat.id);
+    try {
+        let mpGame = storage.get(ctx.chat.id);
 
-    if (mpGame.user2) return 2;
-    if (mpGame.user1) return 1;
-    return 0;
+        if (mpGame.user2) return 2;
+        if (mpGame.user1) return 1;
+        return 0;
+    } catch (ex) {
+        console.log("Unexpected error. " + ex);
+    }
 }
 
 function logMessage(msg) {

@@ -10,31 +10,41 @@ const levels = _.range(minLevel, maxLevel + 1);
 const sp_beginScene = new Scene("sp_beginScene");
 
 sp_beginScene.enter((ctx) => {
-    return ctx.reply(
-        "Choose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun",
-        Extra.HTML().markup((m) => m.inlineKeyboard(levels.map((l) => m.callbackButton(`${l} digits`, `${l} digits`))))
-    );
-});
-
-sp_beginScene.action(/^[0-9] digits/, (ctx) => {
-    const level = eval(ctx.match[0][0]);
-
-    if (level < minLevel || level > maxLevel) {
+    try {
         return ctx.reply(
-            "Choose difficulty level",
-            "<p>Plase select from these inline options!</p>",
+            "Choose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun",
             Extra.HTML().markup((m) =>
                 m.inlineKeyboard(levels.map((l) => m.callbackButton(`${l} digits`, `${l} digits`)))
             )
         );
+    } catch (ex) {
+        console.log("Unexpected error. " + ex);
     }
+});
 
-    ctx.session.number = ctx.session.number ? ctx.session.number : generateRandomNumber(level);
-    ctx.session.guesses = 1;
-    ctx.session.history = [];
-    playerLog(ctx);
+sp_beginScene.action(/^[0-9] digits/, (ctx) => {
+    try {
+        const level = eval(ctx.match[0][0]);
 
-    return ctx.scene.enter("sp_ongoingScene");
+        if (level < minLevel || level > maxLevel) {
+            return ctx.reply(
+                "Choose difficulty level",
+                "<p>Plase select from these inline options!</p>",
+                Extra.HTML().markup((m) =>
+                    m.inlineKeyboard(levels.map((l) => m.callbackButton(`${l} digits`, `${l} digits`)))
+                )
+            );
+        }
+
+        ctx.session.number = ctx.session.number ? ctx.session.number : generateRandomNumber(level);
+        ctx.session.guesses = 1;
+        ctx.session.history = [];
+        playerLog(ctx);
+
+        return ctx.scene.enter("sp_ongoingScene");
+    } catch (ex) {
+        console.log("Unexpected error. " + ex);
+    }
 });
 
 module.exports = sp_beginScene;
