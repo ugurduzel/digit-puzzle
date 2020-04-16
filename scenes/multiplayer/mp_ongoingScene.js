@@ -28,9 +28,6 @@ mp_ongoingScene.action("FIN_PLAY_AGAIN", (ctx) => {
         Markup.keyboard(levels.map((l) => `${l} digits`))
             .removeKeyboard(true)
             .forceReply(true)
-            .oneTime()
-            .resize()
-            .extra()
     );
 });
 
@@ -171,13 +168,6 @@ mp_ongoingScene.hears(/.*/, (ctx) => {
             );
         }
 
-        // if (!storage.has(ctx.chat.id)) {
-        //     storage.set(ctx.chat.id, {
-        //         user1: null,
-        //         user2: null,
-        //         turn: null,
-        //     });
-        // }
         let mpGame = storage.get(ctx.chat.id);
 
         let currentPlayer = getCurrentPlayer(ctx);
