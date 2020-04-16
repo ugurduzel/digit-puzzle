@@ -24,7 +24,7 @@ mp_ongoingScene.action("OK", (ctx) => {
 mp_ongoingScene.action("FIN_PLAY_AGAIN", (ctx) => {
     return ctx.replyWithHTML(
         `Okay, let's play again.\n\nChoose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun`,
-        Extra.HTML().markup((m) => m.inlineKeyboard([levels.map((l) => m.button(`${l} digits`))]))
+        Markup.inlineKeyboard(levels.map((l) => `${l} digits`))
     );
 });
 
