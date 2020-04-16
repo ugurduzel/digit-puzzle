@@ -19,9 +19,12 @@ const levels = _.range(minLevel, maxLevel + 1);
 const mp_ongoingScene = new Scene("mp_ongoingScene");
 
 mp_ongoingScene.action("FIN_PLAY_AGAIN", (ctx) => {
-    return ctx.replyWithHTML(
+    return ctx.reply(
         `Okay, let's play again.\n\nChoose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun.`,
-        Markup.keyboard(levels.map((l) => `${l} digits`)).oneTime(false)
+        Markup.keyboard(levels.map((l) => `${l} digits`))
+            .oneTime(false)
+            .resize()
+            .extra()
     );
 });
 
