@@ -7,7 +7,11 @@ const howto = () => (ctx, next) => {
     if (ctx.state.command && ctx.state.command.command === "howto") {
         ctx.reply(
             message,
-            Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play now!", "NEW_GAME")]))
+            Extra.HTML().markup((m) =>
+                m.inlineKeyboard([
+                    m.callbackButton("🎮 Play now!", ctx.chat.type === "supergroup" ? "NEW_MP_GAME" : "NEW_GAME"),
+                ])
+            )
         );
     }
     return next();

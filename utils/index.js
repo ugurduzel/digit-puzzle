@@ -1,4 +1,6 @@
 const _ = require("lodash");
+const Extra = require("telegraf/extra");
+const Markup = require("telegraf/markup");
 const { admin_from_id, admin_chat_id: chat_id } = require("../configs/constants.json");
 const Telegram = require("telegraf/telegram");
 const telegram = new Telegram(process.env.BOT_TOKEN || "");

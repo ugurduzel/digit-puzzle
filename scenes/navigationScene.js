@@ -1,6 +1,7 @@
 const Extra = require("telegraf/extra");
 const Scene = require("telegraf/scenes/base");
 const Markup = require("telegraf/markup");
+const db = require("../models/gameModel");
 
 const { unexpectedErrorKeyboard } = require("../utils");
 
