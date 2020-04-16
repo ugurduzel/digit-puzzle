@@ -21,13 +21,6 @@ mp_ongoingScene.action("OK", (ctx) => {
     return ctx.reply("OK!");
 });
 
-mp_ongoingScene.action("FIN_PLAY_AGAIN", (ctx) => {
-    return ctx.reply(
-        `Choose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun`,
-        Extra.HTML().markup((m) => m.inlineKeyboard(levels.map((l) => m.callbackButton(`${l} digits`, `${l} digits`))))
-    );
-});
-
 mp_ongoingScene.action(/^[0-9] digits/, (ctx) => {
     try {
         if (!storage.has(ctx.chat.id)) {
@@ -50,10 +43,12 @@ mp_ongoingScene.action(/^[0-9] digits/, (ctx) => {
 
         const level = eval(ctx.match[0][0]);
 
+        console.log(level + " digit level chosen in play again");
+
         if (level < minLevel || level > maxLevel) {
             return ctx.reply(
                 "Choose difficulty level",
-                "<p>Plase select from these inline options!</p>",
+                "<p>Plase select from these options!</p>",
                 Extra.HTML().markup((m) =>
                     m.inlineKeyboard(levels.map((l) => m.callbackButton(`${l} digits`, `${l} digits`)))
                 )
@@ -91,6 +86,13 @@ mp_ongoingScene.action(/^[0-9] digits/, (ctx) => {
         console.log("Unexpected error. " + ex);
         unexpectedErrorKeyboard(ctx);
     }
+});
+
+mp_ongoingScene.action("FIN_PLAY_AGAIN", (ctx) => {
+    return ctx.reply(
+        `Okay, let's play again.\n\nChoose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun`,
+        Extra.HTML().markup((m) => m.inlineKeyboard(levels.map((l) => m.callbackButton(`${l} digits`, `${l} digits`))))
+    );
 });
 
 mp_ongoingScene.action("Quit", (ctx) => {

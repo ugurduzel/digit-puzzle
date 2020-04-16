@@ -106,7 +106,6 @@ bot.action("JOIN_GAME", (ctx) => {
             copy.user2 = { id: ctx.from.id, name, ctx };
             storage.set(ctx.chat.id, copy);
 
-            ctx.reply(` Both players joined.\n\n${mpGame.user1.name} vs ${name}\n\nLet\'s begin...`);
             return ctx.scene.enter("mp_beginScene");
         }
 
