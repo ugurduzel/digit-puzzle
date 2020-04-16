@@ -66,7 +66,7 @@ mp_ongoingScene.action("Quit", (ctx) => {
             loser.name
         }'s number was ${loser.number}\n\n
         ${user1.name} won ${user1.wins || 0} times\n${user2.name} won ${user2.wins || 0} times`,
-        Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "FIN_PLAY_AGAIN")]))
+        Extra.HTML().markup((m) => m.oneTime(false).inlineKeyboard([m.callbackButton("🎮 Play Again", "FIN_PLAY_AGAIN")]))
     );
 });
 
