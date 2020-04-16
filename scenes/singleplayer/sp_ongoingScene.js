@@ -145,7 +145,7 @@ function addSpStepResult(ctx, step, level) {
             .find({ id: ctx.from.id })
             .assign({ [`${level}_count`]: 1, [`${level}_avg`]: step })
             .write();
-        handleTop10Step(ctx, 1, step, `sp${level}`);
+        handleTop10Step(ctx, 1, step, level);
         return;
     }
     const newAvg = (avgScore * count + step) / (count + 1);
@@ -154,12 +154,12 @@ function addSpStepResult(ctx, step, level) {
         .find({ id: ctx.from.id })
         .assign({ [`${level}_count`]: newCount, [`${level}_avg`]: newAvg })
         .write();
-    handleTop10Step(ctx, newCount, newAvg, `sp${level}`);
+    handleTop10Step(ctx, newCount, newAvg, level);
 }
 
-function handleTop10Step(ctx, numberOfGames, avgScore, sp) {
+function handleTop10Step(ctx, numberOfGames, avgScore, sp, level) {
     const username = (ctx.chat.first_name || "") + (ctx.chat.last_name || "") + "";
-    let top10 = db.get(sp + "_step_top10");
+    let top10 = db.get(`sp${level}_step_top10`);
     let arr = [...top10.value()];
     let found = arr.find((e) => e.username === username);
 
@@ -173,7 +173,7 @@ function handleTop10Step(ctx, numberOfGames, avgScore, sp) {
         };
         arr.sort((e1, e2) => (e1[[`${level}_avg`]] < e2[[`${level}_avg`]] ? -1 : 1));
 
-        db.set("sp3_step_top10", arr).write();
+        db.set(`sp${level}_step_top10`, arr).write();
         return;
     }
 
@@ -185,7 +185,7 @@ function handleTop10Step(ctx, numberOfGames, avgScore, sp) {
         });
         arr.sort((e1, e2) => (e1[[`${level}_avg`]] < e2[[`${level}_avg`]] ? -1 : 1));
 
-        db.set("sp3_step_top10", arr).write();
+        db.set(`sp${level}_step_top10`, arr).write();
         return;
     }
     if (arr && arr[9][[`${level}_avg`]] > avgScore) {
@@ -196,7 +196,7 @@ function handleTop10Step(ctx, numberOfGames, avgScore, sp) {
         };
         arr.sort((e1, e2) => (e1[[`${level}_avg`]] < e2[[`${level}_avg`]] ? -1 : 1));
 
-        db.set("sp3_step_top10", arr).write();
+        db.set(`sp${level}_step_top10`, arr).write();
         return;
     }
 }
