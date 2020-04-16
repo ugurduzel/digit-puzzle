@@ -22,12 +22,12 @@ mp_ongoingScene.action("FIN_PLAY_AGAIN", (ctx) => {
     return ctx.replyWithHTML(
         `Okay, let's play again.\n\nChoose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun.\n\nYou can choose from the keyboard`,
         Extra.HTML().markup((m) =>
-            m.inlineKeyboard(levels.map((l) => m.callbackButton(`${l} digits`, `${l} mp_digits`)))
+            m.inlineKeyboard(levels.map((l) => m.callbackButton(`${l} digits`, `${l} mpdigits`)))
         )
     );
 });
 
-mp_ongoingScene.action(/^[0-9] mp_digits/, (ctx) => {
+mp_ongoingScene.action(/^[0-9] mpdigits/, (ctx) => {
     try {
         if (!storage.has(ctx.chat.id)) {
             storage.set(ctx.chat.id, {
@@ -54,7 +54,7 @@ mp_ongoingScene.action(/^[0-9] mp_digits/, (ctx) => {
                 "Choose difficulty level",
                 "<p>Plase select from these inline options!</p>",
                 Extra.HTML().markup((m) =>
-                    m.inlineKeyboard(levels.map((l) => m.callbackButton(`${l} digits`, `${l} mp_digits`)))
+                    m.inlineKeyboard(levels.map((l) => m.callbackButton(`${l} digits`, `${l} mpdigits`)))
                 )
             );
         }
