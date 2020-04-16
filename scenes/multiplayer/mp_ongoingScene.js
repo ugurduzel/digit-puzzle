@@ -7,6 +7,7 @@ const {
     getResult,
     notDistinct,
     extractUsername,
+    logMessage,
     unexpectedErrorKeyboard,
 } = require("../../utils");
 
@@ -33,15 +34,41 @@ mp_ongoingScene.action("FIN_PLAY_AGAIN", (ctx) => {
 });
 
 mp_ongoingScene.action("Quit", (ctx) => {
-    //deleteSessionFeatures(ctx);
+    let user1 = { ...storage.get(ctx.chat.id).user1 };
+    let user2 = { ...storage.get(ctx.chat.id).user2 };
+
+    let loser = null;
+    let winner = user1;
+
+    mpGame = storage.get(ctx.chat.id);
+
+    let copy = { ...mpGame };
+
+    if (ctx.from.id === user1.id) {
+        loser = user1;
+        winner = user2;
+
+        winner.wins = winner.wins + 1 || 1;
+
+        copy.user2 = winner;
+
+        storage.set(ctx.chat.id, copy);
+    } else {
+        loser = user2;
+        winner = user1;
+
+        winner.wins = winner.wins + 1 || 1;
+
+        copy.user1 = winner;
+
+        storage.set(ctx.chat.id, copy);
+    }
+
     return ctx.reply(
-        `Do you want to play again?`,
-        Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "FIN_PLAY_AGAIN")]))
-    );
-    const { number } = ctx.session;
-    deleteSessionFeatures(ctxctx);
-    return ctx.reply(
-        `Quitted\nThe number was ${number.join("")}`,
+        `<b>${loser.name} quitted. ${winner.name} won!</b> 🎊🎉\n\n${winner.name}'s number was ${winner.number}\n${
+            loser.name
+        }'s number was ${loser.number}\n\n
+        ${user1.name} won ${user1.wins || 0} times\n${user2.name} won ${user2.wins || 0} times`,
         Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "FIN_PLAY_AGAIN")]))
     );
 });
@@ -90,14 +117,6 @@ mp_ongoingScene.enter((ctx) => {
     }
 });
 
-function restartGame(ctx) {
-    try {
-    } catch (ex) {
-        console.log("Unexpected error. " + ex);
-        unexpectedErrorKeyboard(ctx);
-    }
-}
-
 mp_ongoingScene.hears(/.*/, (ctx) => {
     try {
         if (ctx.message.text === "3 digits" || ctx.message.text === "4 digits" || ctx.message.text === "5 digits") {
@@ -115,6 +134,8 @@ mp_ongoingScene.hears(/.*/, (ctx) => {
 
             console.log(`${user1.name}'s number is ${user1.number}`);
             console.log(`${user2.name}'s number is ${user2.number}`);
+
+            logMessage(`${user1.name}'s number is ${user1.number}` + `${user2.name}'s number is ${user2.number}`);
 
             user1.guesses = 1;
             user2.guesses = 1;
@@ -211,20 +232,12 @@ mp_ongoingScene.hears(/.*/, (ctx) => {
                 winner = user2;
             }
 
-            // storage.get(ctx.chat.id).user1.ctx.scene.enter("mp_beginScene");
-            // storage.get(ctx.chat.id).user2.ctx.scene.enter("mp_beginScene");
-
             return ctx.reply(
-                `<b>Congrats!</b> 🎊🎉\n\nNumber is <b>${winner.number.join("")}</b>.\nYou found it in ${
+                `<b>Congrats ${winner.name}!</b> 🎊🎉\n\nNumber is <b>${winner.number.join("")}</b>.\nYou found it in ${
                     winner.guesses
                 } tries. 🤯\n\n${user1.name} won ${user1.wins || 0} times\n${user2.name} won ${user2.wins || 0} times`,
                 Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "FIN_PLAY_AGAIN")]))
             );
-
-            //deleteSessionFeatures(ctx);
-            storage.get(ctx.chat.id).user1.ctx.scene.enter("mp_beginScene");
-            storage.get(ctx.chat.id).user2.ctx.scene.enter("mp_beginScene");
-            return;
         }
 
         currentPlayer.guesses += 1;
