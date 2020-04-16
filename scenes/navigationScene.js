@@ -8,7 +8,7 @@ navigationScene.action("SINGLEPLAYER_GAME", (ctx) => ctx.scene.enter("sp_beginSc
 
 navigationScene.action("MULTIPLAYER_GAME", (ctx) =>
     ctx.reply(
-        "To play multiplayer,\n- Create a group chat with your friends\n- Add @DigitPuzzleBot to the group\n- Make the bot admin\n- Re-add the bot to the group again so that admin privilages are set\n\nThen you are good to go ✅🏃‍♂️/🏃‍♀️"
+        "To play multiplayer,\n- Create a group chat with your friend\n- Add @DigitPuzzleBot to the group\n- Make the bot admin\n- Re-add the bot to the group again so that admin privilages are set\n\nThen you are good to go ✅🏃‍♂️/🏃‍♀️"
     )
 );
 
