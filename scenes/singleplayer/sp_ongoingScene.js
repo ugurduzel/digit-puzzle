@@ -167,11 +167,9 @@ function handleTop10Step(ctx, numberOfGames, avgScore, level) {
     console.log(username + " updated to " + numberOfGames + " games and " + avgScore + " avgScore");
 
     if (found) {
-        found = {
-            [`${level}_count`]: numberOfGames,
-            [`${level}_avg`]: avgScore,
-            username,
-        };
+        found[`${level}_count`] = numberOfGames;
+        found[`${level}_avg`] = avgScore;
+
         arr.sort((e1, e2) => (e1[[`${level}_avg`]] < e2[[`${level}_avg`]] ? -1 : 1));
 
         db.set(`sp${level}_step_top10`, arr).write();
@@ -229,7 +227,7 @@ function getStepLeaderboard(lst, level) {
         let tmp = _.take(item[[`${level}_avg`]].toString(), 5).join("");
         s += tmp;
         s += " ".repeat(total_len - (item.username.length + (tmp.length - 2))) + "  ";
-        s += item.numberOfGames + "\n";
+        s += item[`${level}_count`] + "\n";
     }
 
     return s;
