@@ -20,76 +20,9 @@ const mp_ongoingScene = new Scene("mp_ongoingScene");
 
 mp_ongoingScene.action("FIN_PLAY_AGAIN", (ctx) => {
     return ctx.replyWithHTML(
-        `Okay, let's play again.\n\nChoose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun.\n\nYou can choose from the keyboard`,
-        Extra.HTML().markup((m) =>
-            m.inlineKeyboard(levels.map((l) => m.callbackButton(`${l} digits`, `${l} mpdigits`)))
-        )
+        `Okay, let's play again.\n\nChoose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun.`,
+        Markup.keyboard(levels.map((l) => `${l} digits`)).oneTime(false)
     );
-});
-
-mp_ongoingScene.action(/^[0-9] mpdigits/, (ctx) => {
-    try {
-        if (!storage.has(ctx.chat.id)) {
-            storage.set(ctx.chat.id, {
-                user1: null,
-                user2: null,
-                turn: null,
-            });
-        }
-        let mpGame = storage.get(ctx.chat.id);
-
-        if (
-            mpGame.user1 &&
-            mpGame.user1.hasOwnProperty("number") &&
-            mpGame.user2 &&
-            mpGame.user2.hasOwnProperty("number")
-        ) {
-            return;
-        }
-
-        const level = eval(ctx.match[0][0]);
-
-        if (level < minLevel || level > maxLevel) {
-            return ctx.reply(
-                "Choose difficulty level",
-                "<p>Plase select from these inline options!</p>",
-                Extra.HTML().markup((m) =>
-                    m.inlineKeyboard(levels.map((l) => m.callbackButton(`${l} digits`, `${l} mpdigits`)))
-                )
-            );
-        }
-
-        console.log(level + " digit level chosen in play again");
-
-        let user1 = { ...mpGame.user1 };
-        let user2 = { ...mpGame.user2 };
-
-        user1.number = generateRandomNumber(level);
-        user2.number = generateRandomNumber(level);
-
-        logMessage(
-            `****** Multiplayer Game ******\n${user1.name}'s number is ${user1.number}\n${user2.name}'s number is ${user2.number}\n`
-        );
-
-        user1.guesses = 1;
-        user2.guesses = 1;
-
-        user1.history = [];
-        user2.history = [];
-
-        let copy = { ...mpGame };
-        copy.user1 = user1;
-        copy.user2 = user2;
-        copy.turn = user1.id;
-
-        storage.set(ctx.chat.id, copy);
-        return ctx.reply(
-            `Two different ${user1.number.length} digit numbers have been set for you guys.\n\nStart guessing....`
-        );
-    } catch (ex) {
-        console.log("Unexpected error. " + ex);
-        unexpectedErrorKeyboard(ctx);
-    }
 });
 
 mp_ongoingScene.action("Quit", (ctx) => {
@@ -188,6 +121,44 @@ mp_ongoingScene.enter((ctx) => {
 
 mp_ongoingScene.hears(/.*/, (ctx) => {
     try {
+        if (ctx.message.text === "3 digits" || ctx.message.text === "4 digits" || ctx.message.text === "5 digits") {
+            let mpGame = storage.get(ctx.chat.id);
+
+            const level = eval(ctx.match[0][0]);
+
+            console.log(level + " digit level chosen in play again");
+
+            let user1 = { ...mpGame.user1 };
+            let user2 = { ...mpGame.user2 };
+
+            user1.number = generateRandomNumber(level);
+            user2.number = generateRandomNumber(level);
+
+            logMessage(
+                `****** Multiplayer Game ******\n${user1.name}'s number is ${user1.number}\n${user2.name}'s number is ${user2.number}\n`
+            );
+
+            user1.guesses = 1;
+            user2.guesses = 1;
+
+            user1.history = [];
+            user2.history = [];
+
+            let copy = { ...mpGame };
+            copy.user1 = user1;
+            copy.user2 = user2;
+            copy.turn = user1.id;
+            copy.finito = false;
+
+            storage.set(ctx.chat.id, copy);
+            return ctx.reply(
+                `Two different ${user1.number.length} digit numbers have been set for you guys.\n\nStart guessing....`
+            );
+        }
+        if (finito === true) {
+            return;
+        }
+
         if (storage.get(ctx.chat.id).turn && storage.get(ctx.chat.id).turn !== ctx.from.id) {
             return ctx.reply(
                 "It's not your turn. " + extractUsername(ctx),
@@ -246,6 +217,7 @@ mp_ongoingScene.hears(/.*/, (ctx) => {
             } else {
                 copy.user2 = currentPlayer;
             }
+            copy.finito = true;
             storage.set(ctx.chat.id, copy);
 
             const user1 = copy.user1;
