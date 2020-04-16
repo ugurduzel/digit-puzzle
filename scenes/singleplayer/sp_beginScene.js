@@ -1,4 +1,4 @@
-const { generateRandomNumber, playerLog } = require("../../utils");
+const { generateRandomNumber, unexpectedErrorKeyboard, playerLog } = require("../../utils");
 const { minLevel, maxLevel } = require("../../configs/constants.json");
 const Markup = require("telegraf/markup");
 const Extra = require("telegraf/extra");
@@ -19,6 +19,7 @@ sp_beginScene.enter((ctx) => {
         );
     } catch (ex) {
         console.log("Unexpected error. " + ex);
+        unexpectedErrorKeyboard(ctx);
     }
 });
 
@@ -44,6 +45,7 @@ sp_beginScene.action(/^[0-9] digits/, (ctx) => {
         return ctx.scene.enter("sp_ongoingScene");
     } catch (ex) {
         console.log("Unexpected error. " + ex);
+        unexpectedErrorKeyboard(ctx);
     }
 });
 

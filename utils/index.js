@@ -114,6 +114,18 @@ function extractUsername(ctx) {
     return ctx.from.username || "" + (ctx.from.first_name + " " || "") + (ctx.from.last_name || "") || ctx.from.id;
 }
 
+function unexpectedErrorKeyboard(ctx) {
+    try {
+        return ctx.reply(
+            "Unexpected error occured. Please restart.",
+            Markup.keyboard(["/start"]).oneTime().resize().extra()
+        );
+    } catch (ex) {
+        console.log("Unexpected error witht the restart keyboard. " + ex);
+        return;
+    }
+}
+
 module.exports = {
     generateRandomNumber,
     getResult,
@@ -123,4 +135,5 @@ module.exports = {
     formatTime,
     extractUsername,
     howMany,
+    unexpectedErrorKeyboard,
 };

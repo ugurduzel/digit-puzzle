@@ -2,7 +2,7 @@ const Extra = require("telegraf/extra");
 const Scene = require("telegraf/scenes/base");
 const Markup = require("telegraf/markup");
 const db = require("../../models/gameModel");
-const { getResult, notDistinct, formatTime } = require("../../utils");
+const { getResult, unexpectedErrorKeyboard, notDistinct, formatTime } = require("../../utils");
 const _ = require("lodash");
 const sp_ongoingScene = new Scene("sp_ongoingScene");
 
@@ -11,6 +11,7 @@ sp_ongoingScene.enter((ctx) => {
         return ctx.reply(`I have a ${ctx.session.number.length} digit number in mind.\n\nStart guessing... 🧐`);
     } catch (ex) {
         console.log("Unexpected error. " + ex);
+        unexpectedErrorKeyboard(ctx);
     }
 });
 
@@ -20,6 +21,7 @@ sp_ongoingScene.action("FIN_PLAY_AGAIN", (ctx) => {
         return ctx.scene.enter("navigationScene");
     } catch (ex) {
         console.log("Unexpected error. " + ex);
+        unexpectedErrorKeyboard(ctx);
     }
 });
 
@@ -33,6 +35,7 @@ sp_ongoingScene.action("Quit", (ctx) => {
         );
     } catch (ex) {
         console.log("Unexpected error. " + ex);
+        unexpectedErrorKeyboard(ctx);
     }
 });
 
@@ -48,6 +51,7 @@ sp_ongoingScene.action("History", (ctx) => {
         return ctx.reply(s);
     } catch (ex) {
         console.log("Unexpected error. " + ex);
+        unexpectedErrorKeyboard(ctx);
     }
 });
 
@@ -118,6 +122,7 @@ sp_ongoingScene.hears(/.*/, (ctx) => {
         );
     } catch (ex) {
         console.log("Unexpected error. " + ex);
+        unexpectedErrorKeyboard(ctx);
     }
 });
 

@@ -2,6 +2,8 @@ const Extra = require("telegraf/extra");
 const Scene = require("telegraf/scenes/base");
 const Markup = require("telegraf/markup");
 
+const { unexpectedErrorKeyboard } = require("../utils");
+
 const navigationScene = new Scene("navigationScene");
 
 navigationScene.action("SINGLEPLAYER_GAME", (ctx) => ctx.scene.enter("sp_beginScene"));
@@ -34,6 +36,7 @@ navigationScene.action("NEW_GAME", (ctx) => {
         );
     } catch (ex) {
         console.log("Unexpected error. " + ex);
+        unexpectedErrorKeyboard(ctx);
     }
 });
 
@@ -48,6 +51,7 @@ navigationScene.enter((ctx) => {
         );
     } catch (ex) {
         console.log("Unexpected error. " + ex);
+        unexpectedErrorKeyboard(ctx);
     }
 });
 

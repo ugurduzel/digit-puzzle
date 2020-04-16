@@ -5,6 +5,8 @@ const Extra = require("telegraf/extra");
 const Scene = require("telegraf/scenes/base");
 const _ = require("lodash");
 
+const { unexpectedErrorKeyboard } = require("../../utils");
+
 const { storage } = require("../../cache");
 
 const { extractUsername } = require("../../utils");
@@ -73,6 +75,7 @@ mp_beginScene.action(/^[0-9] digits/, (ctx) => {
         return;
     } catch (ex) {
         console.log("Unexpected error. " + ex);
+        unexpectedErrorKeyboard(ctx);
     }
 });
 
@@ -115,6 +118,7 @@ mp_beginScene.enter((ctx) => {
         }
     } catch (ex) {
         console.log("Unexpected error. " + ex);
+        unexpectedErrorKeyboard(ctx);
     }
 });
 

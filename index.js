@@ -19,7 +19,7 @@ const mp_ongoingScene = require("./scenes/multiplayer/mp_ongoingScene");
 const db = require("./models/gameModel");
 const sessionModel = require("./models/sessionModel");
 
-const { extractUsername, howMany } = require("./utils");
+const { extractUsername, howMany, unexpectedErrorKeyboard } = require("./utils");
 let { storage } = require("./cache");
 
 const stage = new Stage([navigationScene, sp_beginScene, sp_ongoingScene, mp_beginScene, mp_ongoingScene]);
@@ -55,7 +55,7 @@ bot.action("NEW_GAME", (ctx) => {
         return ctx.scene.enter("navigationScene");
     } catch (ex) {
         console.log("Unexpected error. " + ex);
-        return;
+        unexpectedErrorKeyboard(ctx);
     }
 });
 
@@ -69,7 +69,7 @@ bot.action("NEW_MP_GAME", (ctx) => {
         );
     } catch (ex) {
         console.log("Unexpected error. " + ex);
-        return;
+        unexpectedErrorKeyboard(ctx);
     }
 });
 
@@ -116,7 +116,7 @@ bot.action("JOIN_GAME", (ctx) => {
         );
     } catch (ex) {
         console.log("Unexpected error. " + ex);
-        return;
+        unexpectedErrorKeyboard(ctx);
     }
 });
 
@@ -142,7 +142,7 @@ bot.command("start", (ctx) => {
         );
     } catch (ex) {
         console.log("Unexpected error. " + ex);
-        return;
+        unexpectedErrorKeyboard(ctx);
     }
 });
 

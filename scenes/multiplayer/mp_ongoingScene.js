@@ -2,8 +2,14 @@ const Extra = require("telegraf/extra");
 const Scene = require("telegraf/scenes/base");
 const Markup = require("telegraf/markup");
 const db = require("../../models/gameModel");
-const { getResult, notDistinct, extractUsername, formatTime } = require("../../utils");
-const { generateRandomNumber, playerLog } = require("../../utils");
+const {
+    generateRandomNumber,
+    getResult,
+    notDistinct,
+    extractUsername,
+    unexpectedErrorKeyboard,
+} = require("../../utils");
+
 const _ = require("lodash");
 
 const { storage } = require("../../cache");
@@ -17,7 +23,7 @@ mp_ongoingScene.action("OK", (ctx) => {
 
 mp_ongoingScene.action("FIN_PLAY_AGAIN", (ctx) => {
     return ctx.reply(
-        `Both players have joined.\n\nWe may begin now. Choose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun`,
+        `Choose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun`,
         Extra.HTML().markup((m) => m.inlineKeyboard(levels.map((l) => m.callbackButton(`${l} digits`, `${l} digits`))))
     );
 });
@@ -83,13 +89,14 @@ mp_ongoingScene.action(/^[0-9] digits/, (ctx) => {
         );
     } catch (ex) {
         console.log("Unexpected error. " + ex);
+        unexpectedErrorKeyboard(ctx);
     }
 });
 
 mp_ongoingScene.action("Quit", (ctx) => {
     //deleteSessionFeatures(ctx);
     return ctx.reply(
-        `Quit is not fully implemented.`,
+        `Do you want to play again?`,
         Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "FIN_PLAY_AGAIN")]))
     );
     const { number } = ctx.session;
@@ -114,6 +121,7 @@ mp_ongoingScene.action("History", (ctx) => {
         return ctx.reply(s);
     } catch (ex) {
         console.log("Unexpected error. " + ex);
+        unexpectedErrorKeyboard(ctx);
     }
 });
 
@@ -139,6 +147,7 @@ mp_ongoingScene.enter((ctx) => {
         return;
     } catch (ex) {
         console.log("Unexpected error. " + ex);
+        unexpectedErrorKeyboard(ctx);
     }
 });
 
@@ -264,6 +273,7 @@ mp_ongoingScene.hears(/.*/, (ctx) => {
         );
     } catch (ex) {
         console.log("Unexpected error. " + ex);
+        unexpectedErrorKeyboard(ctx);
     }
 });
 
