@@ -130,7 +130,6 @@ function deleteSessionFeatures(session) {
 
 function addSpStepResult(ctx, step, level) {
     let result = db.get("players").find({ id: ctx.from.id });
-    console.log(result.value());
     if (!result.value()) return null;
 
     const count = result.value()[`${level}_count`];
@@ -150,7 +149,6 @@ function addSpStepResult(ctx, step, level) {
         .find({ id: ctx.from.id })
         .assign({ [`${level}_count`]: newCount, [`${level}_avg`]: newAvg })
         .write();
-    console.log("Updated player is : ", db.get("players").find({ id: ctx.from.id }).value());
     handleTop10Step(ctx, newCount, newAvg, `sp${level}`);
 }
 

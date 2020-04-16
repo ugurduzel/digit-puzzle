@@ -104,13 +104,9 @@ mp_ongoingScene.action("History", (ctx) => {
     try {
         const currentPlayer = getCurrentPlayer(ctx);
 
-        if (currentPlayer.id !== ctx.from.id) {
-            return;
-        }
-
         const { history } = currentPlayer;
 
-        let s = "Your guesses,\n";
+        let s = extractUsername(ctx) + "\n";
         for (let i = 0; i < history.length; i++) {
             s += "▪️ " + history[i].guess + " ➡️ ";
             s += history[i].result + "\n";

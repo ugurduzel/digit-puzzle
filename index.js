@@ -34,7 +34,7 @@ bot.catch((err, ctx) => {
     console.log(`Ooops, encountered an error for ${ctx.updateType}`, err);
 });
 
-//bot.use(commandParts());
+bot.use(commandParts());
 bot.use(howto());
 bot.use(sessionModel.middleware());
 //bot.use(underMaintenanceMiddleware());
@@ -44,15 +44,12 @@ bot.action("NEW_GAME", (ctx) => {
     try {
         let player = db.get("players").find({ id: ctx.from.id });
         if (!player.value()) {
-            ctx.reply("Just a second...");
             db.get("players")
                 .push({
                     id: ctx.from.id,
                 })
                 .write();
             ctx.reply("We have added you to our userbase. 👏\n\nHave fun! ");
-        } else {
-            console.log("Player " + ctx.from.id + " is found\n" + player);
         }
 
         return ctx.scene.enter("navigationScene");
@@ -125,7 +122,6 @@ bot.action("JOIN_GAME", (ctx) => {
 
 bot.command("start", (ctx) => {
     try {
-        console.log("CHAT: ", ctx.chat);
         if (ctx.chat.type !== "supergroup") {
             return ctx.reply(
                 `Hi ${ctx.chat.first_name},\nWelcome to Digit Puzzle! 🧩\n\nUse /howto command to see the detailed explanation.`,

@@ -6,7 +6,11 @@ const navigationScene = new Scene("navigationScene");
 
 navigationScene.action("SINGLEPLAYER_GAME", (ctx) => ctx.scene.enter("sp_beginScene"));
 
-navigationScene.action("MULTIPLAYER_GAME", (ctx) => ctx.reply("Multiplayer is under construction.\n"));
+navigationScene.action("MULTIPLAYER_GAME", (ctx) =>
+    ctx.reply(
+        "To play multiplayer,\n- Create a group chat with your friends\n- Add @DigitPuzzleBot to the group\n- Make the bot admin\n- Re-add the bot to the group again so that admin privilages are set\n\nThen you are good to go ✅🏃‍♂️/🏃‍♀️"
+    )
+);
 
 navigationScene.action("NEW_GAME", (ctx) => {
     try {
@@ -19,8 +23,6 @@ navigationScene.action("NEW_GAME", (ctx) => {
                 })
                 .write();
             ctx.reply("We have added you to our userbase. 👏\n\nHave fun! ");
-        } else {
-            console.log("Player " + ctx.from.id + " is found\n" + player);
         }
 
         return ctx.reply(
