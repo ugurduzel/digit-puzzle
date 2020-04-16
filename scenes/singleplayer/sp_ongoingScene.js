@@ -157,7 +157,7 @@ function addSpStepResult(ctx, step, level) {
     handleTop10Step(ctx, newCount, newAvg, level);
 }
 
-function handleTop10Step(ctx, numberOfGames, avgScore, sp, level) {
+function handleTop10Step(ctx, numberOfGames, avgScore, level) {
     const username = (ctx.chat.first_name || "") + (ctx.chat.last_name || "") + "";
     let top10 = db.get(`sp${level}_step_top10`);
     let arr = [...top10.value()];
