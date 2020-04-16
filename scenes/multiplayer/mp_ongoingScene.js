@@ -54,7 +54,7 @@ mp_ongoingScene.action(/^[0-9] mp_digits/, (ctx) => {
                 "Choose difficulty level",
                 "<p>Plase select from these inline options!</p>",
                 Extra.HTML().markup((m) =>
-                    m.inlineKeyboard(levels.map((l) => m.callbackButton(`${l} digits`, `${l} digits`)))
+                    m.inlineKeyboard(levels.map((l) => m.callbackButton(`${l} digits`, `${l} mp_digits`)))
                 )
             );
         }
