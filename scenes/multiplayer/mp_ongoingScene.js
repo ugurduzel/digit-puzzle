@@ -155,7 +155,7 @@ mp_ongoingScene.hears(/.*/, (ctx) => {
                 `Two different ${user1.number.length} digit numbers have been set for you guys.\n\nStart guessing....`
             );
         }
-        const finit = storage.get(ctx.chat.id).finito;
+        const finito = storage.get(ctx.chat.id).finito;
         if (finito && finito === true) {
             return;
         }
