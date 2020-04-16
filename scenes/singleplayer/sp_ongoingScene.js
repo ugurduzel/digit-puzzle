@@ -160,12 +160,21 @@ function addSpStepResult(ctx, step, level) {
 function handleTop10Step(ctx, numberOfGames, avgScore, sp) {
     const username = (ctx.chat.first_name || "") + (ctx.chat.last_name || "") + "";
     let top10 = db.get(sp + "_step_top10");
-    let found = top10.find({ username });
-    if (found.value()) {
-        found.assign({ avgScore, numberOfGames }).write();
+    let arr = [...top10.value()];
+    let found = arr.find((e) => e.username === username);
+
+    if (found) {
+        found = {
+            avgScore,
+            numberOfGames,
+            username,
+        };
+        arr.sort((e1, e2) => (e1.avgScore < e2.avgScore ? -1 : 1));
+
+        db.set("sp3_step_top10", arr).write();
         return;
     }
-    let arr = [...top10.value()];
+
     if (arr && arr.length < 10) {
         arr.push({
             avgScore,
