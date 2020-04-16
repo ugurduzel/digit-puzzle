@@ -18,15 +18,52 @@ const { minLevel, maxLevel } = require("../../configs/constants.json");
 const levels = _.range(minLevel, maxLevel + 1);
 const mp_ongoingScene = new Scene("mp_ongoingScene");
 
-mp_ongoingScene.action("OK", (ctx) => {
-    return ctx.reply("OK!");
-});
-
 mp_ongoingScene.action("FIN_PLAY_AGAIN", (ctx) => {
     return ctx.replyWithHTML(
-        `Okay, let's play again.\n\nChoose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun`,
-        Markup.keyboard(levels.map((l) => `${l} digits`))
+        `Okay, let's play again.\n\nChoose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun.\n\nYou can choose from the keyboard`,
+        Extra.HTML().markup((m) =>
+            m.inlineKeyboard(levels.map((l) => m.callbackButton(`${l} digits`, `${l} mp_digits`)))
+        )
     );
+});
+
+mp_ongoingScene.action(/^[0-9] mp_digits/, (ctx) => {
+    try {
+        let mpGame = storage.get(ctx.chat.id);
+
+        const level = eval(ctx.match[0][0]);
+
+        console.log(level + " digit level chosen in play again");
+
+        let user1 = { ...mpGame.user1 };
+        let user2 = { ...mpGame.user2 };
+
+        user1.number = generateRandomNumber(level);
+        user2.number = generateRandomNumber(level);
+
+        logMessage(
+            `****** Multiplayer Game ******\n${user1.name}'s number is ${user1.number}\n${user2.name}'s number is ${user2.number}\n`
+        );
+
+        user1.guesses = 1;
+        user2.guesses = 1;
+
+        user1.history = [];
+        user2.history = [];
+
+        let copy = { ...mpGame };
+        copy.user1 = user1;
+        copy.user2 = user2;
+        copy.turn = user1.id;
+
+        storage.set(ctx.chat.id, copy);
+        return ctx.reply(
+            `Two different ${user1.number.length} digit numbers have been set for you guys.\n\nStart guessing....`
+        );
+    } catch (ex) {
+        console.log("Unexpected error. " + ex);
+        unexpectedErrorKeyboard(ctx);
+    }
 });
 
 mp_ongoingScene.action("Quit", (ctx) => {
@@ -125,40 +162,6 @@ mp_ongoingScene.enter((ctx) => {
 
 mp_ongoingScene.hears(/.*/, (ctx) => {
     try {
-        if (ctx.message.text === "3 digits" || ctx.message.text === "4 digits" || ctx.message.text === "5 digits") {
-            let mpGame = storage.get(ctx.chat.id);
-
-            const level = eval(ctx.match[0][0]);
-
-            console.log(level + " digit level chosen in play again");
-
-            let user1 = { ...mpGame.user1 };
-            let user2 = { ...mpGame.user2 };
-
-            user1.number = generateRandomNumber(level);
-            user2.number = generateRandomNumber(level);
-
-            logMessage(
-                `****** Multiplayer Game ******\n${user1.name}'s number is ${user1.number}\n${user2.name}'s number is ${user2.number}\n`
-            );
-
-            user1.guesses = 1;
-            user2.guesses = 1;
-
-            user1.history = [];
-            user2.history = [];
-
-            let copy = { ...mpGame };
-            copy.user1 = user1;
-            copy.user2 = user2;
-            copy.turn = user1.id;
-
-            storage.set(ctx.chat.id, copy);
-            return ctx.reply(
-                `Two different ${user1.number.length} digit numbers have been set for you guys.\n\nStart guessing....`
-            );
-        }
-
         if (storage.get(ctx.chat.id).turn && storage.get(ctx.chat.id).turn !== ctx.from.id) {
             return ctx.reply(
                 "It's not your turn. " + extractUsername(ctx),
