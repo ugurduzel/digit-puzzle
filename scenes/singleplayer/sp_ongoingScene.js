@@ -163,13 +163,15 @@ function handleTop10Step(ctx, numberOfGames, avgScore, sp) {
     let arr = [...top10.value()];
     let found = arr.find((e) => e.username === username);
 
+    console.log(username + " updated to " + numberOfGames + " games and " + avgScore + " avgScore");
+
     if (found) {
         found = {
-            avgScore,
-            numberOfGames,
+            [`${level}_count`]: numberOfGames,
+            [`${level}_avg`]: avgScore,
             username,
         };
-        arr.sort((e1, e2) => (e1.avgScore < e2.avgScore ? -1 : 1));
+        arr.sort((e1, e2) => (e1[[`${level}_avg`]] < e2[[`${level}_avg`]] ? -1 : 1));
 
         db.set("sp3_step_top10", arr).write();
         return;
@@ -177,22 +179,22 @@ function handleTop10Step(ctx, numberOfGames, avgScore, sp) {
 
     if (arr && arr.length < 10) {
         arr.push({
-            avgScore,
-            numberOfGames,
+            [`${level}_count`]: numberOfGames,
+            [`${level}_avg`]: avgScore,
             username,
         });
-        arr.sort((e1, e2) => (e1.avgScore < e2.avgScore ? -1 : 1));
+        arr.sort((e1, e2) => (e1[[`${level}_avg`]] < e2[[`${level}_avg`]] ? -1 : 1));
 
         db.set("sp3_step_top10", arr).write();
         return;
     }
-    if (arr && arr[9].avgScore > avgScore) {
+    if (arr && arr[9][[`${level}_avg`]] > avgScore) {
         arr[9] = {
-            avgScore,
-            numberOfGames,
+            [`${level}_count`]: numberOfGames,
+            [`${level}_avg`]: avgScore,
             username,
         };
-        arr.sort((e1, e2) => (e1.avgScore < e2.avgScore ? -1 : 1));
+        arr.sort((e1, e2) => (e1[[`${level}_avg`]] < e2[[`${level}_avg`]] ? -1 : 1));
 
         db.set("sp3_step_top10", arr).write();
         return;
