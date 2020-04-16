@@ -109,9 +109,14 @@ bot.action("JOIN_GAME", (ctx) => {
             return ctx.scene.enter("mp_beginScene");
         }
 
+        mpGame = storage.get(ctx.chat.id);
+
+        if (ctx.from.id === mpGame.user1.id || ctx.from.id === mpGame.user2.id) {
+            return;
+        }
         return ctx.reply(
             `This session is currently full.\nThere is a heating match between 
-        ${mpGame.user1.name} vs ${mpGame.user2.name}`
+                ${mpGame.user1.name} vs ${mpGame.user2.name}`
         );
     } catch (ex) {
         console.log("Unexpected error. " + ex);

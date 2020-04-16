@@ -21,7 +21,17 @@ mp_ongoingScene.action("OK", (ctx) => {
     return ctx.reply("OK!");
 });
 
-mp_ongoingScene.action(/^[0-9] digits/, (ctx) => {
+mp_ongoingScene.action("FIN_PLAY_AGAIN", (ctx) => {
+    return ctx.reply(
+        `Okay, let's play again.\n\nChoose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun`,
+        Markup.keyboard(levels.map((l) => `${l} digits`))
+            .oneTime()
+            .resize()
+            .extra()
+    );
+});
+
+mp_ongoingScene.hears(/^[0-9] digits/, (ctx) => {
     try {
         if (!storage.has(ctx.chat.id)) {
             storage.set(ctx.chat.id, {
@@ -86,13 +96,6 @@ mp_ongoingScene.action(/^[0-9] digits/, (ctx) => {
         console.log("Unexpected error. " + ex);
         unexpectedErrorKeyboard(ctx);
     }
-});
-
-mp_ongoingScene.action("FIN_PLAY_AGAIN", (ctx) => {
-    return ctx.reply(
-        `Okay, let's play again.\n\nChoose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun`,
-        Extra.HTML().markup((m) => m.inlineKeyboard(levels.map((l) => m.callbackButton(`${l} digits`, `${l} digits`))))
-    );
 });
 
 mp_ongoingScene.action("Quit", (ctx) => {
