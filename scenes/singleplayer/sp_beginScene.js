@@ -40,7 +40,8 @@ sp_beginScene.action(/^[0-9] digits/, (ctx) => {
         ctx.session.number = ctx.session.number ? ctx.session.number : generateRandomNumber(level);
         ctx.session.guesses = 1;
         ctx.session.history = [];
-        playerLog(ctx);
+
+        console.log(ctx.chat.first_name + " is playing. The number is " + ctx.session.number.join(""));
 
         return ctx.scene.enter("sp_ongoingScene");
     } catch (ex) {

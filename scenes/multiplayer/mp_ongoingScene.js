@@ -131,8 +131,6 @@ mp_ongoingScene.hears(/.*/, (ctx) => {
 
             const level = eval(ctx.match[0][0]);
 
-            console.log(level + " digit level chosen in play again");
-
             let user1 = { ...mpGame.user1 };
             let user2 = { ...mpGame.user2 };
 

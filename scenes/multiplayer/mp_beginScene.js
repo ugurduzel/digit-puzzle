@@ -53,10 +53,6 @@ mp_beginScene.action(/^[0-9] digits/, (ctx) => {
         user1.number = user1.number || generateRandomNumber(level);
         user2.number = user2.number || generateRandomNumber(level);
 
-        logMessage(
-            `****** Multiplayer Game ******\n${user1.name}'s number is ${user1.number}\n${user2.name}'s number is ${user2.number}\n`
-        );
-
         console.log(`${user1.name}'s number is ${user1.number}`);
         console.log(`${user2.name}'s number is ${user2.number}`);
 
