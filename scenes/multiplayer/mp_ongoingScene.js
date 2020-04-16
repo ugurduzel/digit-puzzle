@@ -26,7 +26,6 @@ mp_ongoingScene.action("FIN_PLAY_AGAIN", (ctx) => {
         `Okay, let's play again.\n\nChoose difficulty level\n\n<b>3</b> is too easy, <b>4</b> is the most fun`,
         Markup.keyboard(levels.map((l) => `${l} digits`))
             .removeKeyboard(true)
-            .forceReply(true)
             .oneTime()
             .resize()
             .extra()
@@ -130,10 +129,7 @@ mp_ongoingScene.hears(/.*/, (ctx) => {
 
             storage.set(ctx.chat.id, copy);
             return ctx.reply(
-                `Two different ${user1.number.length} digit numbers have been set for you guys.\n\nStart guessing....`,
-                Extra.HTML().markup((m) =>
-                    m.inlineKeyboard([m.callbackButton("Get History", "History"), m.callbackButton("Quit", "Quit")])
-                )
+                `Two different ${user1.number.length} digit numbers have been set for you guys.\n\nStart guessing....`
             );
         }
 
