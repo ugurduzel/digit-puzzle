@@ -165,21 +165,28 @@ function handleTop10Step(ctx, numberOfGames, avgScore, sp) {
         found.assign({ avgScore, numberOfGames }).write();
         return;
     }
-    if (top10.value() && top10.value().length < 10) {
-        db.get(sp + "_step_top10")
-            .push({
-                avgScore,
-                numberOfGames,
-                username,
-            })
-            .sortBy("avgScore")
-            .write();
+    let arr = [...top10.value()];
+    if (arr && arr.length < 10) {
+        arr.push({
+            avgScore,
+            numberOfGames,
+            username,
+        });
+        arr.sort((e1, e2) => (e1.avgScore < e2.avgScore ? -1 : 1));
+
+        db.set("sp3_step_top10", arr).write();
         return;
     }
-    let array = top10.value();
-    if (array[9] > avgScore) {
-        array[9] = avgScore;
-        db.set(sp + "_step_top10", array).write;
+    if (arr && arr[9].avgScore > avgScore) {
+        arr[9] = {
+            avgScore,
+            numberOfGames,
+            username,
+        };
+        arr.sort((e1, e2) => (e1.avgScore < e2.avgScore ? -1 : 1));
+
+        db.set("sp3_step_top10", arr).write();
+        return;
     }
 }
 
