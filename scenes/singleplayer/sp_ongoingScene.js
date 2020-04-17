@@ -226,7 +226,7 @@ function getStepLeaderboard(lst, level) {
 
         let line = `${i + 1}. ` + item.username + "\n";
 
-        line += "  " + _.take(item[[`${level}_avg`]].toString(), 4).join("") + " average guess - ";
+        line += "   " + _.take(item[[`${level}_avg`]].toString(), 4).join("") + " guess on avg - ";
 
         line += item[`${level}_count`] + " total games\n";
 
