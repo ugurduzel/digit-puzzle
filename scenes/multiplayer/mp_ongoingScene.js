@@ -66,14 +66,14 @@ mp_ongoingScene.action("Quit", (ctx) => {
             loser.name
         }'s number was ${loser.number}\n\n
         ${user1.name} won ${user1.wins || 0} times\n${user2.name} won ${user2.wins || 0} times`,
-        Extra.HTML().markup((m) => m.oneTime(false).inlineKeyboard([m.callbackButton("🎮 Play Again", "FIN_PLAY_AGAIN")]))
+        Extra.HTML().markup((m) =>
+            m.oneTime(false).inlineKeyboard([m.callbackButton("🎮 Play Again", "FIN_PLAY_AGAIN")])
+        )
     );
 });
 
 mp_ongoingScene.action("History", (ctx) => {
     try {
-        const currentPlayer = getCurrentPlayer(ctx);
-
         let players = storage.get(ctx.chat.id);
 
         let history = null;
@@ -81,10 +81,10 @@ mp_ongoingScene.action("History", (ctx) => {
 
         if (players.user1.id === ctx.from.id) {
             history = players.user1.history;
-            s = user1.name + "\n";
+            s = players.user1.name + "\n";
         } else {
             history = players.user2.history;
-            s = user2.name + "\n";
+            s = players.user2.name + "\n";
         }
 
         for (let i = 0; i < history.length; i++) {
@@ -164,6 +164,7 @@ mp_ongoingScene.hears(/.*/, (ctx) => {
         }
 
         if (storage.get(ctx.chat.id).turn && storage.get(ctx.chat.id).turn !== ctx.from.id) {
+            return;
             return ctx.reply(
                 "It's not your turn. " + extractUsername(ctx),
                 Extra.HTML().inReplyTo(ctx.message.message_id)
@@ -257,7 +258,7 @@ mp_ongoingScene.hears(/.*/, (ctx) => {
         }
         storage.set(ctx.chat.id, copy);
 
-        ctx.reply(`It's your turn ${getCurrentPlayer(ctx).name}`);
+        //ctx.reply(`It's your turn ${getCurrentPlayer(ctx).name}`);
 
         return ctx.reply(
             result,
