@@ -228,11 +228,11 @@ function getStepLeaderboard(lst, level) {
 
         line += " ".repeat(ref_A - line.length);
 
-        line += _.take(item[[`sp${level}_avg`]].toString(), 4).join("");
+        line += _.take(item[[`${level}_avg`]].toString(), 4).join("");
 
         line += " ".repeat(ref_T - line.length);
 
-        line += item[`sp${level}_count`] + "\n";
+        line += item[`s{level}_count`] + "\n";
 
         returnString += line;
     }
