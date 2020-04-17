@@ -199,7 +199,8 @@ function handleTop10Step(ctx, numberOfGames, avgScore, level) {
 }
 
 function getStepLeaderboard(lst, level) {
-    let s = "<b>Singleplayer Step Leaderboard</b>\n\n";
+    let returnString = "<b>Singleplayer Step Leaderboard</b>\n\n";
+
     let max = -1;
     for (let i = 0; i < lst.length; i++) {
         const item = lst[i];
@@ -208,25 +209,33 @@ function getStepLeaderboard(lst, level) {
     if (max < 4) {
         max = 4;
     }
-    let temp_s = "";
-    temp_s += "Name  ";
-    temp_s += " ".repeat(max - 4);
-    temp_s += "  | ";
-    const avg_len = temp_s.length - 5;
-    temp_s += "Avg Steps | ";
-    const total_len = temp_s.length - 1;
-    temp_s += "Total Games\n";
-    s += temp_s;
+
+    let headString = "";
+    headString += "Name";
+    headString += " ".repeat(max - 4);
+    headString += " | ";
+    const ref_A = headString.length;
+    headString += "Avg Steps | ";
+    const ref_T = headString.length;
+    headString += "Total Games\n";
+
+    returnString += headString;
 
     for (let i = 0; i < lst.length; i++) {
         const item = lst[i];
-        s += item.username;
-        s += " ".repeat(avg_len - item.username.length) + "  ";
-        let tmp = _.take(item[[`${level}_avg`]].toString(), 5).join("");
-        s += tmp;
-        s += " ".repeat(total_len - (item.username.length + (tmp.length - 2))) + "  ";
-        s += item[`${level}_count`] + "\n";
+
+        let line = item.username;
+
+        line += " ".repeat(ref_A - line.length);
+
+        line += _.take(item[[`sp${level}_avg`]].toString(), 4).join("");
+
+        line += " ".repeat(ref_T - line.length);
+
+        line += item[`sp${level}_count`] + "\n";
+
+        returnString += line;
     }
 
-    return s;
+    return returnString;
 }
