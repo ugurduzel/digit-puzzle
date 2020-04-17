@@ -232,7 +232,7 @@ function getStepLeaderboard(lst, level) {
 
         line += " ".repeat(ref_T - line.length);
 
-        line += item[`s{level}_count`] + "\n";
+        line += item[`${level}_count`] + "\n";
 
         returnString += line;
     }
