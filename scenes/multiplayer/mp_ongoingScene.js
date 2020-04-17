@@ -229,17 +229,20 @@ mp_ongoingScene.hears(/.*/, (ctx) => {
             const user2 = copy.user2;
 
             let winner = null;
+            let loser = null;
 
             if (currentPlayer.id === user1.id) {
                 winner = user1;
+                loser = user2;
             } else {
                 winner = user2;
+                loser = user1;
             }
 
             return ctx.reply(
-                `<b>Congrats ${winner.name}!</b> 🎊🎉\n\nNumber is <b>${winner.number.join("")}</b>.\nYou found it in ${
-                    winner.guesses
-                } tries. 🤯\n\n${user1.name} won ${user1.wins || 0} times\n${user2.name} won ${user2.wins || 0} times`,
+                `<b>Congrats ${winner.name} WON!</b> 🎊🎉🤯\n\n${user1.name}: <b>${user1.number.join("")}</b>, ${
+                    user1.wins || 0
+                } wins\n${user2.name}: <b>${user2.number.join("")}</b>, ${user2.wins || 0} wins`,
                 Extra.HTML().markup((m) => m.inlineKeyboard([m.callbackButton("🎮 Play Again", "FIN_PLAY_AGAIN")]))
             );
         }
