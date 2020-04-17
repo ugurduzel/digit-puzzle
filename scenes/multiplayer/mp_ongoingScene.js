@@ -137,9 +137,9 @@ mp_ongoingScene.hears(/.*/, (ctx) => {
             user1.number = generateRandomNumber(level);
             user2.number = generateRandomNumber(level);
 
-            logMessage(
-                `****** Multiplayer Game ******\n${user1.name}'s number is ${user1.number}\n${user2.name}'s number is ${user2.number}\n`
-            );
+            // logMessage(
+            //     `****** Multiplayer Game ******\n${user1.name}'s number is ${user1.number}\n${user2.name}'s number is ${user2.number}\n`
+            // );
 
             user1.guesses = 1;
             user2.guesses = 1;
